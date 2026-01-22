@@ -1,0 +1,116 @@
+import axios from 'axios';
+import { Word, User, Progress, Statistics, DailyStats } from '../types';
+
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+
+const api = axios.create({
+  baseURL: API_BASE,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+// Words API
+export const wordsApi = {
+  getAll: async (page = 1, limit = 20) => {
+    const response = await api.get<{
+      words: Word[];
+      pagination: { page: number; limit: number; total: number; totalPages: number };
+    }>(`/words?page=${page}&limit=${limit}`);
+    return response.data;
+  },
+
+  getByRange: async (start: number, end: number) => {
+    const response = await api.get<{ words: Word[]; count: number }>(
+      `/words/range/${start}/${end}`
+    );
+    return response.data;
+  },
+
+  getRandom: async (count = 10, maxFrequency = 3000) => {
+    const response = await api.get<{ words: Word[] }>(
+      `/words/random?count=${count}&maxFrequency=${maxFrequency}`
+    );
+    return response.data;
+  },
+
+  getByPartOfSpeech: async (pos: string, count = 10) => {
+    const response = await api.get<{ words: Word[] }>(
+      `/words/pos/${pos}?count=${count}`
+    );
+    return response.data;
+  },
+
+  getById: async (id: number) => {
+    const response = await api.get<{ word: Word }>(`/words/${id}`);
+    return response.data;
+  },
+
+  search: async (query: string) => {
+    const response = await api.get<{ words: Word[] }>(`/words/search/${query}`);
+    return response.data;
+  },
+};
+
+// Users API
+export const usersApi = {
+  getAll: async () => {
+    const response = await api.get<{ users: User[] }>('/users');
+    return response.data;
+  },
+
+  getById: async (id: number) => {
+    const response = await api.get<{ user: User }>(`/users/${id}`);
+    return response.data;
+  },
+
+  create: async (email: string, name: string) => {
+    const response = await api.post<{ user: User }>('/users', { email, name });
+    return response.data;
+  },
+
+  login: async (email: string) => {
+    const response = await api.post<{ user: User }>('/users/login', { email });
+    return response.data;
+  },
+};
+
+// Progress API
+export const progressApi = {
+  getUserProgress: async (userId: number) => {
+    const response = await api.get<{ progress: Progress[]; statistics: Statistics }>(
+      `/progress/user/${userId}`
+    );
+    return response.data;
+  },
+
+  getReviewWords: async (userId: number, limit = 20) => {
+    const response = await api.get<{ words: Progress[] }>(
+      `/progress/review/${userId}?limit=${limit}`
+    );
+    return response.data;
+  },
+
+  getNewWords: async (userId: number, limit = 10, maxFrequency = 1000) => {
+    const response = await api.get<{ words: Word[] }>(
+      `/progress/new/${userId}?limit=${limit}&maxFrequency=${maxFrequency}`
+    );
+    return response.data;
+  },
+
+  updateProgress: async (userId: number, wordId: number, correct: boolean) => {
+    const response = await api.post<{ progress: Progress }>('/progress/update', {
+      userId,
+      wordId,
+      correct,
+    });
+    return response.data;
+  },
+
+  getStats: async (userId: number) => {
+    const response = await api.get<DailyStats>(`/progress/stats/${userId}`);
+    return response.data;
+  },
+};
+
+export default api;
