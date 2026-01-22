@@ -1,0 +1,43 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int        @id @default(autoincrement())
+  email     String     @unique
+  name      String
+  progress  Progress[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model Word {
+  id           Int        @id @default(autoincrement())
+  word         String     @unique
+  frequency    Int        // 頻度順位 (1-3000)
+  partOfSpeech String?    // 品詞 (noun, verb, adjective, etc.)
+  progress     Progress[]
+  createdAt    DateTime   @default(now())
+}
+
+model Progress {
+  id           Int       @id @default(autoincrement())
+  userId       Int
+  wordId       Int
+  level        Int       @default(0)  // 習熟度 0-5
+  lastReviewed DateTime?
+  nextReview   DateTime?
+  reviewCount  Int       @default(0)
+  correctCount Int       @default(0)
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  word         Word      @relation(fields: [wordId], references: [id], onDelete: Cascade)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@unique([userId, wordId])
+}
