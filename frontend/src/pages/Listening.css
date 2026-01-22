@@ -1,0 +1,132 @@
+.listening-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.settings-bar {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.setting-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.setting-group label {
+  font-size: 13px;
+  color: #666;
+}
+
+.setting-group select {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 13px;
+  background: white;
+  cursor: pointer;
+}
+
+.refresh-button {
+  margin-left: auto;
+  padding: 8px 16px;
+  background: #4361ee;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.refresh-button:hover {
+  background: #3730a3;
+}
+
+.loading {
+  text-align: center;
+  padding: 60px;
+  color: #666;
+}
+
+.session-complete {
+  text-align: center;
+  padding: 60px 20px;
+  background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+  border-radius: 16px;
+}
+
+.session-complete h2 {
+  font-size: 28px;
+  color: #059669;
+  margin-bottom: 8px;
+}
+
+.session-complete p {
+  color: #666;
+  margin-bottom: 32px;
+}
+
+.complete-stats {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  margin-bottom: 32px;
+}
+
+.complete-stats .stat {
+  text-align: center;
+}
+
+.complete-stats .value {
+  display: block;
+  font-size: 48px;
+  font-weight: 700;
+  color: #10b981;
+  margin-bottom: 4px;
+}
+
+.complete-stats .label {
+  font-size: 14px;
+  color: #666;
+}
+
+.new-session-button {
+  padding: 14px 32px;
+  background: #10b981;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.new-session-button:hover {
+  background: #059669;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 600px) {
+  .settings-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .setting-group {
+    justify-content: space-between;
+  }
+
+  .refresh-button {
+    margin-left: 0;
+    width: 100%;
+  }
+}
