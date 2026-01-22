@@ -1,9 +1,26 @@
 import { useState, useEffect } from 'react';
 import { useUser } from '../context/UserContext';
 import { progressApi } from '../services/api';
-import { Statistics, DailyStats } from '../types';
 import ProgressBar from '../components/ProgressBar';
 import './Progress.css';
+
+interface Statistics {
+  totalWords: number;
+  learnedWords: number;
+  masteredWords: number;
+  averageLevel: number;
+}
+
+interface LevelDistributionItem {
+  level: number;
+  _count: number;
+}
+
+interface DailyStats {
+  todayReviews: number;
+  averageLevel: number;
+  levelDistribution: LevelDistributionItem[];
+}
 
 export function Progress() {
   const { user } = useUser();

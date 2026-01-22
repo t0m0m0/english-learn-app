@@ -1,8 +1,20 @@
-import { useState, useEffect } from 'react';
-import { Word, UnsplashImage } from '../types';
+import { useState, useEffect, useRef } from 'react';
 import { searchImages } from '../services/unsplash';
 import useAudio from '../hooks/useAudio';
 import './WordCard.css';
+
+interface Word {
+  id: number;
+  word: string;
+  frequency: number;
+  partOfSpeech: string | null;
+}
+
+interface UnsplashImage {
+  id: string;
+  urls: { small: string; regular: string; thumb: string };
+  alt_description: string | null;
+}
 
 interface WordCardProps {
   word: Word;
@@ -25,6 +37,12 @@ export function WordCard({
   const [imageLoading, setImageLoading] = useState(true);
   const [revealed, setRevealed] = useState(showWord);
   const { speak, isSpeaking } = useAudio();
+  const speakRef = useRef(speak);
+
+  // Keep the ref up to date
+  useEffect(() => {
+    speakRef.current = speak;
+  }, [speak]);
 
   useEffect(() => {
     if (showImage) {
@@ -38,9 +56,13 @@ export function WordCard({
 
   useEffect(() => {
     if (autoPlay && word.word) {
-      speak(word.word);
+      // Small delay to ensure component is fully mounted and avoid conflicts
+      const timer = setTimeout(() => {
+        speakRef.current(word.word);
+      }, 100);
+      return () => clearTimeout(timer);
     }
-  }, [autoPlay, word.word, speak]);
+  }, [autoPlay, word.word]);
 
   useEffect(() => {
     setRevealed(showWord);
@@ -65,7 +87,7 @@ export function WordCard({
               src={image.urls.regular}
               alt={image.alt_description || word.word}
               onError={(e) => {
-                (e.target as HTMLImageElement).src = `https://via.placeholder.com/400x400?text=${encodeURIComponent(word.word)}`;
+                (e.target as HTMLImageElement).src = `https://placehold.co/400x400?text=${encodeURIComponent(word.word)}`;
               }}
             />
           ) : (

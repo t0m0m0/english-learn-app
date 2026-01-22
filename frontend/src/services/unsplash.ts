@@ -1,4 +1,16 @@
-import { UnsplashImage } from '../types';
+interface UnsplashImage {
+  id: string;
+  urls: {
+    small: string;
+    regular: string;
+    thumb: string;
+  };
+  alt_description: string | null;
+  user?: {
+    name: string;
+    username: string;
+  };
+}
 
 const UNSPLASH_ACCESS_KEY = import.meta.env.VITE_UNSPLASH_ACCESS_KEY;
 const UNSPLASH_API = 'https://api.unsplash.com';

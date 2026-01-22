@@ -1,10 +1,16 @@
 import { useState, useEffect } from 'react';
-import { Word } from '../types';
 import { wordsApi, progressApi } from '../services/api';
 import { useUser } from '../context/UserContext';
 import WordCard from '../components/WordCard';
 import ProgressBar from '../components/ProgressBar';
 import './Learn.css';
+
+interface Word {
+  id: number;
+  word: string;
+  frequency: number;
+  partOfSpeech: string | null;
+}
 
 export function Learn() {
   const { user } = useUser();

@@ -1,6 +1,12 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { User } from '../types';
 import { usersApi } from '../services/api';
+
+interface User {
+  id: number;
+  email: string;
+  name: string;
+  createdAt: string;
+}
 
 interface UserContextType {
   user: User | null;

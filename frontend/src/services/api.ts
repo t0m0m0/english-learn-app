@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { Word, User, Progress, Statistics, DailyStats } from '../types';
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
@@ -9,6 +8,49 @@ const api = axios.create({
     'Content-Type': 'application/json',
   },
 });
+
+// Types
+interface Word {
+  id: number;
+  word: string;
+  frequency: number;
+  partOfSpeech: string | null;
+  createdAt?: string;
+}
+
+interface User {
+  id: number;
+  email: string;
+  name: string;
+  createdAt: string;
+}
+
+interface Progress {
+  id: number;
+  userId: number;
+  wordId: number;
+  level: number;
+  lastReviewed: string | null;
+  nextReview: string | null;
+  reviewCount: number;
+  correctCount: number;
+  word?: Word;
+}
+
+interface Statistics {
+  totalWords: number;
+  learnedWords: number;
+  masteredWords: number;
+  progressPercent: number;
+  masteryPercent: number;
+}
+
+interface DailyStats {
+  todayReviews: number;
+  totalLearned: number;
+  averageLevel: number;
+  levelDistribution: { level: number; _count: number }[];
+}
 
 // Words API
 export const wordsApi = {

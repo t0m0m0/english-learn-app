@@ -1,8 +1,14 @@
 import { useState, useEffect } from 'react';
-import { Word } from '../types';
 import { wordsApi } from '../services/api';
 import ListeningMode from '../components/ListeningMode';
 import './Listening.css';
+
+interface Word {
+  id: number;
+  word: string;
+  frequency: number;
+  partOfSpeech: string | null;
+}
 
 export function Listening() {
   const [words, setWords] = useState<Word[]>([]);

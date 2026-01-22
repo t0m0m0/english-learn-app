@@ -1,8 +1,14 @@
 import { useState, useEffect } from 'react';
-import { Word } from '../types';
 import { wordsApi } from '../services/api';
 import useAudio from '../hooks/useAudio';
 import './MixingGame.css';
+
+interface Word {
+  id: number;
+  word: string;
+  frequency: number;
+  partOfSpeech: string | null;
+}
 
 interface MixingGameProps {
   onComplete?: (score: number) => void;

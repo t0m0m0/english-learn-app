@@ -1,7 +1,13 @@
-import { useState, useEffect, useCallback } from 'react';
-import { Word } from '../types';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import useAudio from '../hooks/useAudio';
 import './ListeningMode.css';
+
+interface Word {
+  id: number;
+  word: string;
+  frequency: number;
+  partOfSpeech: string | null;
+}
 
 interface ListeningModeProps {
   words: Word[];
@@ -14,6 +20,7 @@ export function ListeningMode({ words, onComplete }: ListeningModeProps) {
   const [speed, setSpeed] = useState(1);
   const [delay, setDelay] = useState(2000);
   const { speak, stop, isSpeaking } = useAudio();
+  const skipNextSpeak = useRef(false);
 
   const currentWord = words[currentIndex];
 
@@ -26,25 +33,34 @@ export function ListeningMode({ words, onComplete }: ListeningModeProps) {
     }
   }, [currentIndex, words.length, onComplete]);
 
+  // currentIndexまたはisPlayingが変わったとき
   useEffect(() => {
-    if (isPlaying && currentWord) {
+    if (!isPlaying || !currentWord) return;
+
+    // handlePlayPauseで既に再生した場合はスキップ
+    if (skipNextSpeak.current) {
+      skipNextSpeak.current = false;
+    } else {
       speak(currentWord.word, speed);
-
-      const timeoutId = setTimeout(() => {
-        if (isPlaying) {
-          playNext();
-        }
-      }, delay + 1000 / speed);
-
-      return () => clearTimeout(timeoutId);
     }
-  }, [isPlaying, currentWord, speed, delay, speak, playNext]);
+
+    const timeoutId = setTimeout(() => {
+      playNext();
+    }, delay + 1000 / speed);
+
+    return () => clearTimeout(timeoutId);
+  }, [currentIndex, isPlaying]);
 
   const handlePlayPause = () => {
     if (isPlaying) {
       stop();
       setIsPlaying(false);
     } else {
+      // ユーザーインタラクション時に直接再生（ブラウザのautoplay制限対策）
+      if (currentWord) {
+        speak(currentWord.word, speed);
+        skipNextSpeak.current = true;
+      }
       setIsPlaying(true);
     }
   };

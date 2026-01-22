@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 interface UseAudioOptions {
   rate?: number;
@@ -24,15 +24,21 @@ export function useAudio(options: UseAudioOptions = {}) {
     return englishVoices;
   }, []);
 
-  // Load voices on mount
-  if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+  // Load voices on mount - must be in useEffect to avoid state updates during render
+  useEffect(() => {
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
+      return;
+    }
+
     // Chrome needs this event
     speechSynthesis.onvoiceschanged = loadVoices;
     // Firefox and Safari might have voices ready immediately
-    if (availableVoices.length === 0) {
-      loadVoices();
-    }
-  }
+    loadVoices();
+
+    return () => {
+      speechSynthesis.onvoiceschanged = null;
+    };
+  }, [loadVoices]);
 
   // Speak a word or phrase
   const speak = useCallback(
@@ -42,27 +48,23 @@ export function useAudio(options: UseAudioOptions = {}) {
         return;
       }
 
-      // Cancel any ongoing speech
-      speechSynthesis.cancel();
-
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.rate = customRate ?? rate;
       utterance.pitch = pitch;
       utterance.volume = volume;
 
       // Set voice
+      const voices = speechSynthesis.getVoices();
       if (voice) {
         utterance.voice = voice;
-      } else {
+      } else if (voices.length > 0) {
         // Try to use a native English voice
-        const voices = speechSynthesis.getVoices();
-        const englishVoice = voices.find(
-          (v) => v.lang === 'en-US' && v.name.includes('Samantha')
-        ) || voices.find(
-          (v) => v.lang === 'en-US'
-        ) || voices.find(
-          (v) => v.lang.startsWith('en-')
-        );
+        const englishVoice =
+          voices.find(
+            (v) => v.lang === 'en-US' && v.name.includes('Samantha')
+          ) ||
+          voices.find((v) => v.lang === 'en-US') ||
+          voices.find((v) => v.lang.startsWith('en-'));
         if (englishVoice) {
           utterance.voice = englishVoice;
         }
@@ -70,10 +72,21 @@ export function useAudio(options: UseAudioOptions = {}) {
 
       utterance.onstart = () => setIsSpeaking(true);
       utterance.onend = () => setIsSpeaking(false);
-      utterance.onerror = () => setIsSpeaking(false);
+      utterance.onerror = (e) => {
+        if (e.error !== 'canceled') {
+          console.error('Speech error:', e.error);
+        }
+        setIsSpeaking(false);
+      };
 
+      // Cancel any ongoing speech
+      speechSynthesis.cancel();
       utteranceRef.current = utterance;
-      speechSynthesis.speak(utterance);
+
+      // Chrome requires a delay after cancel() before speak() will work
+      setTimeout(() => {
+        speechSynthesis.speak(utterance);
+      }, 100);
     },
     [rate, pitch, volume, voice]
   );
