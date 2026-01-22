@@ -35,3 +35,5 @@ prisma/migrations/
 .parcel-cache/
 
 .claude
+
+package-lock.json
