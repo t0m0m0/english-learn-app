@@ -19,7 +19,7 @@ export function ListeningMode({ words, onComplete }: ListeningModeProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [speed, setSpeed] = useState(1);
   const [delay, setDelay] = useState(2000);
-  const { speak, stop, isSpeaking } = useAudio();
+  const { speak, stop, isSpeaking, isReady, error } = useAudio({ debug: true });
   const skipNextSpeak = useRef(false);
 
   const currentWord = words[currentIndex];
@@ -104,6 +104,18 @@ export function ListeningMode({ words, onComplete }: ListeningModeProps) {
           Immerse yourself in the language. Listen to the rhythm and patterns.
         </p>
       </div>
+
+      {/* Audio Status/Error */}
+      {error && (
+        <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-card text-red-700 dark:text-red-300 text-sm">
+          {error}
+        </div>
+      )}
+      {!isReady && !error && (
+        <div className="mb-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-card text-yellow-700 dark:text-yellow-300 text-sm">
+          Loading audio voices...
+        </div>
+      )}
 
       {/* Progress Bar */}
       <div className="relative h-2 bg-gray-200 dark:bg-gray-700 rounded-full mb-2 overflow-hidden">

@@ -5,48 +5,116 @@ interface UseAudioOptions {
   pitch?: number;
   volume?: number;
   voice?: SpeechSynthesisVoice | null;
+  debug?: boolean;
 }
 
-export function useAudio(options: UseAudioOptions = {}) {
-  const { rate = 1, pitch = 1, volume = 1, voice = null } = options;
+interface UseAudioReturn {
+  speak: (text: string, customRate?: number) => void;
+  stop: () => void;
+  pause: () => void;
+  resume: () => void;
+  speakSequence: (words: string[], delayMs?: number, customRate?: number) => Promise<void>;
+  isSpeaking: boolean;
+  availableVoices: SpeechSynthesisVoice[];
+  loadVoices: () => SpeechSynthesisVoice[];
+  isReady: boolean;
+  error: string | null;
+}
+
+export function useAudio(options: UseAudioOptions = {}): UseAudioReturn {
+  const { rate = 1, pitch = 1, volume = 1, voice = null, debug = false } = options;
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [isReady, setIsReady] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [availableVoices, setAvailableVoices] = useState<SpeechSynthesisVoice[]>([]);
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
+  const voicesLoadedRef = useRef(false);
+
+  const log = useCallback(
+    (...args: unknown[]) => {
+      if (debug) {
+        console.log('[useAudio]', ...args);
+      }
+    },
+    [debug]
+  );
 
   // Get available voices
   const loadVoices = useCallback(() => {
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
+      log('speechSynthesis not available');
+      return [];
+    }
+
     const voices = speechSynthesis.getVoices();
+    log('Loaded voices:', voices.length);
+
     // Filter for English voices
     const englishVoices = voices.filter(
       (v) => v.lang.startsWith('en-') || v.lang === 'en'
     );
+
+    log('English voices:', englishVoices.map(v => `${v.name} (${v.lang})`));
+
     setAvailableVoices(englishVoices);
+
+    if (voices.length > 0 && !voicesLoadedRef.current) {
+      voicesLoadedRef.current = true;
+      setIsReady(true);
+      log('Voices ready');
+    }
+
     return englishVoices;
-  }, []);
+  }, [log]);
 
   // Load voices on mount - must be in useEffect to avoid state updates during render
   useEffect(() => {
     if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
+      setError('Speech synthesis not supported in this browser');
       return;
     }
 
-    // Chrome needs this event
-    speechSynthesis.onvoiceschanged = loadVoices;
+    // Chrome needs this event - voices are loaded asynchronously
+    speechSynthesis.onvoiceschanged = () => {
+      log('onvoiceschanged event fired');
+      loadVoices();
+    };
+
     // Firefox and Safari might have voices ready immediately
-    loadVoices();
+    const voices = loadVoices();
+
+    // If no voices loaded yet, try again after a delay (for some browsers)
+    if (voices.length === 0) {
+      log('No voices found initially, will wait for onvoiceschanged');
+      const timeoutId = setTimeout(() => {
+        const retryVoices = loadVoices();
+        if (retryVoices.length === 0) {
+          log('Still no voices after timeout');
+        }
+      }, 500);
+
+      return () => {
+        clearTimeout(timeoutId);
+        speechSynthesis.onvoiceschanged = null;
+      };
+    }
 
     return () => {
       speechSynthesis.onvoiceschanged = null;
     };
-  }, [loadVoices]);
+  }, [loadVoices, log]);
 
   // Speak a word or phrase
   const speak = useCallback(
     (text: string, customRate?: number) => {
       if (!('speechSynthesis' in window)) {
         console.warn('Speech synthesis not supported');
+        setError('Speech synthesis not supported');
         return;
       }
+
+      log('Attempting to speak:', text);
+      setError(null);
 
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.rate = customRate ?? rate;
@@ -55,8 +123,11 @@ export function useAudio(options: UseAudioOptions = {}) {
 
       // Set voice
       const voices = speechSynthesis.getVoices();
+      log('Available voices at speak time:', voices.length);
+
       if (voice) {
         utterance.voice = voice;
+        log('Using provided voice:', voice.name);
       } else if (voices.length > 0) {
         // Try to use a native English voice
         const englishVoice =
@@ -65,16 +136,34 @@ export function useAudio(options: UseAudioOptions = {}) {
           ) ||
           voices.find((v) => v.lang === 'en-US') ||
           voices.find((v) => v.lang.startsWith('en-'));
+
         if (englishVoice) {
           utterance.voice = englishVoice;
+          log('Selected voice:', englishVoice.name, englishVoice.lang);
+        } else {
+          log('No English voice found, using default');
         }
+      } else {
+        log('Warning: No voices available');
       }
 
-      utterance.onstart = () => setIsSpeaking(true);
-      utterance.onend = () => setIsSpeaking(false);
+      utterance.onstart = () => {
+        log('Speech started');
+        setIsSpeaking(true);
+      };
+
+      utterance.onend = () => {
+        log('Speech ended');
+        setIsSpeaking(false);
+      };
+
       utterance.onerror = (e) => {
         if (e.error !== 'canceled') {
           console.error('Speech error:', e.error);
+          log('Speech error:', e.error);
+          setError(`Speech error: ${e.error}`);
+        } else {
+          log('Speech canceled (not an error)');
         }
         setIsSpeaking(false);
       };
@@ -84,32 +173,49 @@ export function useAudio(options: UseAudioOptions = {}) {
       utteranceRef.current = utterance;
 
       // Chrome requires a delay after cancel() before speak() will work
+      // Increased delay for more reliability
       setTimeout(() => {
+        log('Calling speechSynthesis.speak()');
         speechSynthesis.speak(utterance);
-      }, 100);
+
+        // Chrome has a bug where it sometimes doesn't fire events
+        // Check if speech actually started after a short delay
+        setTimeout(() => {
+          if (speechSynthesis.speaking) {
+            log('Speech confirmed speaking');
+          } else if (!speechSynthesis.pending) {
+            log('Warning: Speech may have failed silently');
+          }
+        }, 200);
+      }, 150);
     },
-    [rate, pitch, volume, voice]
+    [rate, pitch, volume, voice, log]
   );
 
   // Stop speaking
   const stop = useCallback(() => {
+    log('Stopping speech');
     speechSynthesis.cancel();
     setIsSpeaking(false);
-  }, []);
+  }, [log]);
 
   // Pause speaking
   const pause = useCallback(() => {
+    log('Pausing speech');
     speechSynthesis.pause();
-  }, []);
+  }, [log]);
 
   // Resume speaking
   const resume = useCallback(() => {
+    log('Resuming speech');
     speechSynthesis.resume();
-  }, []);
+  }, [log]);
 
   // Speak multiple words with a delay between them
   const speakSequence = useCallback(
     async (words: string[], delayMs = 2000, customRate?: number) => {
+      log('Speaking sequence:', words.length, 'words');
+
       for (const word of words) {
         speak(word, customRate);
 
@@ -123,8 +229,10 @@ export function useAudio(options: UseAudioOptions = {}) {
           }, 100);
         });
       }
+
+      log('Sequence complete');
     },
-    [speak]
+    [speak, log]
   );
 
   return {
@@ -136,6 +244,8 @@ export function useAudio(options: UseAudioOptions = {}) {
     isSpeaking,
     availableVoices,
     loadVoices,
+    isReady,
+    error,
   };
 }
 

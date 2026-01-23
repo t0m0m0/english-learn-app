@@ -31,7 +31,7 @@ export function MixingGame({ onComplete }: MixingGameProps) {
   const [round, setRound] = useState(1);
   const [score, setScore] = useState(0);
   const [showExample, setShowExample] = useState(false);
-  const { speak, isSpeaking } = useAudio();
+  const { speak, isSpeaking, isReady, error } = useAudio({ debug: true });
 
   const maxRounds = 10;
 
@@ -176,6 +176,18 @@ export function MixingGame({ onComplete }: MixingGameProps) {
           </span>
         </div>
       </div>
+
+      {/* Audio Status/Error */}
+      {error && (
+        <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-card text-red-700 dark:text-red-300 text-sm">
+          {error}
+        </div>
+      )}
+      {!isReady && !error && (
+        <div className="mb-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-card text-yellow-700 dark:text-yellow-300 text-sm">
+          Loading audio voices...
+        </div>
+      )}
 
       {/* Word Blocks */}
       <div className="flex gap-3 mb-6">
