@@ -3,11 +3,20 @@ import { PrismaClient } from '@prisma/client';
 
 const router = Router();
 
+// Helper function to parse and validate positive integers
+function parsePositiveInt(value: string | undefined, defaultValue: number, max?: number): number {
+  if (!value) return defaultValue;
+  const parsed = parseInt(value);
+  if (isNaN(parsed) || parsed < 1) return defaultValue;
+  if (max && parsed > max) return max;
+  return parsed;
+}
+
 // Get all words with pagination
 router.get('/', async (req: Request, res: Response) => {
   const prisma: PrismaClient = req.app.locals.prisma;
-  const page = parseInt(req.query.page as string) || 1;
-  const limit = parseInt(req.query.limit as string) || 20;
+  const page = parsePositiveInt(req.query.page as string, 1);
+  const limit = parsePositiveInt(req.query.limit as string, 20, 100);
   const skip = (page - 1) * limit;
 
   try {
@@ -43,6 +52,13 @@ router.get('/range/:start/:end', async (req: Request, res: Response) => {
   const start = parseInt(req.params.start);
   const end = parseInt(req.params.end);
 
+  if (isNaN(start) || isNaN(end) || start < 1 || end < 1) {
+    return res.status(400).json({ error: 'Invalid range parameters. Must be positive integers.' });
+  }
+  if (start > end) {
+    return res.status(400).json({ error: 'Start must be less than or equal to end.' });
+  }
+
   try {
     const words = await prisma.word.findMany({
       where: {
@@ -64,8 +80,8 @@ router.get('/range/:start/:end', async (req: Request, res: Response) => {
 // Get random words for practice
 router.get('/random', async (req: Request, res: Response) => {
   const prisma: PrismaClient = req.app.locals.prisma;
-  const count = parseInt(req.query.count as string) || 10;
-  const maxFrequency = parseInt(req.query.maxFrequency as string) || 3000;
+  const count = parsePositiveInt(req.query.count as string, 10, 100);
+  const maxFrequency = parsePositiveInt(req.query.maxFrequency as string, 3000);
 
   try {
     // Get random words using raw query for better randomness
@@ -87,7 +103,7 @@ router.get('/random', async (req: Request, res: Response) => {
 router.get('/pos/:partOfSpeech', async (req: Request, res: Response) => {
   const prisma: PrismaClient = req.app.locals.prisma;
   const { partOfSpeech } = req.params;
-  const count = parseInt(req.query.count as string) || 10;
+  const count = parsePositiveInt(req.query.count as string, 10, 100);
 
   try {
     const words = await prisma.$queryRaw`
@@ -108,6 +124,10 @@ router.get('/pos/:partOfSpeech', async (req: Request, res: Response) => {
 router.get('/:id', async (req: Request, res: Response) => {
   const prisma: PrismaClient = req.app.locals.prisma;
   const id = parseInt(req.params.id);
+
+  if (isNaN(id) || id < 1) {
+    return res.status(400).json({ error: 'Invalid word ID. Must be a positive integer.' });
+  }
 
   try {
     const word = await prisma.word.findUnique({
