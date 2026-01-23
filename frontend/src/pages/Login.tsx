@@ -63,6 +63,7 @@ export function Login() {
         {/* Mode Tabs */}
         <div className="flex bg-gray-100 dark:bg-gray-800 rounded-button p-1 mb-6">
           <button
+            type="button"
             className={`flex-1 py-2 px-4 rounded-button text-sm font-medium transition-colors ${
               mode === 'login'
                 ? 'bg-white dark:bg-gray-700 text-text-primary shadow-sm'
@@ -73,6 +74,7 @@ export function Login() {
             Login
           </button>
           <button
+            type="button"
             className={`flex-1 py-2 px-4 rounded-button text-sm font-medium transition-colors ${
               mode === 'register'
                 ? 'bg-white dark:bg-gray-700 text-text-primary shadow-sm'

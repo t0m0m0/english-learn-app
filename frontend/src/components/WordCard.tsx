@@ -102,6 +102,7 @@ export function WordCard({
           <h2 className="text-3xl font-semibold text-text-primary mb-2">{word.word}</h2>
         ) : (
           <button
+            type="button"
             className="px-8 py-4 bg-gray-100 dark:bg-gray-700 text-text-primary border-2 border-dashed border-border rounded-button text-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
             onClick={handleReveal}
           >

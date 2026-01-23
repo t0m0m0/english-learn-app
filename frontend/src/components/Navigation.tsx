@@ -44,6 +44,7 @@ export function Navigation() {
           <>
             <span className="text-sm text-text-primary hidden sm:inline">{user.name}</span>
             <button
+              type="button"
               className="px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-button text-sm text-text-secondary hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
               onClick={logout}
             >

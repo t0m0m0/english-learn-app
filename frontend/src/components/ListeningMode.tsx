@@ -25,13 +25,16 @@ export function ListeningMode({ words, onComplete }: ListeningModeProps) {
   const currentWord = words[currentIndex];
 
   const playNext = useCallback(() => {
-    if (currentIndex < words.length - 1) {
-      setCurrentIndex((prev) => prev + 1);
-    } else {
-      setIsPlaying(false);
-      onComplete?.();
-    }
-  }, [currentIndex, words.length, onComplete]);
+    setCurrentIndex((prev) => {
+      if (prev < words.length - 1) {
+        return prev + 1;
+      } else {
+        setIsPlaying(false);
+        onComplete?.();
+        return prev;
+      }
+    });
+  }, [words.length, onComplete]);
 
   // currentIndexまたはisPlayingが変わったとき
   useEffect(() => {
@@ -49,7 +52,7 @@ export function ListeningMode({ words, onComplete }: ListeningModeProps) {
     }, delay + 1000 / speed);
 
     return () => clearTimeout(timeoutId);
-  }, [currentIndex, isPlaying]);
+  }, [currentIndex, isPlaying, currentWord, speak, speed, delay, playNext]);
 
   const handlePlayPause = () => {
     if (isPlaying) {
@@ -165,6 +168,7 @@ export function ListeningMode({ words, onComplete }: ListeningModeProps) {
             {[0.5, 0.75, 1, 1.25, 1.5].map((s) => (
               <button
                 key={s}
+                type="button"
                 className={`flex-1 py-2 px-3 rounded-button text-sm transition-colors ${
                   speed === s
                     ? 'bg-primary text-white'
@@ -184,6 +188,7 @@ export function ListeningMode({ words, onComplete }: ListeningModeProps) {
             {[1000, 2000, 3000, 5000].map((d) => (
               <button
                 key={d}
+                type="button"
                 className={`flex-1 py-2 px-3 rounded-button text-sm transition-colors ${
                   delay === d
                     ? 'bg-primary text-white'

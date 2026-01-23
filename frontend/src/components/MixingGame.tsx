@@ -150,6 +150,7 @@ export function MixingGame({ onComplete }: MixingGameProps) {
     colorClass: string;
   }) => (
     <button
+      type="button"
       className={`flex-1 p-4 rounded-card ${colorClass} text-white cursor-pointer transition-all hover:-translate-y-1 hover:shadow-elevated`}
       onClick={() => handleSpeakWord(word)}
     >

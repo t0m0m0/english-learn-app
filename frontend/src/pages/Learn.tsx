@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { wordsApi, progressApi } from '../services/api';
 import { useUser } from '../context/UserContext';
 import WordCard from '../components/WordCard';
@@ -22,7 +22,7 @@ export function Learn() {
 
   const currentWord = words[currentIndex];
 
-  const fetchWords = async () => {
+  const fetchWords = useCallback(async () => {
     setLoading(true);
     try {
       if (user) {
@@ -45,11 +45,11 @@ export function Learn() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user, maxFrequency]);
 
   useEffect(() => {
     fetchWords();
-  }, [user, maxFrequency]);
+  }, [fetchWords]);
 
   const handleCorrect = async () => {
     if (user && currentWord) {
@@ -142,6 +142,7 @@ export function Learn() {
         {[500, 1000, 2000, 3000].map((freq) => (
           <button
             key={freq}
+            type="button"
             className={`px-4 py-2 rounded-button text-sm font-medium transition-colors ${
               maxFrequency === freq
                 ? 'bg-primary text-white'
