@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { searchImages } from '../services/unsplash';
 import useAudio from '../hooks/useAudio';
-import './WordCard.css';
+import { Button, Card } from './ui';
 
 interface Word {
   id: number;
@@ -77,64 +77,72 @@ export function WordCard({
   };
 
   return (
-    <div className="word-card">
+    <Card padding="none" className="max-w-md mx-auto overflow-hidden">
       {showImage && (
-        <div className="word-card-image">
+        <div className="w-full h-72 bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
           {imageLoading ? (
-            <div className="image-loading">Loading...</div>
+            <div className="text-text-muted text-sm animate-pulse">Loading...</div>
           ) : image ? (
             <img
               src={image.urls.regular}
               alt={image.alt_description || word.word}
+              className="w-full h-full object-cover"
               onError={(e) => {
                 (e.target as HTMLImageElement).src = `https://placehold.co/400x400?text=${encodeURIComponent(word.word)}`;
               }}
             />
           ) : (
-            <div className="image-placeholder">No image available</div>
+            <div className="text-text-muted text-sm">No image available</div>
           )}
         </div>
       )}
 
-      <div className="word-card-content">
+      <div className="p-6 text-center">
         {revealed ? (
-          <h2 className="word-text">{word.word}</h2>
+          <h2 className="text-3xl font-semibold text-text-primary mb-2">{word.word}</h2>
         ) : (
-          <button className="reveal-button" onClick={handleReveal}>
+          <button
+            type="button"
+            className="px-8 py-4 bg-gray-100 dark:bg-gray-700 text-text-primary border-2 border-dashed border-border rounded-button text-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+            onClick={handleReveal}
+          >
             Reveal Word
           </button>
         )}
 
         {word.partOfSpeech && (
-          <span className="part-of-speech">{word.partOfSpeech}</span>
+          <span className="inline-block bg-blue-50 dark:bg-blue-900/30 text-primary px-3 py-1 rounded-full text-xs uppercase tracking-wide mb-4">
+            {word.partOfSpeech}
+          </span>
         )}
 
-        <div className="word-card-actions">
-          <button
-            className="speak-button"
+        <div className="flex flex-col gap-3 mt-4">
+          <Button
+            variant="primary"
             onClick={handleSpeak}
             disabled={isSpeaking}
+            fullWidth
           >
             {isSpeaking ? 'Speaking...' : '🔊 Listen'}
-          </button>
+          </Button>
 
           {(onCorrect || onIncorrect) && revealed && (
-            <div className="answer-buttons">
+            <div className="flex gap-3">
               {onIncorrect && (
-                <button className="incorrect-button" onClick={onIncorrect}>
+                <Button variant="error" onClick={onIncorrect} className="flex-1">
                   ✗ Don't Know
-                </button>
+                </Button>
               )}
               {onCorrect && (
-                <button className="correct-button" onClick={onCorrect}>
+                <Button variant="success" onClick={onCorrect} className="flex-1">
                   ✓ Know It
-                </button>
+                </Button>
               )}
             </div>
           )}
         </div>
       </div>
-    </div>
+    </Card>
   );
 }
 

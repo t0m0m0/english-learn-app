@@ -1,14 +1,15 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useUser } from '../context/UserContext';
 import { progressApi } from '../services/api';
 import ProgressBar from '../components/ProgressBar';
-import './Progress.css';
+import { Container, Card, Button } from '../components/ui';
 
 interface Statistics {
   totalWords: number;
   learnedWords: number;
   masteredWords: number;
-  averageLevel: number;
+  averageLevel?: number;
 }
 
 interface LevelDistributionItem {
@@ -55,23 +56,33 @@ export function Progress() {
 
   if (!user) {
     return (
-      <div className="progress-page">
-        <div className="login-prompt">
-          <h2>Track Your Progress</h2>
-          <p>Login to see your learning statistics and track your journey.</p>
-          <a href="/login" className="login-button">
-            Login to Continue
-          </a>
-        </div>
-      </div>
+      <Container size="md" className="py-10">
+        <Card className="text-center py-12">
+          <h2 className="text-2xl font-bold text-text-primary mb-2">
+            Track Your Progress
+          </h2>
+          <p className="text-text-secondary mb-6">
+            Login to see your learning statistics and track your journey.
+          </p>
+          <Link to="/login">
+            <Button variant="primary" size="lg">
+              Login to Continue
+            </Button>
+          </Link>
+        </Card>
+      </Container>
     );
   }
 
   if (loading) {
     return (
-      <div className="progress-page">
-        <div className="loading">Loading your progress...</div>
-      </div>
+      <Container size="lg" className="py-10">
+        <Card className="text-center py-12">
+          <div className="text-text-muted animate-pulse">
+            Loading your progress...
+          </div>
+        </Card>
+      </Container>
     );
   }
 
@@ -87,144 +98,184 @@ export function Progress() {
     return labels[level] || 'Unknown';
   };
 
+  const getLevelColor = (level: number): string => {
+    const colors: { [key: number]: string } = {
+      0: 'bg-gray-400',
+      1: 'bg-red-400',
+      2: 'bg-orange-400',
+      3: 'bg-yellow-400',
+      4: 'bg-green-400',
+      5: 'bg-emerald-500',
+    };
+    return colors[level] || 'bg-gray-400';
+  };
+
   return (
-    <div className="progress-page">
-      <header className="progress-header">
-        <h1>Your Progress</h1>
-        <p>Welcome back, {user.name}!</p>
+    <Container size="lg" className="py-10">
+      {/* Header */}
+      <header className="text-center mb-10">
+        <h1 className="text-3xl font-bold text-text-primary mb-2">
+          Your Progress
+        </h1>
+        <p className="text-text-secondary">Welcome back, {user.name}!</p>
       </header>
 
-      <section className="overview-section">
-        <div className="overview-cards">
-          <div className="overview-card">
-            <span className="card-value">{dailyStats?.todayReviews || 0}</span>
-            <span className="card-label">Words Today</span>
-          </div>
-          <div className="overview-card">
-            <span className="card-value">{statistics?.learnedWords || 0}</span>
-            <span className="card-label">Words Learned</span>
-          </div>
-          <div className="overview-card">
-            <span className="card-value">{statistics?.masteredWords || 0}</span>
-            <span className="card-label">Words Mastered</span>
-          </div>
-          <div className="overview-card">
-            <span className="card-value">
-              {dailyStats?.averageLevel?.toFixed(1) || '0.0'}
+      {/* Overview Cards */}
+      <section className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+        {[
+          { value: dailyStats?.todayReviews || 0, label: 'Words Today' },
+          { value: statistics?.learnedWords || 0, label: 'Words Learned' },
+          { value: statistics?.masteredWords || 0, label: 'Words Mastered' },
+          {
+            value: dailyStats?.averageLevel?.toFixed(1) || '0.0',
+            label: 'Average Level',
+          },
+        ].map((stat) => (
+          <Card key={stat.label} className="text-center">
+            <span className="block text-3xl md:text-4xl font-bold text-primary mb-1">
+              {stat.value}
             </span>
-            <span className="card-label">Average Level</span>
-          </div>
-        </div>
+            <span className="text-sm text-text-muted">{stat.label}</span>
+          </Card>
+        ))}
       </section>
 
-      <section className="progress-section">
-        <h2>Overall Progress</h2>
-
-        <div className="milestone-progress">
-          <h3>Milestones</h3>
-
-          <div className="milestone">
-            <div className="milestone-header">
-              <span className="milestone-title">First 1,000 Words</span>
-              <span className="milestone-description">
-                Covers 85% of daily conversation
-              </span>
-            </div>
-            <ProgressBar
-              current={Math.min(statistics?.learnedWords || 0, 1000)}
-              total={1000}
-              color="blue"
-            />
-          </div>
-
-          <div className="milestone">
-            <div className="milestone-header">
-              <span className="milestone-title">Full 3,000 Words</span>
-              <span className="milestone-description">
-                Covers 98% of daily conversation
-              </span>
-            </div>
-            <ProgressBar
-              current={statistics?.learnedWords || 0}
-              total={statistics?.totalWords || 3000}
-              color="purple"
-            />
-          </div>
-
-          <div className="milestone">
-            <div className="milestone-header">
-              <span className="milestone-title">Mastery</span>
-              <span className="milestone-description">
-                Words at level 4 or higher
-              </span>
-            </div>
-            <ProgressBar
-              current={statistics?.masteredWords || 0}
-              total={statistics?.totalWords || 3000}
-              color="green"
-            />
-          </div>
-        </div>
-      </section>
-
-      <section className="distribution-section">
-        <h2>Learning Distribution</h2>
-        <div className="level-bars">
-          {dailyStats?.levelDistribution?.map((item) => {
-            const maxCount = Math.max(
-              ...dailyStats.levelDistribution.map((d) => d._count)
-            );
-            const width = (item._count / maxCount) * 100;
-
-            return (
-              <div key={item.level} className="level-bar-item">
-                <span className="level-label">{getLevelLabel(item.level)}</span>
-                <div className="level-bar">
-                  <div
-                    className={`level-bar-fill level-${item.level}`}
-                    style={{ width: `${width}%` }}
-                  />
-                </div>
-                <span className="level-count">{item._count}</span>
+      {/* Milestones */}
+      <section className="mb-10">
+        <h2 className="text-xl font-bold text-text-primary mb-6">Milestones</h2>
+        <Card>
+          <div className="space-y-6">
+            <div>
+              <div className="flex justify-between mb-2">
+                <span className="font-medium text-text-primary">
+                  First 1,000 Words
+                </span>
+                <span className="text-sm text-text-muted">
+                  Covers 85% of daily conversation
+                </span>
               </div>
-            );
-          })}
+              <ProgressBar
+                current={Math.min(statistics?.learnedWords || 0, 1000)}
+                total={1000}
+                color="blue"
+              />
+            </div>
 
-          {(!dailyStats?.levelDistribution ||
-            dailyStats.levelDistribution.length === 0) && (
-            <p className="empty-distribution">
+            <div>
+              <div className="flex justify-between mb-2">
+                <span className="font-medium text-text-primary">
+                  Full 3,000 Words
+                </span>
+                <span className="text-sm text-text-muted">
+                  Covers 98% of daily conversation
+                </span>
+              </div>
+              <ProgressBar
+                current={statistics?.learnedWords || 0}
+                total={statistics?.totalWords || 3000}
+                color="purple"
+              />
+            </div>
+
+            <div>
+              <div className="flex justify-between mb-2">
+                <span className="font-medium text-text-primary">Mastery</span>
+                <span className="text-sm text-text-muted">
+                  Words at level 4 or higher
+                </span>
+              </div>
+              <ProgressBar
+                current={statistics?.masteredWords || 0}
+                total={statistics?.totalWords || 3000}
+                color="green"
+              />
+            </div>
+          </div>
+        </Card>
+      </section>
+
+      {/* Level Distribution */}
+      <section className="mb-10">
+        <h2 className="text-xl font-bold text-text-primary mb-6">
+          Learning Distribution
+        </h2>
+        <Card>
+          {dailyStats?.levelDistribution &&
+          dailyStats.levelDistribution.length > 0 ? (
+            <div className="space-y-3">
+              {dailyStats.levelDistribution.map((item) => {
+                const maxCount = Math.max(
+                  ...dailyStats.levelDistribution.map((d) => d._count)
+                );
+                const width = (item._count / maxCount) * 100;
+
+                return (
+                  <div key={item.level} className="flex items-center gap-3">
+                    <span className="w-20 text-sm text-text-secondary">
+                      {getLevelLabel(item.level)}
+                    </span>
+                    <div className="flex-1 h-6 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
+                      <div
+                        className={`h-full ${getLevelColor(item.level)} transition-all duration-500`}
+                        style={{ width: `${width}%` }}
+                      />
+                    </div>
+                    <span className="w-12 text-right text-sm font-medium text-text-primary">
+                      {item._count}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <p className="text-text-muted text-center py-4">
               Start learning to see your distribution!
             </p>
           )}
-        </div>
+        </Card>
       </section>
 
-      <section className="tips-section">
-        <h2>Tips for Success</h2>
-        <div className="tips-grid">
-          <div className="tip-card">
-            <span className="tip-icon">🎯</span>
-            <h3>Focus on Core Words</h3>
-            <p>Master the top 1,000 words first. They cover 85% of conversations.</p>
-          </div>
-          <div className="tip-card">
-            <span className="tip-icon">🔁</span>
-            <h3>Review Regularly</h3>
-            <p>Spaced repetition helps move words to long-term memory.</p>
-          </div>
-          <div className="tip-card">
-            <span className="tip-icon">🖼️</span>
-            <h3>Think in Images</h3>
-            <p>Connect words directly to images, not translations.</p>
-          </div>
-          <div className="tip-card">
-            <span className="tip-icon">🎧</span>
-            <h3>Listen Often</h3>
-            <p>Use Brain Soaking mode to immerse yourself in English sounds.</p>
-          </div>
+      {/* Tips */}
+      <section>
+        <h2 className="text-xl font-bold text-text-primary mb-6">
+          Tips for Success
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {[
+            {
+              icon: '🎯',
+              title: 'Focus on Core Words',
+              desc: 'Master the top 1,000 words first. They cover 85% of conversations.',
+            },
+            {
+              icon: '🔁',
+              title: 'Review Regularly',
+              desc: 'Spaced repetition helps move words to long-term memory.',
+            },
+            {
+              icon: '🖼️',
+              title: 'Think in Images',
+              desc: 'Connect words directly to images, not translations.',
+            },
+            {
+              icon: '🎧',
+              title: 'Listen Often',
+              desc: 'Use Brain Soaking mode to immerse yourself in English sounds.',
+            },
+          ].map((tip) => (
+            <Card key={tip.title} className="text-center">
+              <span className="block text-3xl mb-3">{tip.icon}</span>
+              <h3 className="font-semibold text-text-primary mb-2">
+                {tip.title}
+              </h3>
+              <p className="text-sm text-text-secondary leading-relaxed">
+                {tip.desc}
+              </p>
+            </Card>
+          ))}
         </div>
       </section>
-    </div>
+    </Container>
   );
 }
 

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import useAudio from '../hooks/useAudio';
-import './ListeningMode.css';
+import { Button, Card } from './ui';
 
 interface Word {
   id: number;
@@ -25,13 +25,16 @@ export function ListeningMode({ words, onComplete }: ListeningModeProps) {
   const currentWord = words[currentIndex];
 
   const playNext = useCallback(() => {
-    if (currentIndex < words.length - 1) {
-      setCurrentIndex((prev) => prev + 1);
-    } else {
-      setIsPlaying(false);
-      onComplete?.();
-    }
-  }, [currentIndex, words.length, onComplete]);
+    setCurrentIndex((prev) => {
+      if (prev < words.length - 1) {
+        return prev + 1;
+      } else {
+        setIsPlaying(false);
+        onComplete?.();
+        return prev;
+      }
+    });
+  }, [words.length, onComplete]);
 
   // currentIndexまたはisPlayingが変わったとき
   useEffect(() => {
@@ -49,7 +52,7 @@ export function ListeningMode({ words, onComplete }: ListeningModeProps) {
     }, delay + 1000 / speed);
 
     return () => clearTimeout(timeoutId);
-  }, [currentIndex, isPlaying]);
+  }, [currentIndex, isPlaying, currentWord, speak, speed, delay, playNext]);
 
   const handlePlayPause = () => {
     if (isPlaying) {
@@ -94,62 +97,83 @@ export function ListeningMode({ words, onComplete }: ListeningModeProps) {
   const progress = ((currentIndex + 1) / words.length) * 100;
 
   return (
-    <div className="listening-mode">
-      <div className="listening-header">
-        <h2>Brain Soaking Mode</h2>
-        <p className="listening-description">
+    <Card className="max-w-2xl mx-auto">
+      <div className="text-center mb-6">
+        <h2 className="text-2xl font-bold text-text-primary mb-2">Brain Soaking Mode</h2>
+        <p className="text-text-secondary">
           Immerse yourself in the language. Listen to the rhythm and patterns.
         </p>
       </div>
 
-      <div className="progress-bar">
-        <div className="progress-fill" style={{ width: `${progress}%` }} />
-        <span className="progress-text">
-          {currentIndex + 1} / {words.length}
-        </span>
+      {/* Progress Bar */}
+      <div className="relative h-2 bg-gray-200 dark:bg-gray-700 rounded-full mb-2 overflow-hidden">
+        <div
+          className="h-full bg-gradient-to-r from-primary to-purple-500 transition-all duration-300"
+          style={{ width: `${progress}%` }}
+        />
       </div>
+      <p className="text-center text-sm text-text-muted mb-8">
+        {currentIndex + 1} / {words.length}
+      </p>
 
-      <div className="current-word-display">
-        <span className="word-number">#{currentWord?.frequency || currentIndex + 1}</span>
-        <h1 className={`listening-word ${isSpeaking ? 'speaking' : ''}`}>
+      {/* Current Word Display */}
+      <div className="text-center py-8 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-card mb-8">
+        <span className="text-xs text-text-muted uppercase tracking-wider">
+          #{currentWord?.frequency || currentIndex + 1}
+        </span>
+        <h1
+          className={`text-5xl font-bold mt-2 mb-3 transition-all duration-200 ${
+            isSpeaking ? 'text-primary scale-105' : 'text-text-primary'
+          }`}
+        >
           {currentWord?.word || '...'}
         </h1>
         {currentWord?.partOfSpeech && (
-          <span className="word-pos">{currentWord.partOfSpeech}</span>
+          <span className="inline-block bg-blue-50 dark:bg-blue-900/30 text-primary px-3 py-1 rounded-full text-xs uppercase tracking-wide">
+            {currentWord.partOfSpeech}
+          </span>
         )}
       </div>
 
-      <div className="listening-controls">
-        <button
-          className="control-button"
+      {/* Controls */}
+      <div className="flex justify-center gap-3 mb-8">
+        <Button
+          variant="secondary"
           onClick={handlePrevious}
           disabled={currentIndex === 0}
         >
           ⏮ Previous
-        </button>
-        <button
-          className={`control-button play-button ${isPlaying ? 'pause' : 'play'}`}
+        </Button>
+        <Button
+          variant={isPlaying ? 'error' : 'primary'}
           onClick={handlePlayPause}
+          className="min-w-32"
         >
           {isPlaying ? '⏸ Pause' : '▶ Play'}
-        </button>
-        <button
-          className="control-button"
+        </Button>
+        <Button
+          variant="secondary"
           onClick={handleSkip}
           disabled={currentIndex === words.length - 1}
         >
           Next ⏭
-        </button>
+        </Button>
       </div>
 
-      <div className="settings-panel">
-        <div className="setting">
-          <label>Speed</label>
-          <div className="speed-buttons">
+      {/* Settings */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div>
+          <label className="block text-sm text-text-secondary mb-2">Speed</label>
+          <div className="flex gap-2">
             {[0.5, 0.75, 1, 1.25, 1.5].map((s) => (
               <button
                 key={s}
-                className={`speed-button ${speed === s ? 'active' : ''}`}
+                type="button"
+                className={`flex-1 py-2 px-3 rounded-button text-sm transition-colors ${
+                  speed === s
+                    ? 'bg-primary text-white'
+                    : 'bg-gray-100 dark:bg-gray-700 text-text-secondary hover:bg-gray-200 dark:hover:bg-gray-600'
+                }`}
                 onClick={() => handleSpeedChange(s)}
               >
                 {s}x
@@ -158,13 +182,18 @@ export function ListeningMode({ words, onComplete }: ListeningModeProps) {
           </div>
         </div>
 
-        <div className="setting">
-          <label>Delay between words</label>
-          <div className="delay-buttons">
+        <div>
+          <label className="block text-sm text-text-secondary mb-2">Delay between words</label>
+          <div className="flex gap-2">
             {[1000, 2000, 3000, 5000].map((d) => (
               <button
                 key={d}
-                className={`delay-button ${delay === d ? 'active' : ''}`}
+                type="button"
+                className={`flex-1 py-2 px-3 rounded-button text-sm transition-colors ${
+                  delay === d
+                    ? 'bg-primary text-white'
+                    : 'bg-gray-100 dark:bg-gray-700 text-text-secondary hover:bg-gray-200 dark:hover:bg-gray-600'
+                }`}
                 onClick={() => handleDelayChange(d)}
               >
                 {d / 1000}s
@@ -174,10 +203,10 @@ export function ListeningMode({ words, onComplete }: ListeningModeProps) {
         </div>
       </div>
 
-      <button className="restart-button" onClick={handleRestart}>
+      <Button variant="ghost" onClick={handleRestart} fullWidth>
         ↺ Restart
-      </button>
-    </div>
+      </Button>
+    </Card>
   );
 }
 

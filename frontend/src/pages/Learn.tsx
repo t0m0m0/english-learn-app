@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { wordsApi, progressApi } from '../services/api';
 import { useUser } from '../context/UserContext';
 import WordCard from '../components/WordCard';
 import ProgressBar from '../components/ProgressBar';
-import './Learn.css';
+import { Container, Card, Button } from '../components/ui';
 
 interface Word {
   id: number;
@@ -22,7 +22,7 @@ export function Learn() {
 
   const currentWord = words[currentIndex];
 
-  const fetchWords = async () => {
+  const fetchWords = useCallback(async () => {
     setLoading(true);
     try {
       if (user) {
@@ -45,11 +45,11 @@ export function Learn() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user, maxFrequency]);
 
   useEffect(() => {
     fetchWords();
-  }, [user, maxFrequency]);
+  }, [fetchWords]);
 
   const handleCorrect = async () => {
     if (user && currentWord) {
@@ -93,61 +93,83 @@ export function Learn() {
 
   if (loading) {
     return (
-      <div className="learn-page">
-        <div className="loading">Loading words...</div>
-      </div>
+      <Container size="lg" className="py-10">
+        <Card className="text-center py-12">
+          <div className="text-text-muted animate-pulse">Loading words...</div>
+        </Card>
+      </Container>
     );
   }
 
   if (words.length === 0) {
     return (
-      <div className="learn-page">
-        <div className="empty-state">
-          <h2>No new words to learn!</h2>
-          <p>You've learned all words in this frequency range.</p>
-          <button onClick={fetchWords}>Refresh</button>
-        </div>
-      </div>
+      <Container size="lg" className="py-10">
+        <Card className="text-center py-12">
+          <h2 className="text-2xl font-bold text-text-primary mb-2">
+            No new words to learn!
+          </h2>
+          <p className="text-text-secondary mb-6">
+            You've learned all words in this frequency range.
+          </p>
+          <Button variant="primary" onClick={fetchWords}>
+            Refresh
+          </Button>
+        </Card>
+      </Container>
     );
   }
 
-  const isComplete = currentIndex >= words.length - 1 &&
-    (sessionStats.correct + sessionStats.incorrect) > 0 &&
-    (sessionStats.correct + sessionStats.incorrect) >= words.length;
+  const isComplete =
+    currentIndex >= words.length - 1 &&
+    sessionStats.correct + sessionStats.incorrect > 0 &&
+    sessionStats.correct + sessionStats.incorrect >= words.length;
 
   return (
-    <div className="learn-page">
-      <div className="learn-header">
-        <h1>Image Connect Mode</h1>
-        <p className="learn-description">
+    <Container size="lg" className="py-10">
+      {/* Header */}
+      <header className="text-center mb-8">
+        <h1 className="text-3xl font-bold text-text-primary mb-2">
+          Image Connect Mode
+        </h1>
+        <p className="text-text-secondary">
           Connect the image directly to the English word. Don't translate!
         </p>
+      </header>
+
+      {/* Frequency Selector */}
+      <div className="flex flex-wrap items-center justify-center gap-2 mb-6">
+        <span className="text-sm text-text-secondary mr-2">Focus on top:</span>
+        {[500, 1000, 2000, 3000].map((freq) => (
+          <button
+            key={freq}
+            type="button"
+            className={`px-4 py-2 rounded-button text-sm font-medium transition-colors ${
+              maxFrequency === freq
+                ? 'bg-primary text-white'
+                : 'bg-gray-100 dark:bg-gray-700 text-text-secondary hover:bg-gray-200 dark:hover:bg-gray-600'
+            }`}
+            onClick={() => handleFrequencyChange(freq)}
+          >
+            {freq} words
+          </button>
+        ))}
       </div>
 
-      <div className="frequency-selector">
-        <label>Focus on top:</label>
-        <div className="frequency-buttons">
-          {[500, 1000, 2000, 3000].map((freq) => (
-            <button
-              key={freq}
-              className={maxFrequency === freq ? 'active' : ''}
-              onClick={() => handleFrequencyChange(freq)}
-            >
-              {freq} words
-            </button>
-          ))}
-        </div>
-      </div>
-
+      {/* Progress Bar */}
       <ProgressBar
         current={currentIndex + 1}
         total={words.length}
         label="Session Progress"
       />
 
-      <div className="session-stats">
-        <span className="stat correct">✓ {sessionStats.correct}</span>
-        <span className="stat incorrect">✗ {sessionStats.incorrect}</span>
+      {/* Session Stats */}
+      <div className="flex justify-center gap-4 my-6">
+        <span className="px-4 py-2 bg-success/10 text-success rounded-full text-sm font-medium">
+          ✓ {sessionStats.correct}
+        </span>
+        <span className="px-4 py-2 bg-error/10 text-error rounded-full text-sm font-medium">
+          ✗ {sessionStats.incorrect}
+        </span>
       </div>
 
       {!isComplete ? (
@@ -161,40 +183,47 @@ export function Learn() {
             autoPlay={true}
           />
 
-          <div className="navigation-buttons">
-            <button
-              className="nav-button"
+          {/* Navigation */}
+          <div className="flex items-center justify-center gap-4 mt-6">
+            <Button
+              variant="secondary"
               onClick={goToPrevious}
               disabled={currentIndex === 0}
             >
               ← Previous
-            </button>
-            <span className="word-counter">
+            </Button>
+            <span className="text-text-secondary text-sm">
               {currentIndex + 1} / {words.length}
             </span>
-            <button
-              className="nav-button"
+            <Button
+              variant="secondary"
               onClick={goToNext}
               disabled={currentIndex === words.length - 1}
             >
               Next →
-            </button>
+            </Button>
           </div>
         </>
       ) : (
-        <div className="session-complete">
-          <h2>Session Complete!</h2>
-          <div className="complete-stats">
-            <div className="complete-stat">
-              <span className="stat-value">{sessionStats.correct}</span>
-              <span className="stat-label">Correct</span>
+        <Card className="text-center py-8">
+          <h2 className="text-2xl font-bold text-text-primary mb-6">
+            Session Complete!
+          </h2>
+          <div className="flex justify-center gap-8 mb-8">
+            <div className="text-center">
+              <span className="block text-4xl font-bold text-success">
+                {sessionStats.correct}
+              </span>
+              <span className="text-sm text-text-muted">Correct</span>
             </div>
-            <div className="complete-stat">
-              <span className="stat-value">{sessionStats.incorrect}</span>
-              <span className="stat-label">To Review</span>
+            <div className="text-center">
+              <span className="block text-4xl font-bold text-error">
+                {sessionStats.incorrect}
+              </span>
+              <span className="text-sm text-text-muted">To Review</span>
             </div>
-            <div className="complete-stat">
-              <span className="stat-value">
+            <div className="text-center">
+              <span className="block text-4xl font-bold text-primary">
                 {Math.round(
                   (sessionStats.correct /
                     (sessionStats.correct + sessionStats.incorrect)) *
@@ -202,15 +231,15 @@ export function Learn() {
                 )}
                 %
               </span>
-              <span className="stat-label">Accuracy</span>
+              <span className="text-sm text-text-muted">Accuracy</span>
             </div>
           </div>
-          <button className="new-session-button" onClick={fetchWords}>
+          <Button variant="primary" size="lg" onClick={fetchWords}>
             Start New Session
-          </button>
-        </div>
+          </Button>
+        </Card>
       )}
-    </div>
+    </Container>
   );
 }
 

@@ -36,4 +36,7 @@ prisma/migrations/
 
 .claude
 
+# Playwright MCP screenshots
+.playwright-mcp/
+
 package-lock.json

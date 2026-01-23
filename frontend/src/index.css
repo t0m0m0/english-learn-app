@@ -1,42 +1,114 @@
-:root {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+@import "tailwindcss";
 
-  color-scheme: light;
-  color: #1a1a2e;
-  background-color: #f8f9fa;
+@theme {
+  /* Colors */
+  --color-primary: #4361ee;
+  --color-primary-dark: #3730a3;
+  --color-primary-light: #6b7fff;
+  --color-success: #10b981;
+  --color-error: #ef4444;
+  --color-warning: #f59e0b;
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  --color-background: #f8f9fa;
+  --color-surface: #ffffff;
+  --color-border: #e5e7eb;
+
+  --color-text-primary: #1a1a2e;
+  --color-text-secondary: #666666;
+  --color-text-muted: #999999;
+
+  /* Shadows */
+  --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.1);
+  --shadow-nav: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-elevated: 0 8px 30px rgba(0, 0, 0, 0.12);
+
+  /* Radius */
+  --radius-card: 16px;
+  --radius-button: 8px;
 }
 
-a {
-  font-weight: 500;
-  color: #4361ee;
-  text-decoration: none;
-}
+@layer base {
+  :root {
+    /* Font */
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 
-a:hover {
-  color: #3730a3;
-}
+  .dark {
+    /* Colors - Dark Mode */
+    --color-primary: #6b7fff;
+    --color-primary-dark: #8b93ff;
+    --color-primary-light: #4361ee;
+    --color-success: #34d399;
+    --color-error: #f87171;
+    --color-warning: #fbbf24;
 
-body {
-  margin: 0;
-  min-width: 320px;
-  min-height: 100vh;
-}
+    --color-background: #0f172a;
+    --color-surface: #1e293b;
+    --color-border: #334155;
 
-#root {
-  width: 100%;
-}
+    --color-text-primary: #f1f5f9;
+    --color-text-secondary: #cbd5e1;
+    --color-text-muted: #94a3b8;
 
-h1, h2, h3, h4, h5, h6 {
-  margin: 0;
-}
+    /* Shadows - Darker in dark mode */
+    --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.4);
+    --shadow-nav: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --shadow-elevated: 0 8px 30px rgba(0, 0, 0, 0.5);
+  }
 
-p {
-  margin: 0;
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    min-width: 320px;
+    min-height: 100vh;
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
+    transition: background-color 0.2s, color 0.2s;
+  }
+
+  #root {
+    width: 100%;
+  }
+
+  h1, h2, h3, h4, h5, h6, p {
+    margin: 0;
+  }
+
+  a {
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: var(--color-primary-dark);
+  }
+
+  button {
+    font-family: inherit;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--color-surface);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-text-muted);
+  }
 }
