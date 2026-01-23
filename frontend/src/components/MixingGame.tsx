@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { wordsApi } from '../services/api';
 import useAudio from '../hooks/useAudio';
-import './MixingGame.css';
+import { Button, Card } from './ui';
 
 interface Word {
   id: number;
@@ -133,97 +133,117 @@ export function MixingGame({ onComplete }: MixingGameProps) {
   };
 
   if (loading) {
-    return <div className="mixing-game loading">Loading words...</div>;
+    return (
+      <Card className="max-w-2xl mx-auto text-center py-12">
+        <div className="text-text-muted animate-pulse">Loading words...</div>
+      </Card>
+    );
   }
 
+  const WordBlock = ({
+    type,
+    word,
+    colorClass,
+  }: {
+    type: string;
+    word: Word | null;
+    colorClass: string;
+  }) => (
+    <button
+      className={`flex-1 p-4 rounded-card ${colorClass} text-white cursor-pointer transition-all hover:-translate-y-1 hover:shadow-elevated`}
+      onClick={() => handleSpeakWord(word)}
+    >
+      <span className="block text-xs uppercase tracking-wider opacity-80 mb-1">{type}</span>
+      <span className="block text-xl font-bold">{word?.word || '...'}</span>
+      {isSpeaking && <span className="block text-sm mt-1 animate-pulse">🔊</span>}
+    </button>
+  );
+
   return (
-    <div className="mixing-game">
-      <div className="mixing-header">
-        <h2>Word Mixing Game</h2>
-        <p className="mixing-description">
+    <Card className="max-w-2xl mx-auto">
+      <div className="text-center mb-6">
+        <h2 className="text-2xl font-bold text-text-primary mb-2">Word Mixing Game</h2>
+        <p className="text-text-secondary mb-4">
           Combine these words to create a sentence. Be creative!
         </p>
-        <div className="game-stats">
-          <span className="round">Round {round}/{maxRounds}</span>
-          <span className="score">Score: {score}</span>
+        <div className="flex justify-center gap-4">
+          <span className="px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-sm text-text-secondary">
+            Round {round}/{maxRounds}
+          </span>
+          <span className="px-3 py-1 bg-success/10 text-success rounded-full text-sm font-medium">
+            Score: {score}
+          </span>
         </div>
       </div>
 
-      <div className="word-blocks">
-        <div
-          className="word-block verb"
-          onClick={() => handleSpeakWord(words.verb)}
-        >
-          <span className="word-type">VERB</span>
-          <span className="word-value">{words.verb?.word || '...'}</span>
-          {isSpeaking && <span className="speaking-indicator">🔊</span>}
-        </div>
-
-        <span className="plus">+</span>
-
-        <div
-          className="word-block adjective"
-          onClick={() => handleSpeakWord(words.adjective)}
-        >
-          <span className="word-type">ADJECTIVE</span>
-          <span className="word-value">{words.adjective?.word || '...'}</span>
-        </div>
-
-        <span className="plus">+</span>
-
-        <div
-          className="word-block noun"
-          onClick={() => handleSpeakWord(words.noun)}
-        >
-          <span className="word-type">NOUN</span>
-          <span className="word-value">{words.noun?.word || '...'}</span>
-        </div>
+      {/* Word Blocks */}
+      <div className="flex gap-3 mb-6">
+        <WordBlock
+          type="VERB"
+          word={words.verb}
+          colorClass="bg-gradient-to-br from-red-500 to-red-600"
+        />
+        <WordBlock
+          type="ADJECTIVE"
+          word={words.adjective}
+          colorClass="bg-gradient-to-br from-success to-emerald-600"
+        />
+        <WordBlock
+          type="NOUN"
+          word={words.noun}
+          colorClass="bg-gradient-to-br from-primary to-blue-700"
+        />
       </div>
 
-      <button className="speak-all-button" onClick={handleSpeakAll}>
+      <Button variant="ghost" onClick={handleSpeakAll} fullWidth className="mb-6">
         🔊 Listen to all words
-      </button>
+      </Button>
 
       {!showExample ? (
-        <div className="sentence-input-section">
+        <div>
           <textarea
-            className="sentence-input"
+            className="w-full p-4 border border-border rounded-card bg-surface text-text-primary placeholder-text-muted resize-none focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
             placeholder="Write a sentence using all three words..."
             value={userSentence}
             onChange={(e) => setUserSentence(e.target.value)}
             rows={3}
           />
-          <div className="input-actions">
-            <button className="skip-button" onClick={handleSkip}>
+          <div className="flex gap-3 mt-4">
+            <Button variant="ghost" onClick={handleSkip} className="flex-1">
               Skip
-            </button>
-            <button
-              className="submit-button"
+            </Button>
+            <Button
+              variant="primary"
               onClick={handleSubmit}
               disabled={!userSentence.trim()}
+              className="flex-1"
             >
               Check Sentence
-            </button>
+            </Button>
           </div>
         </div>
       ) : (
-        <div className="result-section">
+        <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-card">
           {userSentence && (
-            <div className="user-sentence">
-              <label>Your sentence:</label>
-              <p>{userSentence}</p>
+            <div className="mb-4">
+              <label className="block text-xs uppercase tracking-wider text-text-muted mb-2">
+                Your sentence:
+              </label>
+              <p className="text-text-primary">{userSentence}</p>
             </div>
           )}
-          <div className="example-sentence">
-            <label>Example sentence:</label>
-            <p>{generateExampleSentence()}</p>
+          <div className="mb-6">
+            <label className="block text-xs uppercase tracking-wider text-text-muted mb-2">
+              Example sentence:
+            </label>
+            <p className="text-text-primary font-medium">{generateExampleSentence()}</p>
           </div>
-          <button className="next-button" onClick={handleNextRound}>
+          <Button variant="primary" onClick={handleNextRound} fullWidth>
             {round >= maxRounds ? 'See Results' : 'Next Round →'}
-          </button>
+          </Button>
         </div>
       )}
-    </div>
+    </Card>
   );
 }
 
