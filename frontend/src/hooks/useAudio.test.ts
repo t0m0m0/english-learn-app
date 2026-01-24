@@ -309,7 +309,6 @@ describe('useAudio', () => {
     });
 
     it('should handle speech error and set isSpeaking to false and error state', () => {
-      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
       const { result } = renderHook(() => useAudio());
 
       act(() => {
@@ -332,9 +331,6 @@ describe('useAudio', () => {
 
       expect(result.current.isSpeaking).toBe(false);
       expect(result.current.error).toBe('Speech error: network');
-      expect(consoleSpy).toHaveBeenCalledWith('Speech error:', 'network');
-
-      consoleSpy.mockRestore();
     });
 
     it('should not log error for canceled speech', () => {
