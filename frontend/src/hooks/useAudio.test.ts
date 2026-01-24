@@ -1,4 +1,4 @@
-import { renderHook, act, waitFor } from '@testing-library/react';
+import { renderHook, act } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { useAudio } from './useAudio';
 
@@ -70,8 +70,8 @@ describe('useAudio', () => {
     mockSpeechSynthesis.onvoiceschanged = null;
 
     // Setup global mocks
-    global.SpeechSynthesisUtterance = MockSpeechSynthesisUtterance as unknown as typeof SpeechSynthesisUtterance;
-    global.speechSynthesis = mockSpeechSynthesis as unknown as SpeechSynthesis;
+    (globalThis as typeof globalThis & { SpeechSynthesisUtterance: typeof SpeechSynthesisUtterance }).SpeechSynthesisUtterance = MockSpeechSynthesisUtterance as unknown as typeof SpeechSynthesisUtterance;
+    (globalThis as typeof globalThis & { speechSynthesis: SpeechSynthesis }).speechSynthesis = mockSpeechSynthesis as unknown as SpeechSynthesis;
   });
 
   afterEach(() => {
