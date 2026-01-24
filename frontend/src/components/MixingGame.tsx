@@ -27,18 +27,23 @@ export function MixingGame({ onComplete }: MixingGameProps) {
     adjective: null,
   });
   const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState<string | null>(null);
   const [userSentence, setUserSentence] = useState('');
   const [round, setRound] = useState(1);
   const [score, setScore] = useState(0);
   const [showExample, setShowExample] = useState(false);
-  const { speak, isSpeaking } = useAudio();
+  const { speak, isSpeaking, isReady, error: audioError } = useAudio();
 
   const maxRounds = 10;
+
+  // Check if we have any words loaded
+  const hasAnyWords = words.verb || words.noun || words.adjective;
 
   const fetchNewWords = async () => {
     setLoading(true);
     setShowExample(false);
     setUserSentence('');
+    setFetchError(null);
 
     try {
       // Fetch random words by part of speech
@@ -56,12 +61,17 @@ export function MixingGame({ onComplete }: MixingGameProps) {
     } catch (error) {
       console.error('Error fetching words:', error);
       // Fallback to random words if POS-based fetch fails
-      const { words: randomWords } = await wordsApi.getRandom(3, 1000);
-      setWords({
-        verb: randomWords[0] || null,
-        noun: randomWords[1] || null,
-        adjective: randomWords[2] || null,
-      });
+      try {
+        const { words: randomWords } = await wordsApi.getRandom(3, 1000);
+        setWords({
+          verb: randomWords[0] || null,
+          noun: randomWords[1] || null,
+          adjective: randomWords[2] || null,
+        });
+      } catch (fallbackError) {
+        console.error('Error fetching fallback words:', fallbackError);
+        setFetchError('Unable to load words. Please check your connection and try again.');
+      }
     }
 
     setLoading(false);
@@ -86,14 +96,16 @@ export function MixingGame({ onComplete }: MixingGameProps) {
   };
 
   const handleSpeakWord = (word: Word | null) => {
-    if (word) {
+    if (word && isReady) {
       speak(word.word);
     }
   };
 
   const handleSpeakAll = () => {
+    if (!isReady) return;
     const { verb, noun, adjective } = words;
     const allWords = [verb, noun, adjective].filter(Boolean) as Word[];
+    if (allWords.length === 0) return;
     const wordStrings = allWords.map((w) => w.word).join(', ');
     speak(wordStrings);
   };
@@ -140,6 +152,18 @@ export function MixingGame({ onComplete }: MixingGameProps) {
     );
   }
 
+  // Show error state if words failed to load
+  if (fetchError) {
+    return (
+      <Card className="max-w-2xl mx-auto text-center py-12">
+        <div className="text-red-600 dark:text-red-400 mb-4">{fetchError}</div>
+        <Button variant="primary" onClick={fetchNewWords}>
+          Retry
+        </Button>
+      </Card>
+    );
+  }
+
   const WordBlock = ({
     type,
     word,
@@ -148,17 +172,25 @@ export function MixingGame({ onComplete }: MixingGameProps) {
     type: string;
     word: Word | null;
     colorClass: string;
-  }) => (
-    <button
-      type="button"
-      className={`flex-1 p-4 rounded-card ${colorClass} text-white cursor-pointer transition-all hover:-translate-y-1 hover:shadow-elevated`}
-      onClick={() => handleSpeakWord(word)}
-    >
-      <span className="block text-xs uppercase tracking-wider opacity-80 mb-1">{type}</span>
-      <span className="block text-xl font-bold">{word?.word || '...'}</span>
-      {isSpeaking && <span className="block text-sm mt-1 animate-pulse">🔊</span>}
-    </button>
-  );
+  }) => {
+    const isDisabled = !word || !isReady;
+    return (
+      <button
+        type="button"
+        className={`flex-1 p-4 rounded-card ${colorClass} text-white transition-all ${
+          isDisabled
+            ? 'opacity-50 cursor-not-allowed'
+            : 'cursor-pointer hover:-translate-y-1 hover:shadow-elevated'
+        }`}
+        onClick={() => handleSpeakWord(word)}
+        disabled={isDisabled}
+      >
+        <span className="block text-xs uppercase tracking-wider opacity-80 mb-1">{type}</span>
+        <span className="block text-xl font-bold">{word?.word || '...'}</span>
+        {isSpeaking && word && <span className="block text-sm mt-1 animate-pulse">🔊</span>}
+      </button>
+    );
+  };
 
   return (
     <Card className="max-w-2xl mx-auto">
@@ -176,6 +208,18 @@ export function MixingGame({ onComplete }: MixingGameProps) {
           </span>
         </div>
       </div>
+
+      {/* Audio Status/Error */}
+      {audioError && (
+        <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-card text-red-700 dark:text-red-300 text-sm">
+          {audioError}
+        </div>
+      )}
+      {!isReady && !audioError && (
+        <div className="mb-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-card text-yellow-700 dark:text-yellow-300 text-sm">
+          Loading audio voices...
+        </div>
+      )}
 
       {/* Word Blocks */}
       <div className="flex gap-3 mb-6">
@@ -196,7 +240,13 @@ export function MixingGame({ onComplete }: MixingGameProps) {
         />
       </div>
 
-      <Button variant="ghost" onClick={handleSpeakAll} fullWidth className="mb-6">
+      <Button
+        variant="ghost"
+        onClick={handleSpeakAll}
+        fullWidth
+        className="mb-6"
+        disabled={!isReady || !hasAnyWords}
+      >
         🔊 Listen to all words
       </Button>
 
