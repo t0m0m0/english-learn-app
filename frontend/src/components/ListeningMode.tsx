@@ -160,6 +160,7 @@ export function ListeningMode({ words, onComplete }: ListeningModeProps) {
           variant={isPlaying ? 'error' : 'primary'}
           onClick={handlePlayPause}
           className="min-w-32"
+          disabled={!isReady && !isPlaying}
         >
           {isPlaying ? '⏸ Pause' : '▶ Play'}
         </Button>

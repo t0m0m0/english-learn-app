@@ -38,6 +38,8 @@ export function useAudio(options: UseAudioOptions = {}): UseAudioReturn {
   const speakTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const checkTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const sequenceIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const sequenceDelayTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const retryTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const sequenceCancelledRef = useRef(false);
 
   const log = useCallback(
@@ -62,6 +64,14 @@ export function useAudio(options: UseAudioOptions = {}): UseAudioReturn {
     if (sequenceIntervalRef.current) {
       clearInterval(sequenceIntervalRef.current);
       sequenceIntervalRef.current = null;
+    }
+    if (sequenceDelayTimeoutRef.current) {
+      clearTimeout(sequenceDelayTimeoutRef.current);
+      sequenceDelayTimeoutRef.current = null;
+    }
+    if (retryTimeoutRef.current) {
+      clearTimeout(retryTimeoutRef.current);
+      retryTimeoutRef.current = null;
     }
   }, []);
 
@@ -101,12 +111,16 @@ export function useAudio(options: UseAudioOptions = {}): UseAudioReturn {
       return;
     }
 
-    let retryTimeoutId: ReturnType<typeof setTimeout> | null = null;
-
     // Chrome needs this event - voices are loaded asynchronously
     speechSynthesis.onvoiceschanged = () => {
       log('onvoiceschanged event fired');
-      loadVoices();
+      const voices = loadVoices();
+      // Clear retry timeout if voices loaded successfully
+      if (voices.length > 0 && retryTimeoutRef.current) {
+        clearTimeout(retryTimeoutRef.current);
+        retryTimeoutRef.current = null;
+        log('Cleared retry timeout - voices loaded via onvoiceschanged');
+      }
     };
 
     // Firefox and Safari might have voices ready immediately
@@ -115,19 +129,17 @@ export function useAudio(options: UseAudioOptions = {}): UseAudioReturn {
     // If no voices loaded yet, try again after a delay (for some browsers)
     if (voices.length === 0) {
       log('No voices found initially, will wait for onvoiceschanged');
-      retryTimeoutId = setTimeout(() => {
+      retryTimeoutRef.current = setTimeout(() => {
         const retryVoices = loadVoices();
         if (retryVoices.length === 0) {
           log('Still no voices after timeout');
           setError('No audio voices available. Please check your browser settings.');
         }
+        retryTimeoutRef.current = null;
       }, 1000); // Increased timeout to 1s for slower browsers
     }
 
     return () => {
-      if (retryTimeoutId) {
-        clearTimeout(retryTimeoutId);
-      }
       speechSynthesis.onvoiceschanged = null;
       cleanupTimers();
     };
@@ -292,7 +304,11 @@ export function useAudio(options: UseAudioOptions = {}): UseAudioReturn {
                 clearInterval(sequenceIntervalRef.current);
                 sequenceIntervalRef.current = null;
               }
-              setTimeout(resolve, delayMs);
+              // Track the delay timeout so it can be cleaned up
+              sequenceDelayTimeoutRef.current = setTimeout(() => {
+                sequenceDelayTimeoutRef.current = null;
+                resolve();
+              }, delayMs);
             }
           }, 100);
         });
