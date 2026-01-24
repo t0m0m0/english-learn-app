@@ -147,13 +147,26 @@ describe('useAudio', () => {
 
       const callsAfterMount = mockSpeechSynthesis.getVoices.mock.calls.length - initialCallCount;
 
-      // After timeout, should have more calls
+      // After timeout (now 1000ms), should have more calls
       act(() => {
-        vi.advanceTimersByTime(500);
+        vi.advanceTimersByTime(1000);
       });
 
       const callsAfterTimeout = mockSpeechSynthesis.getVoices.mock.calls.length - initialCallCount;
       expect(callsAfterTimeout).toBeGreaterThan(callsAfterMount);
+    });
+
+    it('should set error after timeout if no voices available', () => {
+      mockSpeechSynthesis.getVoices.mockReturnValue([]);
+
+      const { result } = renderHook(() => useAudio());
+
+      // After timeout, should set error
+      act(() => {
+        vi.advanceTimersByTime(1000);
+      });
+
+      expect(result.current.error).toBe('No audio voices available. Please check your browser settings.');
     });
   });
 
@@ -364,6 +377,53 @@ describe('useAudio', () => {
       expect(mockSpeechSynthesis.speak).toHaveBeenCalled();
     });
 
+    it('should set error when speech fails silently', () => {
+      const { result } = renderHook(() => useAudio());
+
+      act(() => {
+        result.current.speak('hello');
+      });
+
+      // Wait for speak timeout
+      act(() => {
+        vi.advanceTimersByTime(150);
+      });
+
+      // Simulate silent failure - not speaking and not pending
+      mockSpeechSynthesis.speaking = false;
+      mockSpeechSynthesis.pending = false;
+
+      // Wait for the check timeout
+      act(() => {
+        vi.advanceTimersByTime(200);
+      });
+
+      expect(result.current.error).toBe('Speech failed to start. Please try again.');
+    });
+
+    it('should clear previous timers when speak is called again', () => {
+      const { result } = renderHook(() => useAudio());
+
+      // First speak call
+      act(() => {
+        result.current.speak('first');
+      });
+
+      // Immediately call speak again before timers fire
+      act(() => {
+        result.current.speak('second');
+      });
+
+      // Advance timers
+      act(() => {
+        vi.advanceTimersByTime(150);
+      });
+
+      // Only the second speak should have been called
+      expect(mockSpeechSynthesis.speak).toHaveBeenCalledTimes(1);
+      const utterance = mockSpeechSynthesis.speak.mock.calls[0][0];
+      expect(utterance.text).toBe('second');
+    });
   });
 
   describe('stop', () => {
@@ -443,6 +503,104 @@ describe('useAudio', () => {
     });
   });
 
+  describe('cancelSequence', () => {
+    it('should cancel speech synthesis when called', () => {
+      const { result } = renderHook(() => useAudio());
+
+      act(() => {
+        result.current.cancelSequence();
+      });
+
+      expect(mockSpeechSynthesis.cancel).toHaveBeenCalled();
+    });
+
+    it('should set isSpeaking to false when called', () => {
+      const { result } = renderHook(() => useAudio());
+
+      // Start speaking first
+      act(() => {
+        result.current.speak('hello');
+      });
+
+      act(() => {
+        vi.advanceTimersByTime(150);
+      });
+
+      const utterance = mockSpeechSynthesis.speak.mock.calls[0][0];
+
+      act(() => {
+        utterance.onstart?.();
+      });
+
+      expect(result.current.isSpeaking).toBe(true);
+
+      act(() => {
+        result.current.cancelSequence();
+      });
+
+      expect(result.current.isSpeaking).toBe(false);
+    });
+  });
+
+  describe('speakSequence', () => {
+    it('should call speak for each word in sequence', () => {
+      const { result } = renderHook(() => useAudio());
+
+      const words = ['hello', 'world'];
+
+      // Start the sequence
+      act(() => {
+        result.current.speakSequence(words, 100);
+      });
+
+      // First speak call happens immediately (before the 150ms timeout)
+      // The speak function is called, which calls cancel() then setTimeout
+      expect(mockSpeechSynthesis.cancel).toHaveBeenCalled();
+
+      // Advance past the speak timeout to trigger speechSynthesis.speak
+      act(() => {
+        vi.advanceTimersByTime(150);
+      });
+
+      expect(mockSpeechSynthesis.speak).toHaveBeenCalledTimes(1);
+      expect(mockSpeechSynthesis.speak.mock.calls[0][0].text).toBe('hello');
+    });
+
+    it('should stop sequence when cancelSequence is called', async () => {
+      const { result } = renderHook(() => useAudio());
+
+      const words = ['hello', 'world', 'test'];
+
+      // Start the sequence
+      act(() => {
+        result.current.speakSequence(words, 100);
+      });
+
+      // First word should be spoken
+      act(() => {
+        vi.advanceTimersByTime(150);
+      });
+
+      expect(mockSpeechSynthesis.speak).toHaveBeenCalledTimes(1);
+
+      // Cancel the sequence
+      act(() => {
+        result.current.cancelSequence();
+      });
+
+      // Simulate speech ending
+      mockSpeechSynthesis.speaking = false;
+
+      // Advance all timers
+      act(() => {
+        vi.advanceTimersByTime(1000);
+      });
+
+      // No more words should have been spoken
+      expect(mockSpeechSynthesis.speak).toHaveBeenCalledTimes(1);
+    });
+  });
+
   describe('cleanup', () => {
     it('should remove onvoiceschanged listener on unmount', () => {
       const { unmount } = renderHook(() => useAudio());
@@ -452,6 +610,26 @@ describe('useAudio', () => {
       unmount();
 
       expect(mockSpeechSynthesis.onvoiceschanged).toBeNull();
+    });
+
+    it('should cleanup timers on unmount', () => {
+      const { result, unmount } = renderHook(() => useAudio());
+
+      // Start speaking
+      act(() => {
+        result.current.speak('hello');
+      });
+
+      // Unmount before timers fire
+      unmount();
+
+      // Advance timers - should not cause errors
+      act(() => {
+        vi.advanceTimersByTime(500);
+      });
+
+      // If we get here without errors, cleanup worked
+      expect(true).toBe(true);
     });
   });
 });

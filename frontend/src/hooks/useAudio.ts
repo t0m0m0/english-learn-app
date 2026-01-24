@@ -14,6 +14,7 @@ interface UseAudioReturn {
   pause: () => void;
   resume: () => void;
   speakSequence: (words: string[], delayMs?: number, customRate?: number) => Promise<void>;
+  cancelSequence: () => void;
   isSpeaking: boolean;
   availableVoices: SpeechSynthesisVoice[];
   loadVoices: () => SpeechSynthesisVoice[];
@@ -21,14 +22,23 @@ interface UseAudioReturn {
   error: string | null;
 }
 
+// Use environment variable for debug mode, defaulting to false in production
+const isDebugMode = import.meta.env.DEV;
+
 export function useAudio(options: UseAudioOptions = {}): UseAudioReturn {
-  const { rate = 1, pitch = 1, volume = 1, voice = null, debug = false } = options;
+  const { rate = 1, pitch = 1, volume = 1, voice = null, debug = isDebugMode } = options;
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isReady, setIsReady] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [availableVoices, setAvailableVoices] = useState<SpeechSynthesisVoice[]>([]);
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
   const voicesLoadedRef = useRef(false);
+
+  // Refs for timeout/interval cleanup
+  const speakTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const checkTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const sequenceIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const sequenceCancelledRef = useRef(false);
 
   const log = useCallback(
     (...args: unknown[]) => {
@@ -38,6 +48,22 @@ export function useAudio(options: UseAudioOptions = {}): UseAudioReturn {
     },
     [debug]
   );
+
+  // Cleanup all timers
+  const cleanupTimers = useCallback(() => {
+    if (speakTimeoutRef.current) {
+      clearTimeout(speakTimeoutRef.current);
+      speakTimeoutRef.current = null;
+    }
+    if (checkTimeoutRef.current) {
+      clearTimeout(checkTimeoutRef.current);
+      checkTimeoutRef.current = null;
+    }
+    if (sequenceIntervalRef.current) {
+      clearInterval(sequenceIntervalRef.current);
+      sequenceIntervalRef.current = null;
+    }
+  }, []);
 
   // Get available voices
   const loadVoices = useCallback(() => {
@@ -61,6 +87,7 @@ export function useAudio(options: UseAudioOptions = {}): UseAudioReturn {
     if (voices.length > 0 && !voicesLoadedRef.current) {
       voicesLoadedRef.current = true;
       setIsReady(true);
+      setError(null); // Clear any previous error on successful load
       log('Voices ready');
     }
 
@@ -74,6 +101,8 @@ export function useAudio(options: UseAudioOptions = {}): UseAudioReturn {
       return;
     }
 
+    let retryTimeoutId: ReturnType<typeof setTimeout> | null = null;
+
     // Chrome needs this event - voices are loaded asynchronously
     speechSynthesis.onvoiceschanged = () => {
       log('onvoiceschanged event fired');
@@ -86,28 +115,28 @@ export function useAudio(options: UseAudioOptions = {}): UseAudioReturn {
     // If no voices loaded yet, try again after a delay (for some browsers)
     if (voices.length === 0) {
       log('No voices found initially, will wait for onvoiceschanged');
-      const timeoutId = setTimeout(() => {
+      retryTimeoutId = setTimeout(() => {
         const retryVoices = loadVoices();
         if (retryVoices.length === 0) {
           log('Still no voices after timeout');
+          setError('No audio voices available. Please check your browser settings.');
         }
-      }, 500);
-
-      return () => {
-        clearTimeout(timeoutId);
-        speechSynthesis.onvoiceschanged = null;
-      };
+      }, 1000); // Increased timeout to 1s for slower browsers
     }
 
     return () => {
+      if (retryTimeoutId) {
+        clearTimeout(retryTimeoutId);
+      }
       speechSynthesis.onvoiceschanged = null;
+      cleanupTimers();
     };
-  }, [loadVoices, log]);
+  }, [loadVoices, log, cleanupTimers]);
 
   // Speak a word or phrase
   const speak = useCallback(
     (text: string, customRate?: number) => {
-      if (!('speechSynthesis' in window)) {
+      if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
         console.warn('Speech synthesis not supported');
         setError('Speech synthesis not supported');
         return;
@@ -115,6 +144,14 @@ export function useAudio(options: UseAudioOptions = {}): UseAudioReturn {
 
       log('Attempting to speak:', text);
       setError(null);
+
+      // Clear any existing timers before starting new speech
+      if (speakTimeoutRef.current) {
+        clearTimeout(speakTimeoutRef.current);
+      }
+      if (checkTimeoutRef.current) {
+        clearTimeout(checkTimeoutRef.current);
+      }
 
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.rate = customRate ?? rate;
@@ -174,17 +211,18 @@ export function useAudio(options: UseAudioOptions = {}): UseAudioReturn {
 
       // Chrome requires a delay after cancel() before speak() will work
       // Increased delay for more reliability
-      setTimeout(() => {
+      speakTimeoutRef.current = setTimeout(() => {
         log('Calling speechSynthesis.speak()');
         speechSynthesis.speak(utterance);
 
         // Chrome has a bug where it sometimes doesn't fire events
         // Check if speech actually started after a short delay
-        setTimeout(() => {
+        checkTimeoutRef.current = setTimeout(() => {
           if (speechSynthesis.speaking) {
             log('Speech confirmed speaking');
           } else if (!speechSynthesis.pending) {
             log('Warning: Speech may have failed silently');
+            setError('Speech failed to start. Please try again.');
           }
         }, 200);
       }, 150);
@@ -195,9 +233,10 @@ export function useAudio(options: UseAudioOptions = {}): UseAudioReturn {
   // Stop speaking
   const stop = useCallback(() => {
     log('Stopping speech');
+    cleanupTimers();
     speechSynthesis.cancel();
     setIsSpeaking(false);
-  }, [log]);
+  }, [log, cleanupTimers]);
 
   // Pause speaking
   const pause = useCallback(() => {
@@ -211,19 +250,48 @@ export function useAudio(options: UseAudioOptions = {}): UseAudioReturn {
     speechSynthesis.resume();
   }, [log]);
 
+  // Cancel ongoing sequence
+  const cancelSequence = useCallback(() => {
+    log('Cancelling sequence');
+    sequenceCancelledRef.current = true;
+    if (sequenceIntervalRef.current) {
+      clearInterval(sequenceIntervalRef.current);
+      sequenceIntervalRef.current = null;
+    }
+    stop();
+  }, [log, stop]);
+
   // Speak multiple words with a delay between them
   const speakSequence = useCallback(
     async (words: string[], delayMs = 2000, customRate?: number) => {
       log('Speaking sequence:', words.length, 'words');
+      sequenceCancelledRef.current = false;
 
       for (const word of words) {
+        // Check if sequence was cancelled
+        if (sequenceCancelledRef.current) {
+          log('Sequence cancelled');
+          return;
+        }
+
         speak(word, customRate);
 
         // Wait for speech to finish plus the delay
         await new Promise<void>((resolve) => {
-          const checkSpeaking = setInterval(() => {
+          sequenceIntervalRef.current = setInterval(() => {
+            if (sequenceCancelledRef.current) {
+              if (sequenceIntervalRef.current) {
+                clearInterval(sequenceIntervalRef.current);
+                sequenceIntervalRef.current = null;
+              }
+              resolve();
+              return;
+            }
             if (!speechSynthesis.speaking) {
-              clearInterval(checkSpeaking);
+              if (sequenceIntervalRef.current) {
+                clearInterval(sequenceIntervalRef.current);
+                sequenceIntervalRef.current = null;
+              }
               setTimeout(resolve, delayMs);
             }
           }, 100);
@@ -235,12 +303,21 @@ export function useAudio(options: UseAudioOptions = {}): UseAudioReturn {
     [speak, log]
   );
 
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      cleanupTimers();
+      sequenceCancelledRef.current = true;
+    };
+  }, [cleanupTimers]);
+
   return {
     speak,
     stop,
     pause,
     resume,
     speakSequence,
+    cancelSequence,
     isSpeaking,
     availableVoices,
     loadVoices,

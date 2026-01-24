@@ -31,7 +31,7 @@ export function MixingGame({ onComplete }: MixingGameProps) {
   const [round, setRound] = useState(1);
   const [score, setScore] = useState(0);
   const [showExample, setShowExample] = useState(false);
-  const { speak, isSpeaking, isReady, error } = useAudio({ debug: true });
+  const { speak, isSpeaking, isReady, error } = useAudio();
 
   const maxRounds = 10;
 
@@ -56,12 +56,17 @@ export function MixingGame({ onComplete }: MixingGameProps) {
     } catch (error) {
       console.error('Error fetching words:', error);
       // Fallback to random words if POS-based fetch fails
-      const { words: randomWords } = await wordsApi.getRandom(3, 1000);
-      setWords({
-        verb: randomWords[0] || null,
-        noun: randomWords[1] || null,
-        adjective: randomWords[2] || null,
-      });
+      try {
+        const { words: randomWords } = await wordsApi.getRandom(3, 1000);
+        setWords({
+          verb: randomWords[0] || null,
+          noun: randomWords[1] || null,
+          adjective: randomWords[2] || null,
+        });
+      } catch (fallbackError) {
+        console.error('Error fetching fallback words:', fallbackError);
+        // Set empty state - component will show loading state or error
+      }
     }
 
     setLoading(false);

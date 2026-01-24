@@ -19,7 +19,7 @@ export function ListeningMode({ words, onComplete }: ListeningModeProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [speed, setSpeed] = useState(1);
   const [delay, setDelay] = useState(2000);
-  const { speak, stop, isSpeaking, isReady, error } = useAudio({ debug: true });
+  const { speak, stop, isSpeaking, isReady, error } = useAudio();
   const skipNextSpeak = useRef(false);
 
   const currentWord = words[currentIndex];
