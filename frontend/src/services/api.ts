@@ -155,4 +155,76 @@ export const progressApi = {
   },
 };
 
+// Lessons API
+interface Lesson {
+  id: string;
+  title: string;
+  description: string | null;
+  order: number;
+  userId: number;
+  qaItems: QAItem[];
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+interface QAItem {
+  id: string;
+  question: string;
+  answer: string;
+  order: number;
+  lessonId: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export const lessonsApi = {
+  getAll: async (userId: number) => {
+    const response = await api.get<{ lessons: Lesson[] }>(`/lessons?userId=${userId}`);
+    return response.data;
+  },
+
+  getById: async (id: string) => {
+    const response = await api.get<{ lesson: Lesson }>(`/lessons/${id}`);
+    return response.data;
+  },
+
+  create: async (data: { title: string; description?: string; order: number; userId: number }) => {
+    const response = await api.post<{ lesson: Lesson }>('/lessons', data);
+    return response.data;
+  },
+
+  update: async (id: string, data: { title?: string; description?: string; order?: number }) => {
+    const response = await api.put<{ lesson: Lesson }>(`/lessons/${id}`, data);
+    return response.data;
+  },
+
+  delete: async (id: string) => {
+    const response = await api.delete<{ message: string }>(`/lessons/${id}`);
+    return response.data;
+  },
+};
+
+// QA Items API
+export const qaItemsApi = {
+  create: async (lessonId: string, data: { question: string; answer: string; order: number }) => {
+    const response = await api.post<{ qaItem: QAItem }>(`/lessons/${lessonId}/qa-items`, data);
+    return response.data;
+  },
+
+  update: async (id: string, data: { question?: string; answer?: string; order?: number }) => {
+    const response = await api.put<{ qaItem: QAItem }>(`/qa-items/${id}`, data);
+    return response.data;
+  },
+
+  delete: async (id: string) => {
+    const response = await api.delete<{ message: string }>(`/qa-items/${id}`);
+    return response.data;
+  },
+
+  reorder: async (lessonId: string, items: { id: string; order: number }[]) => {
+    const response = await api.put<{ message: string }>(`/lessons/${lessonId}/qa-items/reorder`, { items });
+    return response.data;
+  },
+};
+
 export default api;

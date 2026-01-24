@@ -36,6 +36,9 @@ export function Navigation() {
         <NavLink to="/progress" className={linkClass}>
           Progress
         </NavLink>
+        <NavLink to="/callan" className={linkClass}>
+          Callan
+        </NavLink>
       </div>
 
       <div className="flex items-center gap-3">

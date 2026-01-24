@@ -61,3 +61,37 @@ export interface MixingWord {
   noun: Word;
   adjective: Word;
 }
+
+// Callan Method types
+export interface QAItem {
+  id: string;
+  question: string;
+  answer: string;
+  order: number;
+  lessonId: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface Lesson {
+  id: string;
+  title: string;
+  description: string | null;
+  order: number;
+  userId: number;
+  qaItems: QAItem[];
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface CallanProgress {
+  id: string;
+  userId: number;
+  qaItemId: string;
+  mode: 'qa' | 'shadowing' | 'dictation';
+  correctCount: number;
+  totalCount: number;
+  lastPracticed: string | null;
+  createdAt?: string;
+  updatedAt?: string;
+}
