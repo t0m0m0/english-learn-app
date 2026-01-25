@@ -11,6 +11,7 @@ import Login from './pages/Login';
 import CallanHome from './pages/CallanHome';
 import CallanLessons from './pages/CallanLessons';
 import CallanLessonForm from './pages/CallanLessonForm';
+import CallanPractice from './pages/CallanPractice';
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
                 <Route path="/callan/lessons" element={<CallanLessons />} />
                 <Route path="/callan/lessons/new" element={<CallanLessonForm />} />
                 <Route path="/callan/lessons/:id/edit" element={<CallanLessonForm />} />
+                <Route path="/callan/practice/:lessonId" element={<CallanPractice />} />
               </Routes>
             </main>
           </div>

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { Word, User, Progress, Statistics, DailyStats, Lesson, QAItem } from '../types';
+import type { Word, User, Progress, Statistics, DailyStats, Lesson, QAItem, CallanProgress } from '../types';
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
@@ -160,6 +160,30 @@ export const qaItemsApi = {
 
   reorder: async (lessonId: string, items: { id: string; order: number }[]) => {
     const response = await api.put<{ message: string }>(`/lessons/${lessonId}/qa-items/reorder`, { items });
+    return response.data;
+  },
+};
+
+// Callan Progress API
+export const callanProgressApi = {
+  recordProgress: async (data: {
+    userId: number;
+    qaItemId: string;
+    mode: 'qa' | 'shadowing' | 'dictation';
+    isCorrect: boolean;
+  }) => {
+    const response = await api.post<{ progress: CallanProgress }>('/callan/progress', data);
+    return response.data;
+  },
+
+  getLessonProgress: async (lessonId: string, userId: number, mode?: 'qa' | 'shadowing' | 'dictation') => {
+    const params = new URLSearchParams({ userId: userId.toString() });
+    if (mode) {
+      params.append('mode', mode);
+    }
+    const response = await api.get<{ progress: CallanProgress[] }>(
+      `/callan/progress/${lessonId}?${params.toString()}`
+    );
     return response.data;
   },
 };
