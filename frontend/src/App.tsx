@@ -10,6 +10,7 @@ import CallanHome from './pages/CallanHome';
 import CallanLessons from './pages/CallanLessons';
 import CallanLessonForm from './pages/CallanLessonForm';
 import CallanPractice from './pages/CallanPractice';
+import CallanShadowingPage from './pages/CallanShadowingPage';
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
               <Route path="/callan/lessons/new" element={<CallanLessonForm />} />
               <Route path="/callan/lessons/:id/edit" element={<CallanLessonForm />} />
               <Route path="/callan/practice/:lessonId" element={<CallanPractice />} />
+              <Route path="/callan/shadowing/:lessonId" element={<CallanShadowingPage />} />
             </Routes>
           </main>
         </div>
