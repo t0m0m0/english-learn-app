@@ -1,4 +1,5 @@
 import axios from 'axios';
+import type { Word, User, Progress, Statistics, DailyStats, Lesson, QAItem } from '../types';
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
@@ -8,49 +9,6 @@ const api = axios.create({
     'Content-Type': 'application/json',
   },
 });
-
-// Types
-interface Word {
-  id: number;
-  word: string;
-  frequency: number;
-  partOfSpeech: string | null;
-  createdAt?: string;
-}
-
-interface User {
-  id: number;
-  email: string;
-  name: string;
-  createdAt: string;
-}
-
-interface Progress {
-  id: number;
-  userId: number;
-  wordId: number;
-  level: number;
-  lastReviewed: string | null;
-  nextReview: string | null;
-  reviewCount: number;
-  correctCount: number;
-  word?: Word;
-}
-
-interface Statistics {
-  totalWords: number;
-  learnedWords: number;
-  masteredWords: number;
-  progressPercent: number;
-  masteryPercent: number;
-}
-
-interface DailyStats {
-  todayReviews: number;
-  totalLearned: number;
-  averageLevel: number;
-  levelDistribution: { level: number; _count: number }[];
-}
 
 // Words API
 export const wordsApi = {
@@ -156,27 +114,6 @@ export const progressApi = {
 };
 
 // Lessons API
-interface Lesson {
-  id: string;
-  title: string;
-  description: string | null;
-  order: number;
-  userId: number;
-  qaItems: QAItem[];
-  createdAt?: string;
-  updatedAt?: string;
-}
-
-interface QAItem {
-  id: string;
-  question: string;
-  answer: string;
-  order: number;
-  lessonId: string;
-  createdAt?: string;
-  updatedAt?: string;
-}
-
 export const lessonsApi = {
   getAll: async (userId: number) => {
     const response = await api.get<{ lessons: Lesson[] }>(`/lessons?userId=${userId}`);

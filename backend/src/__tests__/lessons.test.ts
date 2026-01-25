@@ -120,8 +120,12 @@ const createMockPrisma = () => ({
     updateMany: vi.fn().mockResolvedValue({ count: 2 }),
     count: vi.fn().mockResolvedValue(2),
   },
-  $transaction: vi.fn().mockImplementation(async (callback) => {
-    return callback(createMockPrisma())
+  $transaction: vi.fn().mockImplementation(async (arg) => {
+    // Handle both callback style and array of promises style
+    if (Array.isArray(arg)) {
+      return Promise.all(arg)
+    }
+    return arg(createMockPrisma())
   }),
 })
 
@@ -204,6 +208,29 @@ describe('Lessons API', () => {
       expect(response.status).toBe(400)
       expect(response.body).toHaveProperty('error')
     })
+
+    it('returns 400 when title is only whitespace', async () => {
+      const response = await request(app)
+        .post('/api/lessons')
+        .send({ title: '   ', order: 1, userId: 1 })
+
+      expect(response.status).toBe(400)
+      expect(response.body).toHaveProperty('error')
+    })
+
+    it('trims whitespace from title and description', async () => {
+      const response = await request(app)
+        .post('/api/lessons')
+        .send({ title: '  New Lesson  ', description: '  Description  ', order: 1, userId: 1 })
+
+      expect(response.status).toBe(201)
+      expect(mockPrisma.lesson.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({
+          title: 'New Lesson',
+          description: 'Description',
+        }),
+      })
+    })
   })
 
   describe('PUT /api/lessons/:id', () => {
@@ -232,6 +259,30 @@ describe('Lessons API', () => {
 
       expect(response.status).toBe(404)
     })
+
+    it('returns 403 when user does not own the lesson', async () => {
+      const response = await request(app)
+        .put('/api/lessons/lesson-1?userId=999')
+        .send({ title: 'Unauthorized Update' })
+
+      expect(response.status).toBe(403)
+      expect(response.body).toHaveProperty('error', 'Forbidden')
+    })
+
+    it('trims whitespace from title and description', async () => {
+      const response = await request(app)
+        .put('/api/lessons/lesson-1')
+        .send({ title: '  Trimmed Title  ', description: '  Trimmed Description  ' })
+
+      expect(response.status).toBe(200)
+      expect(mockPrisma.lesson.update).toHaveBeenCalledWith({
+        where: { id: 'lesson-1' },
+        data: expect.objectContaining({
+          title: 'Trimmed Title',
+          description: 'Trimmed Description',
+        }),
+      })
+    })
   })
 
   describe('DELETE /api/lessons/:id', () => {
@@ -249,6 +300,14 @@ describe('Lessons API', () => {
       const response = await request(app).delete('/api/lessons/non-existent')
 
       expect(response.status).toBe(404)
+    })
+
+    it('returns 403 when user does not own the lesson', async () => {
+      const response = await request(app)
+        .delete('/api/lessons/lesson-1?userId=999')
+
+      expect(response.status).toBe(403)
+      expect(response.body).toHaveProperty('error', 'Forbidden')
     })
   })
 })
@@ -292,6 +351,29 @@ describe('QA Items API', () => {
 
       expect(response.status).toBe(400)
       expect(response.body).toHaveProperty('error')
+    })
+
+    it('returns 404 when lesson does not exist', async () => {
+      const response = await request(app)
+        .post('/api/lessons/non-existent/qa-items')
+        .send({ question: 'Test?', answer: 'Test answer.', order: 1 })
+
+      expect(response.status).toBe(404)
+      expect(response.body).toHaveProperty('error', 'Lesson not found')
+    })
+
+    it('trims whitespace from question and answer', async () => {
+      const response = await request(app)
+        .post('/api/lessons/lesson-1/qa-items')
+        .send({ question: '  Trimmed Question?  ', answer: '  Trimmed Answer.  ', order: 1 })
+
+      expect(response.status).toBe(201)
+      expect(mockPrisma.qAItem.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({
+          question: 'Trimmed Question?',
+          answer: 'Trimmed Answer.',
+        }),
+      })
     })
   })
 
@@ -365,6 +447,44 @@ describe('QA Items API', () => {
 
       expect(response.status).toBe(400)
       expect(response.body).toHaveProperty('error')
+    })
+
+    it('returns 400 when items have invalid structure', async () => {
+      const response = await request(app)
+        .put('/api/lessons/lesson-1/qa-items/reorder')
+        .send({ items: [{ id: 123, order: 'invalid' }] })
+
+      expect(response.status).toBe(400)
+      expect(response.body).toHaveProperty('error')
+    })
+
+    it('returns 404 when some QA items are not found', async () => {
+      // Mock findMany to return only one item (simulating non-existent not found)
+      mockPrisma.qAItem.findMany.mockResolvedValueOnce([
+        { id: 'qa-1', lessonId: 'lesson-1' },
+      ])
+
+      const response = await request(app)
+        .put('/api/lessons/lesson-1/qa-items/reorder')
+        .send({ items: [{ id: 'qa-1', order: 1 }, { id: 'non-existent', order: 2 }] })
+
+      expect(response.status).toBe(404)
+      expect(response.body).toHaveProperty('error', 'One or more QA items not found')
+    })
+
+    it('returns 400 when items do not belong to the specified lesson', async () => {
+      // Add a QA item that belongs to a different lesson
+      mockPrisma.qAItem.findMany.mockResolvedValueOnce([
+        { id: 'qa-1', lessonId: 'lesson-1' },
+        { id: 'qa-other', lessonId: 'lesson-2' },
+      ])
+
+      const response = await request(app)
+        .put('/api/lessons/lesson-1/qa-items/reorder')
+        .send({ items: [{ id: 'qa-1', order: 1 }, { id: 'qa-other', order: 2 }] })
+
+      expect(response.status).toBe(400)
+      expect(response.body).toHaveProperty('error', 'All items must belong to the specified lesson')
     })
   })
 })

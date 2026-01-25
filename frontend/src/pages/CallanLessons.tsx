@@ -10,6 +10,7 @@ export function CallanLessons() {
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const fetchLessons = useCallback(async () => {
     if (!user) return;
@@ -32,12 +33,15 @@ export function CallanLessons() {
 
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this lesson?')) return;
+    setDeletingId(id);
     try {
       await lessonsApi.delete(id);
       setLessons((prev) => prev.filter((l) => l.id !== id));
     } catch (err) {
       console.error('Error deleting lesson:', err);
       alert('Failed to delete lesson');
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -125,9 +129,10 @@ export function CallanLessons() {
                   variant="secondary"
                   size="sm"
                   onClick={() => handleDelete(lesson.id)}
-                  className="text-error hover:bg-error/10"
+                  disabled={deletingId === lesson.id}
+                  className="text-error hover:bg-error/10 disabled:opacity-50"
                 >
-                  Delete
+                  {deletingId === lesson.id ? 'Deleting...' : 'Delete'}
                 </Button>
               </div>
             </Card>
