@@ -8,12 +8,14 @@ datasource db {
 }
 
 model User {
-  id        Int        @id @default(autoincrement())
-  email     String     @unique
-  name      String
-  progress  Progress[]
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  id              Int              @id @default(autoincrement())
+  email           String           @unique
+  name            String
+  progress        Progress[]
+  lessons         Lesson[]
+  callanProgress  CallanProgress[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
 }
 
 model Word {
@@ -40,4 +42,44 @@ model Progress {
   updatedAt    DateTime  @updatedAt
 
   @@unique([userId, wordId])
+}
+
+model Lesson {
+  id          String   @id @default(uuid())
+  title       String   // "Stage 1 - Lesson 1" など
+  description String?
+  order       Int      // レッスンの順序
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  qaItems     QAItem[]
+}
+
+model QAItem {
+  id           String   @id @default(uuid())
+  question     String   // 質問文
+  answer       String   // 回答文
+  order        Int      // レッスン内の順序
+  lessonId     String
+  lesson       Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  progresses   CallanProgress[]
+}
+
+model CallanProgress {
+  id            String    @id @default(uuid())
+  userId        Int
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  qaItemId      String
+  qaItem        QAItem    @relation(fields: [qaItemId], references: [id], onDelete: Cascade)
+  mode          String    // "qa" | "shadowing" | "dictation"
+  correctCount  Int       @default(0)
+  totalCount    Int       @default(0)
+  lastPracticed DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@unique([userId, qaItemId, mode])
 }

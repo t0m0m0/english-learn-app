@@ -8,6 +8,9 @@ import Listening from './pages/Listening';
 import Mixing from './pages/Mixing';
 import Progress from './pages/Progress';
 import Login from './pages/Login';
+import CallanHome from './pages/CallanHome';
+import CallanLessons from './pages/CallanLessons';
+import CallanLessonForm from './pages/CallanLessonForm';
 
 function App() {
   return (
@@ -24,6 +27,10 @@ function App() {
                 <Route path="/mixing" element={<Mixing />} />
                 <Route path="/progress" element={<Progress />} />
                 <Route path="/login" element={<Login />} />
+                <Route path="/callan" element={<CallanHome />} />
+                <Route path="/callan/lessons" element={<CallanLessons />} />
+                <Route path="/callan/lessons/new" element={<CallanLessonForm />} />
+                <Route path="/callan/lessons/:id/edit" element={<CallanLessonForm />} />
               </Routes>
             </main>
           </div>

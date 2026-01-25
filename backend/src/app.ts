@@ -4,6 +4,8 @@ import { Prisma } from '@prisma/client';
 import wordsRouter from './routes/words';
 import progressRouter from './routes/progress';
 import usersRouter from './routes/users';
+import lessonsRouter from './routes/lessons';
+import qaItemsRouter from './routes/qa-items';
 
 export function createApp(prisma?: unknown) {
   const app = express();
@@ -44,6 +46,8 @@ export function createApp(prisma?: unknown) {
   app.use('/api/words', wordsRouter);
   app.use('/api/progress', progressRouter);
   app.use('/api/users', usersRouter);
+  app.use('/api/lessons', lessonsRouter);
+  app.use('/api/qa-items', qaItemsRouter);
 
   // Error handling
   app.use((err: Error, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
