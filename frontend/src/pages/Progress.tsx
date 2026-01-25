@@ -1,9 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { useUser } from '../context/UserContext';
 import { progressApi } from '../services/api';
 import ProgressBar from '../components/ProgressBar';
-import { Container, Card, Button } from '../components/ui';
+import { Container, Card } from '../components/ui';
 
 interface Statistics {
   totalWords: number;
@@ -24,22 +22,16 @@ interface DailyStats {
 }
 
 export function Progress() {
-  const { user } = useUser();
   const [statistics, setStatistics] = useState<Statistics | null>(null);
   const [dailyStats, setDailyStats] = useState<DailyStats | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchStats = async () => {
-      if (!user) {
-        setLoading(false);
-        return;
-      }
-
       try {
         const [progressData, statsData] = await Promise.all([
-          progressApi.getUserProgress(user.id),
-          progressApi.getStats(user.id),
+          progressApi.getUserProgress(),
+          progressApi.getStats(),
         ]);
 
         setStatistics(progressData.statistics);
@@ -52,27 +44,7 @@ export function Progress() {
     };
 
     fetchStats();
-  }, [user]);
-
-  if (!user) {
-    return (
-      <Container size="md" className="py-10">
-        <Card className="text-center py-12">
-          <h2 className="text-2xl font-bold text-text-primary mb-2">
-            Track Your Progress
-          </h2>
-          <p className="text-text-secondary mb-6">
-            Login to see your learning statistics and track your journey.
-          </p>
-          <Link to="/login">
-            <Button variant="primary" size="lg">
-              Login to Continue
-            </Button>
-          </Link>
-        </Card>
-      </Container>
-    );
-  }
+  }, []);
 
   if (loading) {
     return (
@@ -117,7 +89,7 @@ export function Progress() {
         <h1 className="text-3xl font-bold text-text-primary mb-2">
           Your Progress
         </h1>
-        <p className="text-text-secondary">Welcome back, {user.name}!</p>
+        <p className="text-text-secondary">Track your English learning journey</p>
       </header>
 
       {/* Overview Cards */}

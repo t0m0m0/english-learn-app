@@ -6,13 +6,6 @@ export interface Word {
   createdAt?: string;
 }
 
-export interface User {
-  id: number;
-  email: string;
-  name: string;
-  createdAt: string;
-}
-
 export interface Progress {
   id: number;
   userId: number;

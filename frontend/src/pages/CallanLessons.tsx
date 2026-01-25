@@ -1,23 +1,20 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { lessonsApi } from '../services/api';
-import { useUser } from '../context/UserContext';
 import { Container, Card, Button } from '../components/ui';
 import type { Lesson } from '../types';
 
 export function CallanLessons() {
-  const { user } = useUser();
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const fetchLessons = useCallback(async () => {
-    if (!user) return;
     setLoading(true);
     setError(null);
     try {
-      const { lessons: fetchedLessons } = await lessonsApi.getAll(user.id);
+      const { lessons: fetchedLessons } = await lessonsApi.getAll();
       setLessons(fetchedLessons);
     } catch (err) {
       console.error('Error fetching lessons:', err);
@@ -25,7 +22,7 @@ export function CallanLessons() {
     } finally {
       setLoading(false);
     }
-  }, [user]);
+  }, []);
 
   useEffect(() => {
     fetchLessons();
@@ -44,21 +41,6 @@ export function CallanLessons() {
       setDeletingId(null);
     }
   };
-
-  if (!user) {
-    return (
-      <Container size="lg" className="py-10">
-        <Card className="text-center py-12">
-          <h2 className="text-2xl font-bold text-text-primary mb-4">
-            Please log in to manage lessons
-          </h2>
-          <Link to="/login">
-            <Button variant="primary">Go to Login</Button>
-          </Link>
-        </Card>
-      </Container>
-    );
-  }
 
   if (loading) {
     return (

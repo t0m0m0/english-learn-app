@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { lessonsApi } from '../services/api';
-import { useUser } from '../context/UserContext';
+import { lessonsApi, DEFAULT_USER_ID } from '../services/api';
 import { Container, Card, Button } from '../components/ui';
 import { CallanQAPractice, type PracticeSummary } from '../components/CallanQAPractice';
 import type { Lesson } from '../types';
@@ -10,7 +9,6 @@ type PracticeState = 'loading' | 'ready' | 'practicing' | 'completed' | 'error';
 
 export function CallanPractice() {
   const { lessonId } = useParams<{ lessonId: string }>();
-  const { user } = useUser();
 
   const [lesson, setLesson] = useState<Lesson | null>(null);
   const [practiceState, setPracticeState] = useState<PracticeState>('loading');
@@ -51,21 +49,6 @@ export function CallanPractice() {
     setSummary(null);
     setPracticeState('ready');
   }, []);
-
-  if (!user) {
-    return (
-      <Container size="lg" className="py-10">
-        <Card className="text-center py-12">
-          <h2 className="text-2xl font-bold text-text-primary mb-4">
-            Please log in to practice
-          </h2>
-          <Link to="/login">
-            <Button variant="primary">Go to Login</Button>
-          </Link>
-        </Card>
-      </Container>
-    );
-  }
 
   if (practiceState === 'loading') {
     return (
@@ -279,7 +262,7 @@ export function CallanPractice() {
 
       <CallanQAPractice
         qaItems={lesson.qaItems}
-        userId={user.id}
+        userId={DEFAULT_USER_ID}
         onComplete={handleComplete}
       />
     </Container>

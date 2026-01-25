@@ -1,10 +1,7 @@
 import { Link } from 'react-router-dom';
-import { useUser } from '../context/UserContext';
 import { Container, Card, Button } from '../components/ui';
 
 export function CallanHome() {
-  const { user } = useUser();
-
   return (
     <Container size="lg" className="py-10">
       <header className="text-center mb-12">
@@ -59,20 +56,11 @@ export function CallanHome() {
         <p className="text-text-secondary mb-6">
           Create and organize your Q&A content for practice sessions.
         </p>
-        {user ? (
-          <Link to="/callan/lessons">
-            <Button variant="primary" size="lg">
-              Go to Lessons
-            </Button>
-          </Link>
-        ) : (
-          <div>
-            <p className="text-text-muted mb-4">Please log in to manage lessons</p>
-            <Link to="/login">
-              <Button variant="primary">Log In</Button>
-            </Link>
-          </div>
-        )}
+        <Link to="/callan/lessons">
+          <Button variant="primary" size="lg">
+            Go to Lessons
+          </Button>
+        </Link>
       </Card>
 
       <div className="mt-12">
