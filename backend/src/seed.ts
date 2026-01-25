@@ -106,19 +106,23 @@ async function main() {
     console.log(`Imported ${imported}/${words.length} words`);
   }
 
-  // Create a default user for testing
-  const existingUser = await prisma.user.findUnique({
-    where: { email: 'test@example.com' },
+  // Create a default user with ID=1 (required for app to work without authentication)
+  // First, ensure user with ID=1 exists
+  const existingDefaultUser = await prisma.user.findUnique({
+    where: { id: 1 },
   });
 
-  if (!existingUser) {
-    await prisma.user.create({
-      data: {
-        email: 'test@example.com',
-        name: 'Test User',
-      },
+  if (!existingDefaultUser) {
+    // Delete any existing user with email 'default@example.com' to avoid conflicts
+    await prisma.user.deleteMany({
+      where: { email: 'default@example.com' },
     });
-    console.log('Created test user');
+
+    // Use raw SQL to insert with specific ID (Prisma doesn't support specifying ID directly)
+    await prisma.$executeRaw`INSERT INTO "User" (id, email, name, "createdAt", "updatedAt") VALUES (1, 'default@example.com', 'Default User', NOW(), NOW()) ON CONFLICT (id) DO NOTHING`;
+    console.log('Created default user with ID=1');
+  } else {
+    console.log('Default user with ID=1 already exists');
   }
 
   console.log('Seed completed successfully!');
