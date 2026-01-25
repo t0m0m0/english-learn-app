@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { wordsApi, progressApi } from '../services/api';
-import { useUser } from '../context/UserContext';
+import { progressApi, DEFAULT_USER_ID } from '../services/api';
 import WordCard from '../components/WordCard';
 import ProgressBar from '../components/ProgressBar';
 import { Container, Card, Button } from '../components/ui';
@@ -13,7 +12,6 @@ interface Word {
 }
 
 export function Learn() {
-  const { user } = useUser();
   const [words, setWords] = useState<Word[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -25,19 +23,12 @@ export function Learn() {
   const fetchWords = useCallback(async () => {
     setLoading(true);
     try {
-      if (user) {
-        // Get new words for the user
-        const { words: newWords } = await progressApi.getNewWords(
-          user.id,
-          20,
-          maxFrequency
-        );
-        setWords(newWords);
-      } else {
-        // Guest mode: just get random words
-        const { words: randomWords } = await wordsApi.getRandom(20, maxFrequency);
-        setWords(randomWords);
-      }
+      const { words: newWords } = await progressApi.getNewWords(
+        DEFAULT_USER_ID,
+        20,
+        maxFrequency
+      );
+      setWords(newWords);
       setCurrentIndex(0);
       setSessionStats({ correct: 0, incorrect: 0 });
     } catch (error) {
@@ -45,16 +36,16 @@ export function Learn() {
     } finally {
       setLoading(false);
     }
-  }, [user, maxFrequency]);
+  }, [maxFrequency]);
 
   useEffect(() => {
     fetchWords();
   }, [fetchWords]);
 
   const handleCorrect = async () => {
-    if (user && currentWord) {
+    if (currentWord) {
       try {
-        await progressApi.updateProgress(user.id, currentWord.id, true);
+        await progressApi.updateProgress(DEFAULT_USER_ID, currentWord.id, true);
       } catch (error) {
         console.error('Error updating progress:', error);
       }
@@ -64,9 +55,9 @@ export function Learn() {
   };
 
   const handleIncorrect = async () => {
-    if (user && currentWord) {
+    if (currentWord) {
       try {
-        await progressApi.updateProgress(user.id, currentWord.id, false);
+        await progressApi.updateProgress(DEFAULT_USER_ID, currentWord.id, false);
       } catch (error) {
         console.error('Error updating progress:', error);
       }

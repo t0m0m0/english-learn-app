@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { Word, User, Progress, Statistics, DailyStats, Lesson, QAItem, CallanProgress } from '../types';
+import type { Word, Progress, Statistics, DailyStats, Lesson, QAItem, CallanProgress } from '../types';
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
@@ -9,6 +9,9 @@ const api = axios.create({
     'Content-Type': 'application/json',
   },
 });
+
+// Default user ID for all operations (authentication removed)
+export const DEFAULT_USER_ID = 1;
 
 // Words API
 export const wordsApi = {
@@ -52,53 +55,30 @@ export const wordsApi = {
   },
 };
 
-// Users API
-export const usersApi = {
-  getAll: async () => {
-    const response = await api.get<{ users: User[] }>('/users');
-    return response.data;
-  },
-
-  getById: async (id: number) => {
-    const response = await api.get<{ user: User }>(`/users/${id}`);
-    return response.data;
-  },
-
-  create: async (email: string, name: string) => {
-    const response = await api.post<{ user: User }>('/users', { email, name });
-    return response.data;
-  },
-
-  login: async (email: string) => {
-    const response = await api.post<{ user: User }>('/users/login', { email });
-    return response.data;
-  },
-};
-
 // Progress API
 export const progressApi = {
-  getUserProgress: async (userId: number) => {
+  getUserProgress: async (userId: number = DEFAULT_USER_ID) => {
     const response = await api.get<{ progress: Progress[]; statistics: Statistics }>(
       `/progress/user/${userId}`
     );
     return response.data;
   },
 
-  getReviewWords: async (userId: number, limit = 20) => {
+  getReviewWords: async (userId: number = DEFAULT_USER_ID, limit = 20) => {
     const response = await api.get<{ words: Progress[] }>(
       `/progress/review/${userId}?limit=${limit}`
     );
     return response.data;
   },
 
-  getNewWords: async (userId: number, limit = 10, maxFrequency = 1000) => {
+  getNewWords: async (userId: number = DEFAULT_USER_ID, limit = 10, maxFrequency = 1000) => {
     const response = await api.get<{ words: Word[] }>(
       `/progress/new/${userId}?limit=${limit}&maxFrequency=${maxFrequency}`
     );
     return response.data;
   },
 
-  updateProgress: async (userId: number, wordId: number, correct: boolean) => {
+  updateProgress: async (userId: number = DEFAULT_USER_ID, wordId: number, correct: boolean) => {
     const response = await api.post<{ progress: Progress }>('/progress/update', {
       userId,
       wordId,
@@ -107,7 +87,7 @@ export const progressApi = {
     return response.data;
   },
 
-  getStats: async (userId: number) => {
+  getStats: async (userId: number = DEFAULT_USER_ID) => {
     const response = await api.get<DailyStats>(`/progress/stats/${userId}`);
     return response.data;
   },
@@ -115,7 +95,7 @@ export const progressApi = {
 
 // Lessons API
 export const lessonsApi = {
-  getAll: async (userId: number) => {
+  getAll: async (userId: number = DEFAULT_USER_ID) => {
     const response = await api.get<{ lessons: Lesson[] }>(`/lessons?userId=${userId}`);
     return response.data;
   },
@@ -125,8 +105,11 @@ export const lessonsApi = {
     return response.data;
   },
 
-  create: async (data: { title: string; description?: string; order: number; userId: number }) => {
-    const response = await api.post<{ lesson: Lesson }>('/lessons', data);
+  create: async (data: { title: string; description?: string; order: number; userId?: number }) => {
+    const response = await api.post<{ lesson: Lesson }>('/lessons', {
+      ...data,
+      userId: data.userId ?? DEFAULT_USER_ID,
+    });
     return response.data;
   },
 
@@ -167,16 +150,19 @@ export const qaItemsApi = {
 // Callan Progress API
 export const callanProgressApi = {
   recordProgress: async (data: {
-    userId: number;
+    userId?: number;
     qaItemId: string;
     mode: 'qa' | 'shadowing' | 'dictation';
     isCorrect: boolean;
   }) => {
-    const response = await api.post<{ progress: CallanProgress }>('/callan/progress', data);
+    const response = await api.post<{ progress: CallanProgress }>('/callan/progress', {
+      ...data,
+      userId: data.userId ?? DEFAULT_USER_ID,
+    });
     return response.data;
   },
 
-  getLessonProgress: async (lessonId: string, userId: number, mode?: 'qa' | 'shadowing' | 'dictation') => {
+  getLessonProgress: async (lessonId: string, userId: number = DEFAULT_USER_ID, mode?: 'qa' | 'shadowing' | 'dictation') => {
     const params = new URLSearchParams({ userId: userId.toString() });
     if (mode) {
       params.append('mode', mode);

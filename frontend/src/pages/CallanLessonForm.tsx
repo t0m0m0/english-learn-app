@@ -1,14 +1,12 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { lessonsApi, qaItemsApi } from '../services/api';
-import { useUser } from '../context/UserContext';
 import { Container, Card, Button } from '../components/ui';
 import type { QAItem } from '../types';
 
 export function CallanLessonForm() {
   const { id } = useParams<{ id?: string }>();
   const navigate = useNavigate();
-  const { user } = useUser();
   const isEditing = Boolean(id);
 
   const [title, setTitle] = useState('');
@@ -48,7 +46,6 @@ export function CallanLessonForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user) return;
 
     setSaving(true);
     try {
@@ -59,7 +56,6 @@ export function CallanLessonForm() {
           title,
           description,
           order,
-          userId: user.id,
         });
         navigate(`/callan/lessons/${lesson.id}/edit`);
         return;
@@ -127,16 +123,6 @@ export function CallanLessonForm() {
       alert('Failed to reorder Q&A items');
     }
   };
-
-  if (!user) {
-    return (
-      <Container size="lg" className="py-10">
-        <Card className="text-center py-12">
-          <p className="text-text-secondary">Please log in to manage lessons</p>
-        </Card>
-      </Container>
-    );
-  }
 
   if (loading) {
     return (

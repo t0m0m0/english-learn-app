@@ -1,10 +1,7 @@
 import { NavLink } from 'react-router-dom';
-import { useUser } from '../context/UserContext';
 import { ThemeToggle } from './ui';
 
 export function Navigation() {
-  const { user, logout } = useUser();
-
   const linkClass = ({ isActive }: { isActive: boolean }) =>
     `px-4 py-2 rounded-button text-sm transition-colors ${
       isActive
@@ -43,25 +40,6 @@ export function Navigation() {
 
       <div className="flex items-center gap-3">
         <ThemeToggle />
-        {user ? (
-          <>
-            <span className="text-sm text-text-primary hidden sm:inline">{user.name}</span>
-            <button
-              type="button"
-              className="px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-button text-sm text-text-secondary hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
-              onClick={logout}
-            >
-              Logout
-            </button>
-          </>
-        ) : (
-          <NavLink
-            to="/login"
-            className="px-4 py-2 bg-primary text-white rounded-button text-sm hover:bg-primary-dark transition-colors"
-          >
-            Login
-          </NavLink>
-        )}
       </div>
     </nav>
   );

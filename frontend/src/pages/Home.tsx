@@ -1,10 +1,7 @@
 import { Link } from 'react-router-dom';
-import { useUser } from '../context/UserContext';
 import { Container, Card, Button } from '../components/ui';
 
 export function Home() {
-  const { user } = useUser();
-
   return (
     <Container size="lg" className="py-10">
       {/* Hero Section */}
@@ -130,23 +127,21 @@ export function Home() {
       </section>
 
       {/* CTA Section */}
-      {!user && (
-        <section className="text-center bg-gradient-to-br from-primary to-purple-600 text-white p-10 md:p-16 rounded-3xl">
-          <h2 className="text-3xl font-bold mb-4">Start Your Journey Today</h2>
-          <p className="text-lg opacity-90 mb-8">
-            Create an account to track your progress and unlock all features.
-          </p>
-          <Link to="/login">
-            <Button
-              variant="secondary"
-              size="lg"
-              className="bg-white text-primary hover:bg-gray-100"
-            >
-              Get Started Free
-            </Button>
-          </Link>
-        </section>
-      )}
+      <section className="text-center bg-gradient-to-br from-primary to-purple-600 text-white p-10 md:p-16 rounded-3xl">
+        <h2 className="text-3xl font-bold mb-4">Start Your Journey Today</h2>
+        <p className="text-lg opacity-90 mb-8">
+          Begin learning with the 3,000 most common English words.
+        </p>
+        <Link to="/learn">
+          <Button
+            variant="secondary"
+            size="lg"
+            className="bg-white text-primary hover:bg-gray-100"
+          >
+            Get Started
+          </Button>
+        </Link>
+      </section>
     </Container>
   );
 }
