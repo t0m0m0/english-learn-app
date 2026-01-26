@@ -34,7 +34,7 @@ export function CallanHome() {
           <p className="text-text-secondary text-sm">
             Listen and immediately repeat to improve pronunciation and fluency
           </p>
-          <p className="text-text-muted text-xs mt-2">(Coming in #9)</p>
+          <p className="text-success text-xs mt-2 font-medium">Available Now!</p>
         </Card>
 
         <Card className="text-center">

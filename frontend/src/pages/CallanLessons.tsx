@@ -105,9 +105,14 @@ export function CallanLessons() {
               </div>
               <div className="flex gap-2">
                 {lesson.qaItems.length > 0 && (
-                  <Link to={`/callan/practice/${lesson.id}`}>
-                    <Button variant="primary" size="sm">Practice</Button>
-                  </Link>
+                  <>
+                    <Link to={`/callan/practice/${lesson.id}`}>
+                      <Button variant="primary" size="sm">Q&A</Button>
+                    </Link>
+                    <Link to={`/callan/shadowing/${lesson.id}`}>
+                      <Button variant="primary" size="sm">Shadow</Button>
+                    </Link>
+                  </>
                 )}
                 <Link to={`/callan/lessons/${lesson.id}/edit`}>
                   <Button variant="secondary" size="sm">Edit</Button>
