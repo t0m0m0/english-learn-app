@@ -357,12 +357,192 @@ describe("CallanDictation", () => {
   });
 
   describe("empty state", () => {
-    it("should return null when no qaItems", () => {
-      const { container } = render(
+    it("should show fallback UI when no qaItems", () => {
+      render(
         <CallanDictation qaItems={[]} userId={1} onComplete={mockOnComplete} />,
       );
 
-      expect(container).toBeEmptyDOMElement();
+      expect(
+        screen.getByText(/unable to load practice item/i),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: /go back/i }),
+      ).toBeInTheDocument();
+    });
+  });
+
+  describe("API error handling", () => {
+    it("should continue to show results even when progress recording fails", async () => {
+      const consoleSpy = vi
+        .spyOn(console, "error")
+        .mockImplementation(() => {});
+      const { callanProgressApi } = await import("../services/api");
+      vi.mocked(callanProgressApi.recordProgress).mockRejectedValueOnce(
+        new Error("Network error"),
+      );
+
+      render(
+        <CallanDictation
+          qaItems={mockQAItems}
+          userId={1}
+          onComplete={mockOnComplete}
+        />,
+      );
+
+      const input = screen.getByRole("textbox");
+      fireEvent.change(input, { target: { value: "My name is John." } });
+      fireEvent.click(screen.getByRole("button", { name: /check/i }));
+
+      // Should still show result despite API failure
+      await waitFor(() => {
+        expect(screen.getByText(/100/)).toBeInTheDocument();
+      });
+
+      // Should show progress save error
+      await waitFor(() => {
+        expect(
+          screen.getByText(/progress could not be saved/i),
+        ).toBeInTheDocument();
+      });
+
+      expect(consoleSpy).toHaveBeenCalledWith(
+        "Failed to record progress:",
+        expect.any(Error),
+      );
+      consoleSpy.mockRestore();
+    });
+  });
+
+  describe("summary calculation", () => {
+    it("should calculate correct summary with single item", async () => {
+      render(
+        <CallanDictation
+          qaItems={[mockQAItems[0]]}
+          userId={1}
+          onComplete={mockOnComplete}
+        />,
+      );
+
+      const input = screen.getByRole("textbox");
+      fireEvent.change(input, { target: { value: "My name is John" } });
+      fireEvent.click(screen.getByRole("button", { name: /check/i }));
+
+      await waitFor(() => {
+        fireEvent.click(screen.getByRole("button", { name: /finish/i }));
+      });
+
+      expect(mockOnComplete).toHaveBeenCalledWith(
+        expect.objectContaining({
+          totalItems: 1,
+          correctCount: 1,
+          totalAccuracy: 100,
+        }),
+      );
+    });
+
+    it("should calculate correct summary with multiple items", async () => {
+      render(
+        <CallanDictation
+          qaItems={mockQAItems}
+          userId={1}
+          onComplete={mockOnComplete}
+        />,
+      );
+
+      // First item - 100% correct
+      let input = screen.getByRole("textbox");
+      fireEvent.change(input, { target: { value: "My name is John" } });
+      fireEvent.click(screen.getByRole("button", { name: /check/i }));
+
+      await waitFor(() => {
+        fireEvent.click(screen.getByRole("button", { name: /next/i }));
+      });
+
+      // Second item - 100% correct
+      input = screen.getByRole("textbox");
+      fireEvent.change(input, { target: { value: "I live in Tokyo" } });
+      fireEvent.click(screen.getByRole("button", { name: /check/i }));
+
+      await waitFor(() => {
+        fireEvent.click(screen.getByRole("button", { name: /finish/i }));
+      });
+
+      expect(mockOnComplete).toHaveBeenCalledWith(
+        expect.objectContaining({
+          totalItems: 2,
+          correctCount: 2,
+          totalAccuracy: 100,
+        }),
+      );
+    });
+  });
+
+  describe("button states", () => {
+    it("should disable check button when input is empty", () => {
+      render(
+        <CallanDictation
+          qaItems={mockQAItems}
+          userId={1}
+          onComplete={mockOnComplete}
+        />,
+      );
+
+      const checkButton = screen.getByRole("button", { name: /check/i });
+      expect(checkButton).toBeDisabled();
+    });
+
+    it("should enable check button when input has content", () => {
+      render(
+        <CallanDictation
+          qaItems={mockQAItems}
+          userId={1}
+          onComplete={mockOnComplete}
+        />,
+      );
+
+      const input = screen.getByRole("textbox");
+      fireEvent.change(input, { target: { value: "test" } });
+
+      const checkButton = screen.getByRole("button", { name: /check/i });
+      expect(checkButton).not.toBeDisabled();
+    });
+
+    it("should hide hint button after checking answer", async () => {
+      render(
+        <CallanDictation
+          qaItems={mockQAItems}
+          userId={1}
+          onComplete={mockOnComplete}
+        />,
+      );
+
+      expect(screen.getByRole("button", { name: /hint/i })).toBeInTheDocument();
+
+      const input = screen.getByRole("textbox");
+      fireEvent.change(input, { target: { value: "test" } });
+      fireEvent.click(screen.getByRole("button", { name: /check/i }));
+
+      await waitFor(() => {
+        expect(
+          screen.queryByRole("button", { name: /hint/i }),
+        ).not.toBeInTheDocument();
+      });
+    });
+  });
+
+  describe("keyboard shortcuts - additional", () => {
+    it("should stop audio on Escape key", () => {
+      render(
+        <CallanDictation
+          qaItems={mockQAItems}
+          userId={1}
+          onComplete={mockOnComplete}
+        />,
+      );
+
+      fireEvent.keyDown(window, { key: "Escape" });
+
+      expect(mockStop).toHaveBeenCalled();
     });
   });
 });

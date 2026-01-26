@@ -31,8 +31,8 @@ export function CallanDictation({
   const [hint, setHint] = useState<string | null>(null);
   const [result, setResult] = useState<DictationResult | null>(null);
   const [correctCount, setCorrectCount] = useState(0);
-  const [totalAccuracy, setTotalAccuracy] = useState(0);
   const [accuracySum, setAccuracySum] = useState(0);
+  const [progressSaveError, setProgressSaveError] = useState<string | null>(null);
 
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -66,10 +66,9 @@ export function CallanDictation({
       setCorrectCount((prev) => prev + 1);
     }
     setAccuracySum((prev) => prev + dictationResult.accuracy);
-    setTotalAccuracy((prev) => {
-      const newSum = accuracySum + dictationResult.accuracy;
-      return Math.round(newSum / (currentIndex + 1));
-    });
+
+    // Clear previous progress save error
+    setProgressSaveError(null);
 
     // Record progress
     try {
@@ -81,20 +80,14 @@ export function CallanDictation({
       });
     } catch (err) {
       console.error("Failed to record progress:", err);
+      setProgressSaveError(
+        "Progress could not be saved. Your practice will continue but this item may not be recorded."
+      );
     }
 
     // Play the correct answer
     speak(currentItem.answer, speed);
-  }, [
-    currentItem,
-    practiceState,
-    userInput,
-    userId,
-    speak,
-    speed,
-    accuracySum,
-    currentIndex,
-  ]);
+  }, [currentItem, practiceState, userInput, userId, speak, speed]);
 
   // Show hint
   const handleHint = useCallback(() => {
@@ -106,13 +99,16 @@ export function CallanDictation({
     setHint(hintWords + "...");
   }, [currentItem]);
 
-  // Go to next item
+  // Go to next item - use functional update to get latest state values
   const handleNext = useCallback(() => {
     if (isLastItem) {
+      // Use current result to include the last item's accuracy in the summary
+      const finalAccuracySum = result ? accuracySum : accuracySum;
+      const finalCorrectCount = result?.isCorrect ? correctCount : correctCount;
       const summary: DictationSummary = {
         totalItems: qaItems.length,
-        correctCount,
-        totalAccuracy: Math.round(accuracySum / qaItems.length),
+        correctCount: finalCorrectCount,
+        totalAccuracy: qaItems.length > 0 ? Math.round(finalAccuracySum / qaItems.length) : 0,
       };
       onComplete(summary);
     } else {
@@ -126,7 +122,7 @@ export function CallanDictation({
         inputRef.current?.focus();
       }, 0);
     }
-  }, [isLastItem, qaItems.length, correctCount, accuracySum, onComplete]);
+  }, [isLastItem, qaItems.length, correctCount, accuracySum, result, onComplete]);
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -184,8 +180,24 @@ export function CallanDictation({
     inputRef.current?.focus();
   }, []);
 
+  // Cleanup TTS on unmount
+  useEffect(() => {
+    return () => {
+      stopSpeaking();
+    };
+  }, [stopSpeaking]);
+
   if (!currentItem) {
-    return null;
+    return (
+      <Card className="p-6 text-center">
+        <p className="text-error mb-4">
+          Unable to load practice item. The practice data may be invalid.
+        </p>
+        <Button variant="secondary" onClick={() => window.history.back()}>
+          Go Back
+        </Button>
+      </Card>
+    );
   }
 
   return (
@@ -277,8 +289,11 @@ export function CallanDictation({
           </Button>
         )}
 
-        {/* Error message */}
+        {/* Error messages */}
         {audioError && <p className="mt-4 text-error text-sm">{audioError}</p>}
+        {progressSaveError && (
+          <p className="mt-4 text-warning text-sm">{progressSaveError}</p>
+        )}
       </Card>
 
       {/* Result card */}

@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
+import axios from "axios";
 import { lessonsApi, DEFAULT_USER_ID } from "../services/api";
 import { Container, Card, Button } from "../components/ui";
 import {
@@ -30,7 +31,21 @@ export function CallanDictationPage() {
       setPracticeState("ready");
     } catch (err) {
       console.error("Error fetching lesson:", err);
-      setError("Failed to load lesson");
+
+      let errorMessage = "Failed to load lesson";
+      if (axios.isAxiosError(err)) {
+        if (err.response?.status === 404) {
+          errorMessage = "This lesson could not be found. It may have been deleted.";
+        } else if (err.response?.status === 403) {
+          errorMessage = "You don't have permission to access this lesson.";
+        } else if (err.response?.status && err.response.status >= 500) {
+          errorMessage = "Server error. Please try again in a few moments.";
+        } else if (err.code === "ERR_NETWORK" || !err.response) {
+          errorMessage = "Network error. Please check your internet connection.";
+        }
+      }
+
+      setError(errorMessage);
       setPracticeState("error");
     }
   }, [lessonId]);

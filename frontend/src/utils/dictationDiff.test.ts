@@ -1,9 +1,5 @@
 import { describe, it, expect } from "vitest";
-import {
-  compareDictation,
-  type DictationResult,
-  type DiffSegment,
-} from "./dictationDiff";
+import { compareDictation } from "./dictationDiff";
 
 describe("compareDictation", () => {
   describe("exact matches", () => {
@@ -150,6 +146,14 @@ describe("compareDictation", () => {
 
     it("should handle empty expected", () => {
       const result = compareDictation("Hello world", "");
+
+      expect(result.isCorrect).toBe(true);
+      expect(result.accuracy).toBe(100);
+      expect(result.diff).toEqual([]);
+    });
+
+    it("should handle both input and expected being empty", () => {
+      const result = compareDictation("", "");
 
       expect(result.isCorrect).toBe(true);
       expect(result.accuracy).toBe(100);
