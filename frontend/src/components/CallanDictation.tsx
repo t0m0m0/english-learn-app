@@ -1,9 +1,9 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { useAudio } from '../hooks/useAudio';
-import { callanProgressApi } from '../services/api';
-import { compareDictation, type DictationResult } from '../utils/dictationDiff';
-import { Button, Card } from './ui';
-import type { QAItem } from '../types';
+import { useState, useEffect, useCallback, useRef } from "react";
+import { useAudio } from "../hooks/useAudio";
+import { callanProgressApi } from "../services/api";
+import { compareDictation, type DictationResult } from "../utils/dictationDiff";
+import { Button, Card } from "./ui";
+import type { QAItem } from "../types";
 
 interface CallanDictationProps {
   qaItems: QAItem[];
@@ -17,13 +17,17 @@ export interface DictationSummary {
   totalAccuracy: number;
 }
 
-type PracticeState = 'input' | 'checked';
+type PracticeState = "input" | "checked";
 
-export function CallanDictation({ qaItems, userId, onComplete }: CallanDictationProps) {
+export function CallanDictation({
+  qaItems,
+  userId,
+  onComplete,
+}: CallanDictationProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [practiceState, setPracticeState] = useState<PracticeState>('input');
+  const [practiceState, setPracticeState] = useState<PracticeState>("input");
   const [speed, setSpeed] = useState(1);
-  const [userInput, setUserInput] = useState('');
+  const [userInput, setUserInput] = useState("");
   const [hint, setHint] = useState<string | null>(null);
   const [result, setResult] = useState<DictationResult | null>(null);
   const [correctCount, setCorrectCount] = useState(0);
@@ -32,7 +36,12 @@ export function CallanDictation({ qaItems, userId, onComplete }: CallanDictation
 
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
-  const { speak, stop: stopSpeaking, isSpeaking, error: audioError } = useAudio();
+  const {
+    speak,
+    stop: stopSpeaking,
+    isSpeaking,
+    error: audioError,
+  } = useAudio();
 
   const currentItem = qaItems[currentIndex];
   const isLastItem = currentIndex === qaItems.length - 1;
@@ -46,11 +55,11 @@ export function CallanDictation({ qaItems, userId, onComplete }: CallanDictation
 
   // Check answer
   const handleCheck = useCallback(async () => {
-    if (!currentItem || practiceState === 'checked') return;
+    if (!currentItem || practiceState === "checked") return;
 
     const dictationResult = compareDictation(userInput, currentItem.answer);
     setResult(dictationResult);
-    setPracticeState('checked');
+    setPracticeState("checked");
 
     // Update statistics
     if (dictationResult.isCorrect) {
@@ -67,25 +76,34 @@ export function CallanDictation({ qaItems, userId, onComplete }: CallanDictation
       await callanProgressApi.recordProgress({
         userId,
         qaItemId: currentItem.id,
-        mode: 'dictation',
+        mode: "dictation",
         isCorrect: dictationResult.isCorrect,
       });
     } catch (err) {
-      console.error('Failed to record progress:', err);
+      console.error("Failed to record progress:", err);
     }
 
     // Play the correct answer
     speak(currentItem.answer, speed);
-  }, [currentItem, practiceState, userInput, userId, speak, speed, accuracySum, currentIndex]);
+  }, [
+    currentItem,
+    practiceState,
+    userInput,
+    userId,
+    speak,
+    speed,
+    accuracySum,
+    currentIndex,
+  ]);
 
   // Show hint
   const handleHint = useCallback(() => {
     if (!currentItem) return;
-    
-    const words = currentItem.answer.split(' ');
+
+    const words = currentItem.answer.split(" ");
     // Show first 1-2 words as hint
-    const hintWords = words.slice(0, Math.min(2, words.length)).join(' ');
-    setHint(hintWords + '...');
+    const hintWords = words.slice(0, Math.min(2, words.length)).join(" ");
+    setHint(hintWords + "...");
   }, [currentItem]);
 
   // Go to next item
@@ -99,10 +117,10 @@ export function CallanDictation({ qaItems, userId, onComplete }: CallanDictation
       onComplete(summary);
     } else {
       setCurrentIndex((prev) => prev + 1);
-      setUserInput('');
+      setUserInput("");
       setHint(null);
       setResult(null);
-      setPracticeState('input');
+      setPracticeState("input");
       // Focus on input after state update
       setTimeout(() => {
         inputRef.current?.focus();
@@ -116,7 +134,7 @@ export function CallanDictation({ qaItems, userId, onComplete }: CallanDictation
       // Don't handle shortcuts when typing in textarea (except specific ones)
       if (e.target instanceof HTMLTextAreaElement) {
         // Only handle Enter for check when not composing
-        if (e.key === 'Enter' && !e.shiftKey && practiceState === 'input') {
+        if (e.key === "Enter" && !e.shiftKey && practiceState === "input") {
           e.preventDefault();
           handleCheck();
         }
@@ -124,35 +142,42 @@ export function CallanDictation({ qaItems, userId, onComplete }: CallanDictation
       }
 
       switch (e.key.toLowerCase()) {
-        case 'p':
+        case "p":
           handlePlay();
           break;
-        case 'h':
-          if (practiceState === 'input') {
+        case "h":
+          if (practiceState === "input") {
             handleHint();
           }
           break;
-        case 'enter':
-          if (practiceState === 'input') {
+        case "enter":
+          if (practiceState === "input") {
             handleCheck();
-          } else if (practiceState === 'checked') {
+          } else if (practiceState === "checked") {
             handleNext();
           }
           break;
-        case 'n':
-          if (practiceState === 'checked') {
+        case "n":
+          if (practiceState === "checked") {
             handleNext();
           }
           break;
-        case 'escape':
+        case "escape":
           stopSpeaking();
           break;
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [practiceState, handlePlay, handleCheck, handleHint, handleNext, stopSpeaking]);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [
+    practiceState,
+    handlePlay,
+    handleCheck,
+    handleHint,
+    handleNext,
+    stopSpeaking,
+  ]);
 
   // Focus input on mount
   useEffect(() => {
@@ -184,7 +209,7 @@ export function CallanDictation({ qaItems, userId, onComplete }: CallanDictation
           <p className="text-xs text-text-muted uppercase tracking-wide mb-2">
             Listen and type what you hear
           </p>
-          
+
           {/* Speed control */}
           <div className="flex items-center gap-4 mb-4">
             <label htmlFor="speed" className="text-text-secondary text-sm">
@@ -209,21 +234,18 @@ export function CallanDictation({ qaItems, userId, onComplete }: CallanDictation
               onClick={handlePlay}
               disabled={isSpeaking}
             >
-              {isSpeaking ? '🔊 Playing...' : '🔊 Play (P)'}
+              {isSpeaking ? "🔊 Playing..." : "🔊 Play (P)"}
             </Button>
 
-            {practiceState === 'input' && (
-              <Button
-                variant="secondary"
-                onClick={handleHint}
-              >
+            {practiceState === "input" && (
+              <Button variant="secondary" onClick={handleHint}>
                 💡 Hint (H)
               </Button>
             )}
           </div>
 
           {/* Hint display */}
-          {hint && practiceState === 'input' && (
+          {hint && practiceState === "input" && (
             <div className="mb-4 p-3 bg-warning/10 rounded-lg border border-warning/20">
               <p className="text-sm text-warning font-medium">Hint: {hint}</p>
             </div>
@@ -237,14 +259,14 @@ export function CallanDictation({ qaItems, userId, onComplete }: CallanDictation
             value={userInput}
             onChange={(e) => setUserInput(e.target.value)}
             placeholder="Type what you hear..."
-            disabled={practiceState === 'checked'}
+            disabled={practiceState === "checked"}
             className="w-full p-4 border border-border rounded-lg bg-surface text-text-primary placeholder:text-text-muted resize-none min-h-[100px] focus:outline-none focus:ring-2 focus:ring-primary/50 disabled:opacity-50"
             rows={3}
           />
         </div>
 
         {/* Check button */}
-        {practiceState === 'input' && (
+        {practiceState === "input" && (
           <Button
             variant="primary"
             onClick={handleCheck}
@@ -256,13 +278,11 @@ export function CallanDictation({ qaItems, userId, onComplete }: CallanDictation
         )}
 
         {/* Error message */}
-        {audioError && (
-          <p className="mt-4 text-error text-sm">{audioError}</p>
-        )}
+        {audioError && <p className="mt-4 text-error text-sm">{audioError}</p>}
       </Card>
 
       {/* Result card */}
-      {practiceState === 'checked' && result && (
+      {practiceState === "checked" && result && (
         <Card className="p-6">
           {/* Accuracy display */}
           <div className="mb-4 flex items-center justify-between">
@@ -270,10 +290,10 @@ export function CallanDictation({ qaItems, userId, onComplete }: CallanDictation
             <span
               className={`text-2xl font-bold ${
                 result.accuracy === 100
-                  ? 'text-success'
+                  ? "text-success"
                   : result.accuracy >= 80
-                  ? 'text-warning'
-                  : 'text-error'
+                    ? "text-warning"
+                    : "text-error"
               }`}
             >
               {result.accuracy}%
@@ -290,22 +310,22 @@ export function CallanDictation({ qaItems, userId, onComplete }: CallanDictation
                 <span
                   key={idx}
                   className={
-                    segment.type === 'correct'
-                      ? 'text-success'
-                      : segment.type === 'wrong'
-                      ? 'text-error line-through'
-                      : segment.type === 'missing'
-                      ? 'text-warning bg-warning/10 px-1 rounded'
-                      : 'text-error/50 bg-error/10 px-1 rounded line-through'
+                    segment.type === "correct"
+                      ? "text-success"
+                      : segment.type === "wrong"
+                        ? "text-error line-through"
+                        : segment.type === "missing"
+                          ? "text-warning bg-warning/10 px-1 rounded"
+                          : "text-error/50 bg-error/10 px-1 rounded line-through"
                   }
                   title={
-                    segment.type === 'wrong'
+                    segment.type === "wrong"
                       ? `Expected: ${segment.expected}`
-                      : segment.type === 'missing'
-                      ? 'Missing word'
-                      : segment.type === 'extra'
-                      ? 'Extra word'
-                      : undefined
+                      : segment.type === "missing"
+                        ? "Missing word"
+                        : segment.type === "extra"
+                          ? "Extra word"
+                          : undefined
                   }
                 >
                   {segment.text}
@@ -341,12 +361,8 @@ export function CallanDictation({ qaItems, userId, onComplete }: CallanDictation
           </div>
 
           {/* Next button */}
-          <Button
-            variant="primary"
-            onClick={handleNext}
-            className="w-full"
-          >
-            {isLastItem ? '🏁 Finish' : '➡️ Next (N)'}
+          <Button variant="primary" onClick={handleNext} className="w-full">
+            {isLastItem ? "🏁 Finish" : "➡️ Next (N)"}
           </Button>
         </Card>
       )}
