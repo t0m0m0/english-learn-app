@@ -1,5 +1,5 @@
-import { Link } from 'react-router-dom';
-import { Container, Card, Button } from '../components/ui';
+import { Link } from "react-router-dom";
+import { Container, Card, Button } from "../components/ui";
 
 export function Home() {
   return (
@@ -23,26 +23,29 @@ export function Home() {
           {[
             {
               num: 1,
-              title: 'Focus on the Core',
-              desc: 'Master the 3,000 most common words. This covers 98% of daily conversation.',
+              title: "Focus on the Core",
+              desc: "Master the 3,000 most common words. This covers 98% of daily conversation.",
             },
             {
               num: 2,
-              title: 'Direct Connection',
-              desc: 'Connect images and feelings directly to English words. No translation needed.',
+              title: "Direct Connection",
+              desc: "Connect images and feelings directly to English words. No translation needed.",
             },
             {
               num: 3,
-              title: 'Brain Soaking',
-              desc: 'Immerse yourself in the language. Listen to rhythm and patterns repeatedly.',
+              title: "Brain Soaking",
+              desc: "Immerse yourself in the language. Listen to rhythm and patterns repeatedly.",
             },
             {
               num: 4,
-              title: 'Start Mixing',
-              desc: 'Combine words creatively. 10 verbs + 10 nouns + 10 adjectives = 1,000 expressions.',
+              title: "Start Mixing",
+              desc: "Combine words creatively. 10 verbs + 10 nouns + 10 adjectives = 1,000 expressions.",
             },
           ].map((principle) => (
-            <Card key={principle.num} className="hover:shadow-elevated transition-shadow">
+            <Card
+              key={principle.num}
+              className="hover:shadow-elevated transition-shadow"
+            >
               <span className="inline-flex items-center justify-center w-10 h-10 bg-primary text-white rounded-full font-semibold text-sm mb-4">
                 {principle.num}
               </span>
@@ -70,7 +73,8 @@ export function Home() {
                 Image Connect
               </h3>
               <p className="text-sm text-text-secondary mb-4 leading-relaxed">
-                Learn words by connecting them directly to images. No Japanese translation.
+                Learn words by connecting them directly to images. No Japanese
+                translation.
               </p>
               <span className="text-primary font-medium text-sm group-hover:underline">
                 Start Learning →
@@ -85,7 +89,8 @@ export function Home() {
                 Brain Soaking
               </h3>
               <p className="text-sm text-text-secondary mb-4 leading-relaxed">
-                Listen to words continuously. Train your ear to recognize patterns.
+                Listen to words continuously. Train your ear to recognize
+                patterns.
               </p>
               <span className="text-primary font-medium text-sm group-hover:underline">
                 Start Listening →
@@ -113,9 +118,9 @@ export function Home() {
       {/* Stats Section */}
       <section className="flex flex-col md:flex-row justify-center gap-8 md:gap-16 py-10 mb-12">
         {[
-          { value: '3,000', label: 'Words to Master' },
-          { value: '98%', label: 'Daily Conversation Coverage' },
-          { value: '6', label: 'Months to Fluency' },
+          { value: "3,000", label: "Words to Master" },
+          { value: "98%", label: "Daily Conversation Coverage" },
+          { value: "6", label: "Months to Fluency" },
         ].map((stat) => (
           <div key={stat.label} className="text-center">
             <span className="block text-4xl md:text-5xl font-bold text-primary mb-2">

@@ -1,18 +1,21 @@
-import { NavLink } from 'react-router-dom';
-import { ThemeToggle } from './ui';
+import { NavLink } from "react-router-dom";
+import { ThemeToggle } from "./ui";
 
 export function Navigation() {
   const linkClass = ({ isActive }: { isActive: boolean }) =>
     `px-4 py-2 rounded-button text-sm transition-colors ${
       isActive
-        ? 'bg-primary text-white'
-        : 'text-text-secondary hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-text-primary'
+        ? "bg-primary text-white"
+        : "text-text-secondary hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-text-primary"
     }`;
 
   return (
     <nav className="flex items-center justify-between px-6 py-4 bg-surface shadow-nav sticky top-0 z-50 flex-wrap gap-3">
       <div>
-        <NavLink to="/" className="text-xl font-bold text-primary hover:text-primary-dark">
+        <NavLink
+          to="/"
+          className="text-xl font-bold text-primary hover:text-primary-dark"
+        >
           English Learn
         </NavLink>
       </div>

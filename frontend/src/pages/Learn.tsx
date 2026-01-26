@@ -1,8 +1,8 @@
-import { useState, useEffect, useCallback } from 'react';
-import { progressApi, DEFAULT_USER_ID } from '../services/api';
-import WordCard from '../components/WordCard';
-import ProgressBar from '../components/ProgressBar';
-import { Container, Card, Button } from '../components/ui';
+import { useState, useEffect, useCallback } from "react";
+import { progressApi, DEFAULT_USER_ID } from "../services/api";
+import WordCard from "../components/WordCard";
+import ProgressBar from "../components/ProgressBar";
+import { Container, Card, Button } from "../components/ui";
 
 interface Word {
   id: number;
@@ -15,7 +15,10 @@ export function Learn() {
   const [words, setWords] = useState<Word[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [sessionStats, setSessionStats] = useState({ correct: 0, incorrect: 0 });
+  const [sessionStats, setSessionStats] = useState({
+    correct: 0,
+    incorrect: 0,
+  });
   const [maxFrequency, setMaxFrequency] = useState(1000);
 
   const currentWord = words[currentIndex];
@@ -26,13 +29,13 @@ export function Learn() {
       const { words: newWords } = await progressApi.getNewWords(
         DEFAULT_USER_ID,
         20,
-        maxFrequency
+        maxFrequency,
       );
       setWords(newWords);
       setCurrentIndex(0);
       setSessionStats({ correct: 0, incorrect: 0 });
     } catch (error) {
-      console.error('Error fetching words:', error);
+      console.error("Error fetching words:", error);
     } finally {
       setLoading(false);
     }
@@ -47,7 +50,7 @@ export function Learn() {
       try {
         await progressApi.updateProgress(DEFAULT_USER_ID, currentWord.id, true);
       } catch (error) {
-        console.error('Error updating progress:', error);
+        console.error("Error updating progress:", error);
       }
     }
     setSessionStats((prev) => ({ ...prev, correct: prev.correct + 1 }));
@@ -57,9 +60,13 @@ export function Learn() {
   const handleIncorrect = async () => {
     if (currentWord) {
       try {
-        await progressApi.updateProgress(DEFAULT_USER_ID, currentWord.id, false);
+        await progressApi.updateProgress(
+          DEFAULT_USER_ID,
+          currentWord.id,
+          false,
+        );
       } catch (error) {
-        console.error('Error updating progress:', error);
+        console.error("Error updating progress:", error);
       }
     }
     setSessionStats((prev) => ({ ...prev, incorrect: prev.incorrect + 1 }));
@@ -136,8 +143,8 @@ export function Learn() {
             type="button"
             className={`px-4 py-2 rounded-button text-sm font-medium transition-colors ${
               maxFrequency === freq
-                ? 'bg-primary text-white'
-                : 'bg-gray-100 dark:bg-gray-700 text-text-secondary hover:bg-gray-200 dark:hover:bg-gray-600'
+                ? "bg-primary text-white"
+                : "bg-gray-100 dark:bg-gray-700 text-text-secondary hover:bg-gray-200 dark:hover:bg-gray-600"
             }`}
             onClick={() => handleFrequencyChange(freq)}
           >
@@ -218,7 +225,7 @@ export function Learn() {
                 {Math.round(
                   (sessionStats.correct /
                     (sessionStats.correct + sessionStats.incorrect)) *
-                    100
+                    100,
                 )}
                 %
               </span>

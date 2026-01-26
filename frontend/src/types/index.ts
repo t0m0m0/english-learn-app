@@ -47,7 +47,7 @@ export interface UnsplashImage {
   };
 }
 
-export type LearningMode = 'direct-connect' | 'listening' | 'mixing';
+export type LearningMode = "direct-connect" | "listening" | "mixing";
 
 export interface MixingWord {
   verb: Word;
@@ -81,7 +81,7 @@ export interface CallanProgress {
   id: string;
   userId: number;
   qaItemId: string;
-  mode: 'qa' | 'shadowing' | 'dictation';
+  mode: "qa" | "shadowing" | "dictation";
   correctCount: number;
   totalCount: number;
   lastPracticed: string | null;

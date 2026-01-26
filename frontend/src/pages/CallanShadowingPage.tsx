@@ -1,34 +1,37 @@
-import { useState, useEffect, useCallback } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { lessonsApi, DEFAULT_USER_ID } from '../services/api';
-import { Container, Card, Button } from '../components/ui';
-import { CallanShadowing, type ShadowingSummary } from '../components/CallanShadowing';
-import type { Lesson } from '../types';
+import { useState, useEffect, useCallback } from "react";
+import { useParams, Link } from "react-router-dom";
+import { lessonsApi, DEFAULT_USER_ID } from "../services/api";
+import { Container, Card, Button } from "../components/ui";
+import {
+  CallanShadowing,
+  type ShadowingSummary,
+} from "../components/CallanShadowing";
+import type { Lesson } from "../types";
 
-type PracticeState = 'loading' | 'ready' | 'practicing' | 'completed' | 'error';
+type PracticeState = "loading" | "ready" | "practicing" | "completed" | "error";
 
 export function CallanShadowingPage() {
   const { lessonId } = useParams<{ lessonId: string }>();
 
   const [lesson, setLesson] = useState<Lesson | null>(null);
-  const [practiceState, setPracticeState] = useState<PracticeState>('loading');
+  const [practiceState, setPracticeState] = useState<PracticeState>("loading");
   const [error, setError] = useState<string | null>(null);
   const [summary, setSummary] = useState<ShadowingSummary | null>(null);
 
   const fetchLesson = useCallback(async () => {
     if (!lessonId) return;
 
-    setPracticeState('loading');
+    setPracticeState("loading");
     setError(null);
 
     try {
       const { lesson: fetchedLesson } = await lessonsApi.getById(lessonId);
       setLesson(fetchedLesson);
-      setPracticeState('ready');
+      setPracticeState("ready");
     } catch (err) {
-      console.error('Error fetching lesson:', err);
-      setError('Failed to load lesson');
-      setPracticeState('error');
+      console.error("Error fetching lesson:", err);
+      setError("Failed to load lesson");
+      setPracticeState("error");
     }
   }, [lessonId]);
 
@@ -37,20 +40,20 @@ export function CallanShadowingPage() {
   }, [fetchLesson]);
 
   const handleStartPractice = useCallback(() => {
-    setPracticeState('practicing');
+    setPracticeState("practicing");
   }, []);
 
   const handleComplete = useCallback((practiceSummary: ShadowingSummary) => {
     setSummary(practiceSummary);
-    setPracticeState('completed');
+    setPracticeState("completed");
   }, []);
 
   const handlePracticeAgain = useCallback(() => {
     setSummary(null);
-    setPracticeState('ready');
+    setPracticeState("ready");
   }, []);
 
-  if (practiceState === 'loading') {
+  if (practiceState === "loading") {
     return (
       <Container size="lg" className="py-10">
         <Card className="text-center py-12">
@@ -60,12 +63,12 @@ export function CallanShadowingPage() {
     );
   }
 
-  if (practiceState === 'error' || !lesson) {
+  if (practiceState === "error" || !lesson) {
     return (
       <Container size="lg" className="py-10">
         <Card className="text-center py-12">
           <h2 className="text-xl font-semibold text-error mb-4">
-            {error || 'Lesson not found'}
+            {error || "Lesson not found"}
           </h2>
           <div className="flex gap-4 justify-center">
             <Button variant="primary" onClick={fetchLesson}>
@@ -103,7 +106,7 @@ export function CallanShadowingPage() {
     );
   }
 
-  if (practiceState === 'ready') {
+  if (practiceState === "ready") {
     return (
       <Container size="lg" className="py-10">
         <Card className="text-center py-12">
@@ -127,9 +130,7 @@ export function CallanShadowingPage() {
               </div>
               <div className="flex justify-between">
                 <span className="text-text-secondary">Mode:</span>
-                <span className="text-text-primary font-medium">
-                  Shadowing
-                </span>
+                <span className="text-text-primary font-medium">Shadowing</span>
               </div>
             </div>
           </div>
@@ -168,7 +169,7 @@ export function CallanShadowingPage() {
     );
   }
 
-  if (practiceState === 'completed' && summary) {
+  if (practiceState === "completed" && summary) {
     return (
       <Container size="lg" className="py-10">
         <Card className="text-center py-12">
@@ -206,10 +207,10 @@ export function CallanShadowingPage() {
           {/* Encouragement message */}
           <p className="text-text-secondary mb-8">
             {summary.retryCount === 0
-              ? '🎉 Perfect! You nailed every phrase!'
+              ? "🎉 Perfect! You nailed every phrase!"
               : summary.retryCount < summary.totalItems
-              ? '👍 Great effort! Practice makes perfect.'
-              : '💪 Keep practicing! You\'re making progress.'}
+                ? "👍 Great effort! Practice makes perfect."
+                : "💪 Keep practicing! You're making progress."}
           </p>
 
           <div className="flex gap-4 justify-center flex-wrap">

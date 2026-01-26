@@ -1,9 +1,9 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { useAudio } from '../hooks/useAudio';
-import { useAudioRecorder } from '../hooks/useAudioRecorder';
-import { callanProgressApi } from '../services/api';
-import { Button, Card } from './ui';
-import type { QAItem } from '../types';
+import { useState, useEffect, useCallback, useRef } from "react";
+import { useAudio } from "../hooks/useAudio";
+import { useAudioRecorder } from "../hooks/useAudioRecorder";
+import { callanProgressApi } from "../services/api";
+import { Button, Card } from "./ui";
+import type { QAItem } from "../types";
 
 interface CallanShadowingProps {
   qaItems: QAItem[];
@@ -17,11 +17,15 @@ export interface ShadowingSummary {
   retryCount: number;
 }
 
-type PracticeState = 'ready' | 'recording' | 'review' | 'evaluated';
+type PracticeState = "ready" | "recording" | "review" | "evaluated";
 
-export function CallanShadowing({ qaItems, userId, onComplete }: CallanShadowingProps) {
+export function CallanShadowing({
+  qaItems,
+  userId,
+  onComplete,
+}: CallanShadowingProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [practiceState, setPracticeState] = useState<PracticeState>('ready');
+  const [practiceState, setPracticeState] = useState<PracticeState>("ready");
   const [speed, setSpeed] = useState(1);
   const [goodCount, setGoodCount] = useState(0);
   const [retryCount, setRetryCount] = useState(0);
@@ -30,10 +34,17 @@ export function CallanShadowing({ qaItems, userId, onComplete }: CallanShadowing
   const [playbackError, setPlaybackError] = useState<string | null>(null);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const compareIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const compareIntervalRef = useRef<ReturnType<typeof setInterval> | null>(
+    null,
+  );
   const compareTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const { speak, stop: stopSpeaking, isSpeaking, error: audioError } = useAudio();
+  const {
+    speak,
+    stop: stopSpeaking,
+    isSpeaking,
+    error: audioError,
+  } = useAudio();
   const {
     isRecording,
     isSupported: recorderSupported,
@@ -59,7 +70,7 @@ export function CallanShadowing({ qaItems, userId, onComplete }: CallanShadowing
   const handleStartRecording = useCallback(async () => {
     if (isRecording) return;
     stopSpeaking();
-    setPracticeState('recording');
+    setPracticeState("recording");
     await startRecording();
   }, [isRecording, stopSpeaking, startRecording]);
 
@@ -67,7 +78,7 @@ export function CallanShadowing({ qaItems, userId, onComplete }: CallanShadowing
   const handleStopRecording = useCallback(() => {
     if (!isRecording) return;
     stopRecording();
-    setPracticeState('review');
+    setPracticeState("review");
   }, [isRecording, stopRecording]);
 
   // Play recorded audio
@@ -84,7 +95,7 @@ export function CallanShadowing({ qaItems, userId, onComplete }: CallanShadowing
     };
 
     audio.onerror = () => {
-      setPlaybackError('Failed to play recording');
+      setPlaybackError("Failed to play recording");
       setIsPlayingRecording(false);
       audioRef.current = null;
     };
@@ -93,8 +104,8 @@ export function CallanShadowing({ qaItems, userId, onComplete }: CallanShadowing
       await audio.play();
       setIsPlayingRecording(true);
     } catch (err) {
-      console.error('Audio playback failed:', err);
-      setPlaybackError('Failed to play recording. Please try again.');
+      console.error("Audio playback failed:", err);
+      setPlaybackError("Failed to play recording. Please try again.");
       setIsPlayingRecording(false);
       audioRef.current = null;
     }
@@ -142,7 +153,7 @@ export function CallanShadowing({ qaItems, userId, onComplete }: CallanShadowing
           compareIntervalRef.current = null;
         }
         setIsComparing(false);
-        setPlaybackError('Compare timed out. Please try again.');
+        setPlaybackError("Compare timed out. Please try again.");
         return;
       }
 
@@ -164,7 +175,7 @@ export function CallanShadowing({ qaItems, userId, onComplete }: CallanShadowing
           };
 
           audio.onerror = () => {
-            setPlaybackError('Failed to play recording during compare');
+            setPlaybackError("Failed to play recording during compare");
             setIsComparing(false);
             audioRef.current = null;
           };
@@ -172,8 +183,8 @@ export function CallanShadowing({ qaItems, userId, onComplete }: CallanShadowing
           try {
             await audio.play();
           } catch (err) {
-            console.error('Failed to play recording in compare:', err);
-            setPlaybackError('Failed to play recording. Please try again.');
+            console.error("Failed to play recording in compare:", err);
+            setPlaybackError("Failed to play recording. Please try again.");
             setIsComparing(false);
             audioRef.current = null;
           }
@@ -187,18 +198,18 @@ export function CallanShadowing({ qaItems, userId, onComplete }: CallanShadowing
     if (!currentItem) return;
 
     setGoodCount((prev) => prev + 1);
-    setPracticeState('evaluated');
+    setPracticeState("evaluated");
 
     // Record progress
     try {
       await callanProgressApi.recordProgress({
         userId,
         qaItemId: currentItem.id,
-        mode: 'shadowing',
+        mode: "shadowing",
         isCorrect: true,
       });
     } catch (err) {
-      console.error('Failed to record progress:', err);
+      console.error("Failed to record progress:", err);
     }
   }, [currentItem, userId]);
 
@@ -206,7 +217,7 @@ export function CallanShadowing({ qaItems, userId, onComplete }: CallanShadowing
   const handleRetry = useCallback(() => {
     setRetryCount((prev) => prev + 1);
     clearRecording();
-    setPracticeState('ready');
+    setPracticeState("ready");
   }, [clearRecording]);
 
   // Go to next item
@@ -221,9 +232,16 @@ export function CallanShadowing({ qaItems, userId, onComplete }: CallanShadowing
     } else {
       setCurrentIndex((prev) => prev + 1);
       clearRecording();
-      setPracticeState('ready');
+      setPracticeState("ready");
     }
-  }, [isLastItem, qaItems.length, goodCount, retryCount, onComplete, clearRecording]);
+  }, [
+    isLastItem,
+    qaItems.length,
+    goodCount,
+    retryCount,
+    onComplete,
+    clearRecording,
+  ]);
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -231,37 +249,37 @@ export function CallanShadowing({ qaItems, userId, onComplete }: CallanShadowing
       if (e.target instanceof HTMLInputElement) return;
 
       switch (e.key.toLowerCase()) {
-        case 'p':
+        case "p":
           handlePlayModel();
           break;
-        case 'r':
-          if (practiceState === 'ready') {
+        case "r":
+          if (practiceState === "ready") {
             handleStartRecording();
-          } else if (practiceState === 'review') {
+          } else if (practiceState === "review") {
             handleRetry();
           }
           break;
-        case ' ':
+        case " ":
           e.preventDefault();
-          if (practiceState === 'recording') {
+          if (practiceState === "recording") {
             handleStopRecording();
-          } else if (practiceState === 'review' && recordedAudio) {
+          } else if (practiceState === "review" && recordedAudio) {
             handlePlayRecording();
-          } else if (practiceState === 'evaluated') {
+          } else if (practiceState === "evaluated") {
             handleNext();
           }
           break;
-        case 'c':
-          if (recordedAudio && practiceState === 'review') {
+        case "c":
+          if (recordedAudio && practiceState === "review") {
             handleCompare();
           }
           break;
-        case 'g':
-          if (practiceState === 'review') {
+        case "g":
+          if (practiceState === "review") {
             handleGood();
           }
           break;
-        case 'escape':
+        case "escape":
           if (isRecording) {
             handleStopRecording();
           }
@@ -271,8 +289,8 @@ export function CallanShadowing({ qaItems, userId, onComplete }: CallanShadowing
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [
     practiceState,
     recordedAudio,
@@ -364,11 +382,11 @@ export function CallanShadowing({ qaItems, userId, onComplete }: CallanShadowing
             onClick={handlePlayModel}
             disabled={isSpeaking || isRecording}
           >
-            {isSpeaking ? '🔊 Playing...' : '🔊 Play Model (P)'}
+            {isSpeaking ? "🔊 Playing..." : "🔊 Play Model (P)"}
           </Button>
 
           {/* Record */}
-          {practiceState === 'ready' && (
+          {practiceState === "ready" && (
             <Button
               variant="primary"
               onClick={handleStartRecording}
@@ -379,31 +397,33 @@ export function CallanShadowing({ qaItems, userId, onComplete }: CallanShadowing
           )}
 
           {/* Stop Recording */}
-          {practiceState === 'recording' && (
+          {practiceState === "recording" && (
             <Button variant="primary" onClick={handleStopRecording}>
               ⏹️ Stop Recording (Space)
             </Button>
           )}
 
           {/* Play Recording */}
-          {recordedAudio && practiceState === 'review' && (
+          {recordedAudio && practiceState === "review" && (
             <Button
               variant="secondary"
-              onClick={isPlayingRecording ? handleStopPlayback : handlePlayRecording}
+              onClick={
+                isPlayingRecording ? handleStopPlayback : handlePlayRecording
+              }
               disabled={isComparing}
             >
-              {isPlayingRecording ? '⏹️ Stop' : '▶️ Play My Recording (Space)'}
+              {isPlayingRecording ? "⏹️ Stop" : "▶️ Play My Recording (Space)"}
             </Button>
           )}
 
           {/* Compare */}
-          {recordedAudio && practiceState === 'review' && (
+          {recordedAudio && practiceState === "review" && (
             <Button
               variant="secondary"
               onClick={handleCompare}
               disabled={isComparing || isPlayingRecording || isSpeaking}
             >
-              {isComparing ? '🔄 Comparing...' : '🔀 Compare (C)'}
+              {isComparing ? "🔄 Comparing..." : "🔀 Compare (C)"}
             </Button>
           )}
         </div>
@@ -425,33 +445,36 @@ export function CallanShadowing({ qaItems, userId, onComplete }: CallanShadowing
       </Card>
 
       {/* Self-evaluation card */}
-      {recordedAudio && (practiceState === 'review' || practiceState === 'evaluated') && (
-        <Card className="p-6">
-          <h3 className="text-lg font-semibold text-text-primary mb-4">
-            How did you do?
-          </h3>
+      {recordedAudio &&
+        (practiceState === "review" || practiceState === "evaluated") && (
+          <Card className="p-6">
+            <h3 className="text-lg font-semibold text-text-primary mb-4">
+              How did you do?
+            </h3>
 
-          {practiceState === 'review' && (
-            <div className="flex gap-3">
-              <Button variant="primary" onClick={handleGood}>
-                👍 Good (G)
-              </Button>
-              <Button variant="secondary" onClick={handleRetry}>
-                🔄 Retry (R)
-              </Button>
-            </div>
-          )}
+            {practiceState === "review" && (
+              <div className="flex gap-3">
+                <Button variant="primary" onClick={handleGood}>
+                  👍 Good (G)
+                </Button>
+                <Button variant="secondary" onClick={handleRetry}>
+                  🔄 Retry (R)
+                </Button>
+              </div>
+            )}
 
-          {practiceState === 'evaluated' && (
-            <div className="space-y-4">
-              <p className="text-success font-medium">Great job! Keep going.</p>
-              <Button variant="primary" onClick={handleNext}>
-                {isLastItem ? '🏁 Finish' : '➡️ Next (Space)'}
-              </Button>
-            </div>
-          )}
-        </Card>
-      )}
+            {practiceState === "evaluated" && (
+              <div className="space-y-4">
+                <p className="text-success font-medium">
+                  Great job! Keep going.
+                </p>
+                <Button variant="primary" onClick={handleNext}>
+                  {isLastItem ? "🏁 Finish" : "➡️ Next (Space)"}
+                </Button>
+              </div>
+            )}
+          </Card>
+        )}
 
       {/* Keyboard shortcuts hint */}
       <div className="text-center text-text-muted text-xs">

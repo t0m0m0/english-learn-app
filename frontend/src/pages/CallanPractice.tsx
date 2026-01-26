@@ -1,34 +1,37 @@
-import { useState, useEffect, useCallback } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { lessonsApi, DEFAULT_USER_ID } from '../services/api';
-import { Container, Card, Button } from '../components/ui';
-import { CallanQAPractice, type PracticeSummary } from '../components/CallanQAPractice';
-import type { Lesson } from '../types';
+import { useState, useEffect, useCallback } from "react";
+import { useParams, Link } from "react-router-dom";
+import { lessonsApi, DEFAULT_USER_ID } from "../services/api";
+import { Container, Card, Button } from "../components/ui";
+import {
+  CallanQAPractice,
+  type PracticeSummary,
+} from "../components/CallanQAPractice";
+import type { Lesson } from "../types";
 
-type PracticeState = 'loading' | 'ready' | 'practicing' | 'completed' | 'error';
+type PracticeState = "loading" | "ready" | "practicing" | "completed" | "error";
 
 export function CallanPractice() {
   const { lessonId } = useParams<{ lessonId: string }>();
 
   const [lesson, setLesson] = useState<Lesson | null>(null);
-  const [practiceState, setPracticeState] = useState<PracticeState>('loading');
+  const [practiceState, setPracticeState] = useState<PracticeState>("loading");
   const [error, setError] = useState<string | null>(null);
   const [summary, setSummary] = useState<PracticeSummary | null>(null);
 
   const fetchLesson = useCallback(async () => {
     if (!lessonId) return;
 
-    setPracticeState('loading');
+    setPracticeState("loading");
     setError(null);
 
     try {
       const { lesson: fetchedLesson } = await lessonsApi.getById(lessonId);
       setLesson(fetchedLesson);
-      setPracticeState('ready');
+      setPracticeState("ready");
     } catch (err) {
-      console.error('Error fetching lesson:', err);
-      setError('Failed to load lesson');
-      setPracticeState('error');
+      console.error("Error fetching lesson:", err);
+      setError("Failed to load lesson");
+      setPracticeState("error");
     }
   }, [lessonId]);
 
@@ -37,20 +40,20 @@ export function CallanPractice() {
   }, [fetchLesson]);
 
   const handleStartPractice = useCallback(() => {
-    setPracticeState('practicing');
+    setPracticeState("practicing");
   }, []);
 
   const handleComplete = useCallback((practiceSummary: PracticeSummary) => {
     setSummary(practiceSummary);
-    setPracticeState('completed');
+    setPracticeState("completed");
   }, []);
 
   const handlePracticeAgain = useCallback(() => {
     setSummary(null);
-    setPracticeState('ready');
+    setPracticeState("ready");
   }, []);
 
-  if (practiceState === 'loading') {
+  if (practiceState === "loading") {
     return (
       <Container size="lg" className="py-10">
         <Card className="text-center py-12">
@@ -60,12 +63,12 @@ export function CallanPractice() {
     );
   }
 
-  if (practiceState === 'error' || !lesson) {
+  if (practiceState === "error" || !lesson) {
     return (
       <Container size="lg" className="py-10">
         <Card className="text-center py-12">
           <h2 className="text-xl font-semibold text-error mb-4">
-            {error || 'Lesson not found'}
+            {error || "Lesson not found"}
           </h2>
           <Link to="/callan/lessons">
             <Button variant="secondary">Back to Lessons</Button>
@@ -98,7 +101,7 @@ export function CallanPractice() {
     );
   }
 
-  if (practiceState === 'ready') {
+  if (practiceState === "ready") {
     return (
       <Container size="lg" className="py-10">
         <Card className="text-center py-12">
@@ -162,7 +165,7 @@ export function CallanPractice() {
     );
   }
 
-  if (practiceState === 'completed' && summary) {
+  if (practiceState === "completed" && summary) {
     return (
       <Container size="lg" className="py-10">
         <Card className="text-center py-12">
@@ -181,10 +184,10 @@ export function CallanPractice() {
                 <span
                   className={`text-2xl font-bold ${
                     summary.accuracy >= 80
-                      ? 'text-success'
+                      ? "text-success"
                       : summary.accuracy >= 60
-                      ? 'text-warning'
-                      : 'text-error'
+                        ? "text-warning"
+                        : "text-error"
                   }`}
                 >
                   {Math.round(summary.accuracy)}%
@@ -222,10 +225,10 @@ export function CallanPractice() {
           {/* Encouragement message */}
           <p className="text-text-secondary mb-8">
             {summary.accuracy >= 80
-              ? '🎉 Excellent work! Keep it up!'
+              ? "🎉 Excellent work! Keep it up!"
               : summary.accuracy >= 60
-              ? '👍 Good effort! Practice makes perfect.'
-              : '💪 Keep practicing! You\'ll get better each time.'}
+                ? "👍 Good effort! Practice makes perfect."
+                : "💪 Keep practicing! You'll get better each time."}
           </p>
 
           <div className="flex gap-4 justify-center flex-wrap">

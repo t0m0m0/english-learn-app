@@ -1,5 +1,5 @@
-import { Link } from 'react-router-dom';
-import { Container, Card, Button } from '../components/ui';
+import { Link } from "react-router-dom";
+import { Container, Card, Button } from "../components/ui";
 
 export function CallanHome() {
   return (
@@ -9,8 +9,8 @@ export function CallanHome() {
           Callan Method
         </h1>
         <p className="text-lg text-text-secondary max-w-2xl mx-auto">
-          Practice English through rapid-fire Q&A repetition, shadowing, and dictation.
-          Based on Chris Lonsdale's language learning principles.
+          Practice English through rapid-fire Q&A repetition, shadowing, and
+          dictation. Based on Chris Lonsdale's language learning principles.
         </p>
       </header>
 
@@ -34,7 +34,9 @@ export function CallanHome() {
           <p className="text-text-secondary text-sm">
             Listen and immediately repeat to improve pronunciation and fluency
           </p>
-          <p className="text-success text-xs mt-2 font-medium">Available Now!</p>
+          <p className="text-success text-xs mt-2 font-medium">
+            Available Now!
+          </p>
         </Card>
 
         <Card className="text-center">

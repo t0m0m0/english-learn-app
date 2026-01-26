@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { renderHook, act, waitFor } from '@testing-library/react';
-import { useSpeechRecognition } from './useSpeechRecognition';
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { renderHook, act, waitFor } from "@testing-library/react";
+import { useSpeechRecognition } from "./useSpeechRecognition";
 
 // Store instance reference for tests
 let currentMockInstance: MockSpeechRecognition | null = null;
@@ -9,10 +9,11 @@ let currentMockInstance: MockSpeechRecognition | null = null;
 class MockSpeechRecognition {
   continuous = false;
   interimResults = false;
-  lang = 'en-US';
+  lang = "en-US";
   onstart: (() => void) | null = null;
   onend: (() => void) | null = null;
-  onresult: ((event: { results: SpeechRecognitionResultList }) => void) | null = null;
+  onresult: ((event: { results: SpeechRecognitionResultList }) => void) | null =
+    null;
   onerror: ((event: { error: string }) => void) | null = null;
 
   constructor() {
@@ -38,7 +39,9 @@ class MockSpeechRecognition {
         0: { transcript, confidence: 0.9 },
       },
     };
-    this.onresult?.({ results: mockResult as unknown as SpeechRecognitionResultList });
+    this.onresult?.({
+      results: mockResult as unknown as SpeechRecognitionResultList,
+    });
   }
 
   simulateError(error: string) {
@@ -46,13 +49,21 @@ class MockSpeechRecognition {
   }
 }
 
-describe('useSpeechRecognition', () => {
+describe("useSpeechRecognition", () => {
   beforeEach(() => {
     currentMockInstance = null;
-    
+
     // Set up the global mock as a class
-    (globalThis as unknown as { SpeechRecognition: typeof MockSpeechRecognition }).SpeechRecognition = MockSpeechRecognition;
-    (globalThis as unknown as { webkitSpeechRecognition: typeof MockSpeechRecognition }).webkitSpeechRecognition = MockSpeechRecognition;
+    (
+      globalThis as unknown as {
+        SpeechRecognition: typeof MockSpeechRecognition;
+      }
+    ).SpeechRecognition = MockSpeechRecognition;
+    (
+      globalThis as unknown as {
+        webkitSpeechRecognition: typeof MockSpeechRecognition;
+      }
+    ).webkitSpeechRecognition = MockSpeechRecognition;
   });
 
   afterEach(() => {
@@ -62,16 +73,16 @@ describe('useSpeechRecognition', () => {
     delete (globalThis as Record<string, unknown>).webkitSpeechRecognition;
   });
 
-  it('should return initial state', () => {
+  it("should return initial state", () => {
     const { result } = renderHook(() => useSpeechRecognition());
 
-    expect(result.current.transcript).toBe('');
+    expect(result.current.transcript).toBe("");
     expect(result.current.isListening).toBe(false);
     expect(result.current.isSupported).toBe(true);
     expect(result.current.error).toBeNull();
   });
 
-  it('should start listening when startListening is called', async () => {
+  it("should start listening when startListening is called", async () => {
     const { result } = renderHook(() => useSpeechRecognition());
 
     act(() => {
@@ -84,7 +95,7 @@ describe('useSpeechRecognition', () => {
     expect(currentMockInstance?.start).toHaveBeenCalled();
   });
 
-  it('should stop listening when stopListening is called', async () => {
+  it("should stop listening when stopListening is called", async () => {
     const { result } = renderHook(() => useSpeechRecognition());
 
     act(() => {
@@ -105,7 +116,7 @@ describe('useSpeechRecognition', () => {
     expect(currentMockInstance?.stop).toHaveBeenCalled();
   });
 
-  it('should update transcript when speech is recognized', async () => {
+  it("should update transcript when speech is recognized", async () => {
     const { result } = renderHook(() => useSpeechRecognition());
 
     act(() => {
@@ -117,13 +128,13 @@ describe('useSpeechRecognition', () => {
     });
 
     act(() => {
-      currentMockInstance?.simulateResult('hello world', true);
+      currentMockInstance?.simulateResult("hello world", true);
     });
 
-    expect(result.current.transcript).toBe('hello world');
+    expect(result.current.transcript).toBe("hello world");
   });
 
-  it('should update interim transcript for non-final results', async () => {
+  it("should update interim transcript for non-final results", async () => {
     const { result } = renderHook(() => useSpeechRecognition());
 
     act(() => {
@@ -135,13 +146,13 @@ describe('useSpeechRecognition', () => {
     });
 
     act(() => {
-      currentMockInstance?.simulateResult('hel', false);
+      currentMockInstance?.simulateResult("hel", false);
     });
 
-    expect(result.current.interimTranscript).toBe('hel');
+    expect(result.current.interimTranscript).toBe("hel");
   });
 
-  it('should reset transcript when resetTranscript is called', async () => {
+  it("should reset transcript when resetTranscript is called", async () => {
     const { result } = renderHook(() => useSpeechRecognition());
 
     act(() => {
@@ -153,19 +164,19 @@ describe('useSpeechRecognition', () => {
     });
 
     act(() => {
-      currentMockInstance?.simulateResult('hello world', true);
+      currentMockInstance?.simulateResult("hello world", true);
     });
 
-    expect(result.current.transcript).toBe('hello world');
+    expect(result.current.transcript).toBe("hello world");
 
     act(() => {
       result.current.resetTranscript();
     });
 
-    expect(result.current.transcript).toBe('');
+    expect(result.current.transcript).toBe("");
   });
 
-  it('should handle errors', async () => {
+  it("should handle errors", async () => {
     const { result } = renderHook(() => useSpeechRecognition());
 
     act(() => {
@@ -177,14 +188,14 @@ describe('useSpeechRecognition', () => {
     });
 
     act(() => {
-      currentMockInstance?.simulateError('no-speech');
+      currentMockInstance?.simulateError("no-speech");
     });
 
-    expect(result.current.error).toBe('no-speech');
+    expect(result.current.error).toBe("no-speech");
     expect(result.current.isListening).toBe(false);
   });
 
-  it('should indicate unsupported when SpeechRecognition is not available', () => {
+  it("should indicate unsupported when SpeechRecognition is not available", () => {
     delete (globalThis as Record<string, unknown>).SpeechRecognition;
     delete (globalThis as Record<string, unknown>).webkitSpeechRecognition;
 
@@ -193,13 +204,13 @@ describe('useSpeechRecognition', () => {
     expect(result.current.isSupported).toBe(false);
   });
 
-  it('should accept language option', () => {
-    renderHook(() => useSpeechRecognition({ language: 'ja-JP' }));
+  it("should accept language option", () => {
+    renderHook(() => useSpeechRecognition({ language: "ja-JP" }));
 
-    expect(currentMockInstance?.lang).toBe('ja-JP');
+    expect(currentMockInstance?.lang).toBe("ja-JP");
   });
 
-  it('should accept continuous option', () => {
+  it("should accept continuous option", () => {
     renderHook(() => useSpeechRecognition({ continuous: true }));
 
     expect(currentMockInstance?.continuous).toBe(true);

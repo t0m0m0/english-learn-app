@@ -14,8 +14,8 @@ export interface CheckAnswerResult {
 export function normalizeText(text: string): string {
   return text
     .toLowerCase()
-    .replace(/[^\w\s]/g, '') // Remove punctuation
-    .replace(/\s+/g, ' ') // Collapse multiple spaces
+    .replace(/[^\w\s]/g, "") // Remove punctuation
+    .replace(/\s+/g, " ") // Collapse multiple spaces
     .trim();
 }
 
@@ -47,11 +47,13 @@ function levenshteinDistance(str1: string, str2: string): number {
       if (str1[i - 1] === str2[j - 1]) {
         dp[i][j] = dp[i - 1][j - 1];
       } else {
-        dp[i][j] = 1 + Math.min(
-          dp[i - 1][j],     // deletion
-          dp[i][j - 1],     // insertion
-          dp[i - 1][j - 1]  // substitution
-        );
+        dp[i][j] =
+          1 +
+          Math.min(
+            dp[i - 1][j], // deletion
+            dp[i][j - 1], // insertion
+            dp[i - 1][j - 1], // substitution
+          );
       }
     }
   }
@@ -81,13 +83,13 @@ export function calculateSimilarity(str1: string, str2: string): number {
 
   const distance = levenshteinDistance(normalized1, normalized2);
   const maxLength = Math.max(normalized1.length, normalized2.length);
-  
+
   return 1 - distance / maxLength;
 }
 
 /**
  * Checks a user's answer against the correct answer and provides feedback.
- * 
+ *
  * @param userAnswer - The user's submitted answer
  * @param correctAnswer - The correct answer to compare against
  * @param threshold - Minimum similarity (0-1) to consider correct (default: 0.8)
@@ -96,7 +98,7 @@ export function calculateSimilarity(str1: string, str2: string): number {
 export function checkAnswer(
   userAnswer: string,
   correctAnswer: string,
-  threshold = 0.8
+  threshold = 0.8,
 ): CheckAnswerResult {
   const similarity = calculateSimilarity(userAnswer, correctAnswer);
   const isCorrect = similarity >= threshold;
@@ -104,17 +106,17 @@ export function checkAnswer(
   let feedback: string;
 
   if (similarity === 1) {
-    feedback = 'Correct! Perfect answer!';
+    feedback = "Correct! Perfect answer!";
   } else if (similarity >= 0.95) {
-    feedback = 'Correct! Almost perfect!';
+    feedback = "Correct! Almost perfect!";
   } else if (similarity >= threshold) {
-    feedback = 'Correct! Good job, but watch for small errors.';
+    feedback = "Correct! Good job, but watch for small errors.";
   } else if (similarity >= 0.6) {
-    feedback = 'Close! Try again. Check your pronunciation and word order.';
+    feedback = "Close! Try again. Check your pronunciation and word order.";
   } else if (similarity >= 0.3) {
-    feedback = 'Not quite. Listen to the question again and try once more.';
+    feedback = "Not quite. Listen to the question again and try once more.";
   } else {
-    feedback = 'Try again. Listen carefully to the correct answer.';
+    feedback = "Try again. Listen carefully to the correct answer.";
   }
 
   return {

@@ -1,10 +1,10 @@
-import { useState, useEffect, useCallback } from 'react';
-import { useAudio } from '../hooks/useAudio';
-import { useSpeechRecognition } from '../hooks/useSpeechRecognition';
-import { checkAnswer } from '../utils/answerChecker';
-import { callanProgressApi } from '../services/api';
-import { Button, Card } from './ui';
-import type { QAItem } from '../types';
+import { useState, useEffect, useCallback } from "react";
+import { useAudio } from "../hooks/useAudio";
+import { useSpeechRecognition } from "../hooks/useSpeechRecognition";
+import { checkAnswer } from "../utils/answerChecker";
+import { callanProgressApi } from "../services/api";
+import { Button, Card } from "./ui";
+import type { QAItem } from "../types";
 
 interface CallanQAPracticeProps {
   qaItems: QAItem[];
@@ -20,21 +20,35 @@ export interface PracticeSummary {
   accuracy: number;
 }
 
-type InputMode = 'voice' | 'text';
-type AnswerState = 'waiting' | 'listening' | 'checking' | 'correct' | 'incorrect';
+type InputMode = "voice" | "text";
+type AnswerState =
+  | "waiting"
+  | "listening"
+  | "checking"
+  | "correct"
+  | "incorrect";
 
-export function CallanQAPractice({ qaItems, userId, onComplete }: CallanQAPracticeProps) {
+export function CallanQAPractice({
+  qaItems,
+  userId,
+  onComplete,
+}: CallanQAPracticeProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [inputMode, setInputMode] = useState<InputMode>('voice');
-  const [answerState, setAnswerState] = useState<AnswerState>('waiting');
-  const [textAnswer, setTextAnswer] = useState('');
-  const [feedback, setFeedback] = useState('');
+  const [inputMode, setInputMode] = useState<InputMode>("voice");
+  const [answerState, setAnswerState] = useState<AnswerState>("waiting");
+  const [textAnswer, setTextAnswer] = useState("");
+  const [feedback, setFeedback] = useState("");
   const [similarity, setSimilarity] = useState(0);
   const [correctCount, setCorrectCount] = useState(0);
   const [incorrectCount, setIncorrectCount] = useState(0);
   const [skippedCount, setSkippedCount] = useState(0);
 
-  const { speak, stop: stopSpeaking, isSpeaking, isReady: audioReady } = useAudio();
+  const {
+    speak,
+    stop: stopSpeaking,
+    isSpeaking,
+    isReady: audioReady,
+  } = useAudio();
   const {
     transcript,
     interimTranscript,
@@ -52,14 +66,14 @@ export function CallanQAPractice({ qaItems, userId, onComplete }: CallanQAPracti
 
   // Speak the question when item changes
   useEffect(() => {
-    if (currentItem && audioReady && answerState === 'waiting') {
+    if (currentItem && audioReady && answerState === "waiting") {
       speak(currentItem.question);
     }
   }, [currentItem, audioReady, speak, answerState]);
 
   // Handle voice recognition result
   useEffect(() => {
-    if (transcript && answerState === 'listening') {
+    if (transcript && answerState === "listening") {
       handleAnswerCheck(transcript);
     }
   }, [transcript]);
@@ -68,12 +82,12 @@ export function CallanQAPractice({ qaItems, userId, onComplete }: CallanQAPracti
     async (answer: string) => {
       if (!currentItem) return;
 
-      setAnswerState('checking');
+      setAnswerState("checking");
       const result = checkAnswer(answer, currentItem.answer);
 
       setSimilarity(result.similarity);
       setFeedback(result.feedback);
-      setAnswerState(result.isCorrect ? 'correct' : 'incorrect');
+      setAnswerState(result.isCorrect ? "correct" : "incorrect");
 
       if (result.isCorrect) {
         setCorrectCount((prev) => prev + 1);
@@ -90,20 +104,20 @@ export function CallanQAPractice({ qaItems, userId, onComplete }: CallanQAPracti
         await callanProgressApi.recordProgress({
           userId,
           qaItemId: currentItem.id,
-          mode: 'qa',
+          mode: "qa",
           isCorrect: result.isCorrect,
         });
       } catch (err) {
-        console.error('Failed to record progress:', err);
+        console.error("Failed to record progress:", err);
       }
     },
-    [currentItem, userId, speak]
+    [currentItem, userId, speak],
   );
 
   const handleStartListening = useCallback(() => {
     stopSpeaking();
     resetTranscript();
-    setAnswerState('listening');
+    setAnswerState("listening");
     startListening();
   }, [stopSpeaking, resetTranscript, startListening]);
 
@@ -112,7 +126,7 @@ export function CallanQAPractice({ qaItems, userId, onComplete }: CallanQAPracti
     if (transcript) {
       handleAnswerCheck(transcript);
     } else {
-      setAnswerState('waiting');
+      setAnswerState("waiting");
     }
   }, [stopListening, transcript, handleAnswerCheck]);
 
@@ -123,7 +137,7 @@ export function CallanQAPractice({ qaItems, userId, onComplete }: CallanQAPracti
         handleAnswerCheck(textAnswer.trim());
       }
     },
-    [textAnswer, handleAnswerCheck]
+    [textAnswer, handleAnswerCheck],
   );
 
   const handleNext = useCallback(() => {
@@ -138,10 +152,10 @@ export function CallanQAPractice({ qaItems, userId, onComplete }: CallanQAPracti
       onComplete(summary);
     } else {
       setCurrentIndex((prev) => prev + 1);
-      setAnswerState('waiting');
-      setTextAnswer('');
+      setAnswerState("waiting");
+      setTextAnswer("");
       resetTranscript();
-      setFeedback('');
+      setFeedback("");
       setSimilarity(0);
     }
   }, [
@@ -155,10 +169,10 @@ export function CallanQAPractice({ qaItems, userId, onComplete }: CallanQAPracti
   ]);
 
   const handleRetry = useCallback(() => {
-    setAnswerState('waiting');
-    setTextAnswer('');
+    setAnswerState("waiting");
+    setTextAnswer("");
     resetTranscript();
-    setFeedback('');
+    setFeedback("");
     setSimilarity(0);
     speak(currentItem.question);
   }, [resetTranscript, speak, currentItem]);
@@ -178,39 +192,39 @@ export function CallanQAPractice({ qaItems, userId, onComplete }: CallanQAPracti
       if (e.target instanceof HTMLInputElement) return;
 
       switch (e.key) {
-        case ' ':
+        case " ":
           e.preventDefault();
-          if (answerState === 'correct' || answerState === 'incorrect') {
+          if (answerState === "correct" || answerState === "incorrect") {
             handleNext();
-          } else if (inputMode === 'voice' && !isListening) {
+          } else if (inputMode === "voice" && !isListening) {
             handleStartListening();
           }
           break;
-        case 'r':
-        case 'R':
-          if (answerState === 'incorrect') {
+        case "r":
+        case "R":
+          if (answerState === "incorrect") {
             handleRetry();
-          } else if (answerState === 'waiting') {
+          } else if (answerState === "waiting") {
             handleRepeatQuestion();
           }
           break;
-        case 's':
-        case 'S':
-          if (answerState === 'waiting' || answerState === 'listening') {
+        case "s":
+        case "S":
+          if (answerState === "waiting" || answerState === "listening") {
             handleSkip();
           }
           break;
-        case 'Escape':
+        case "Escape":
           if (isListening) {
             stopListening();
-            setAnswerState('waiting');
+            setAnswerState("waiting");
           }
           break;
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [
     answerState,
     inputMode,
@@ -259,41 +273,40 @@ export function CallanQAPractice({ qaItems, userId, onComplete }: CallanQAPracti
             onClick={handleRepeatQuestion}
             disabled={isSpeaking}
           >
-            {isSpeaking ? '🔊 Speaking...' : '🔊 Repeat'}
+            {isSpeaking ? "🔊 Speaking..." : "🔊 Repeat"}
           </Button>
         </div>
 
         {/* Input mode toggle */}
         <div className="flex gap-2 mb-4">
           <Button
-            variant={inputMode === 'voice' ? 'primary' : 'secondary'}
+            variant={inputMode === "voice" ? "primary" : "secondary"}
             size="sm"
-            onClick={() => setInputMode('voice')}
+            onClick={() => setInputMode("voice")}
             disabled={!speechSupported}
           >
             🎤 Voice
           </Button>
           <Button
-            variant={inputMode === 'text' ? 'primary' : 'secondary'}
+            variant={inputMode === "text" ? "primary" : "secondary"}
             size="sm"
-            onClick={() => setInputMode('text')}
+            onClick={() => setInputMode("text")}
           >
             ⌨️ Text
           </Button>
         </div>
 
         {/* Answer input area */}
-        {inputMode === 'voice' ? (
+        {inputMode === "voice" ? (
           <div className="space-y-4">
             {!speechSupported && (
               <p className="text-warning text-sm">
-                Speech recognition is not supported in this browser. Please use text input.
+                Speech recognition is not supported in this browser. Please use
+                text input.
               </p>
             )}
 
-            {speechError && (
-              <p className="text-error text-sm">{speechError}</p>
-            )}
+            {speechError && <p className="text-error text-sm">{speechError}</p>}
 
             {/* Voice input display */}
             <div className="bg-surface-elevated rounded-lg p-4 min-h-[80px]">
@@ -301,7 +314,7 @@ export function CallanQAPractice({ qaItems, userId, onComplete }: CallanQAPracti
                 <div className="flex items-center gap-2">
                   <span className="animate-pulse text-primary">●</span>
                   <span className="text-text-secondary">
-                    {interimTranscript || 'Listening...'}
+                    {interimTranscript || "Listening..."}
                   </span>
                 </div>
               ) : transcript ? (
@@ -314,15 +327,17 @@ export function CallanQAPractice({ qaItems, userId, onComplete }: CallanQAPracti
             </div>
 
             {/* Voice control button */}
-            {answerState === 'waiting' || answerState === 'listening' ? (
+            {answerState === "waiting" || answerState === "listening" ? (
               <Button
                 variant="primary"
                 size="lg"
                 className="w-full"
-                onClick={isListening ? handleStopListening : handleStartListening}
+                onClick={
+                  isListening ? handleStopListening : handleStartListening
+                }
                 disabled={!speechSupported || isSpeaking}
               >
-                {isListening ? '⏹️ Stop Recording' : '🎤 Start Recording'}
+                {isListening ? "⏹️ Stop Recording" : "🎤 Start Recording"}
               </Button>
             ) : null}
           </div>
@@ -334,10 +349,10 @@ export function CallanQAPractice({ qaItems, userId, onComplete }: CallanQAPracti
               onChange={(e) => setTextAnswer(e.target.value)}
               placeholder="Type your answer..."
               className="w-full px-4 py-3 rounded-lg bg-surface-elevated border border-border text-text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary"
-              disabled={answerState !== 'waiting'}
+              disabled={answerState !== "waiting"}
               autoFocus
             />
-            {answerState === 'waiting' && (
+            {answerState === "waiting" && (
               <Button
                 type="submit"
                 variant="primary"
@@ -353,24 +368,24 @@ export function CallanQAPractice({ qaItems, userId, onComplete }: CallanQAPracti
       </Card>
 
       {/* Feedback card */}
-      {(answerState === 'correct' || answerState === 'incorrect') && (
+      {(answerState === "correct" || answerState === "incorrect") && (
         <Card
           className={`p-6 ${
-            answerState === 'correct'
-              ? 'border-success bg-success/10'
-              : 'border-error bg-error/10'
+            answerState === "correct"
+              ? "border-success bg-success/10"
+              : "border-error bg-error/10"
           }`}
         >
           <div className="flex items-center gap-3 mb-4">
             <span className="text-2xl">
-              {answerState === 'correct' ? '✅' : '❌'}
+              {answerState === "correct" ? "✅" : "❌"}
             </span>
             <span
               className={`text-lg font-semibold ${
-                answerState === 'correct' ? 'text-success' : 'text-error'
+                answerState === "correct" ? "text-success" : "text-error"
               }`}
             >
-              {answerState === 'correct' ? 'Correct!' : 'Not quite...'}
+              {answerState === "correct" ? "Correct!" : "Not quite..."}
             </span>
             <span className="text-text-muted text-sm ml-auto">
               {Math.round(similarity * 100)}% match
@@ -379,30 +394,32 @@ export function CallanQAPractice({ qaItems, userId, onComplete }: CallanQAPracti
 
           <p className="text-text-secondary mb-4">{feedback}</p>
 
-          {answerState === 'incorrect' && (
+          {answerState === "incorrect" && (
             <div className="bg-surface rounded-lg p-4 mb-4">
               <p className="text-xs text-text-muted uppercase tracking-wide mb-1">
                 Correct Answer
               </p>
-              <p className="text-text-primary font-medium">{currentItem.answer}</p>
+              <p className="text-text-primary font-medium">
+                {currentItem.answer}
+              </p>
             </div>
           )}
 
           <div className="flex gap-2">
-            {answerState === 'incorrect' && (
+            {answerState === "incorrect" && (
               <Button variant="secondary" onClick={handleRetry}>
                 Retry (R)
               </Button>
             )}
             <Button variant="primary" onClick={handleNext}>
-              {isLastItem ? 'Finish' : 'Next'} (Space)
+              {isLastItem ? "Finish" : "Next"} (Space)
             </Button>
           </div>
         </Card>
       )}
 
       {/* Skip button */}
-      {(answerState === 'waiting' || answerState === 'listening') && (
+      {(answerState === "waiting" || answerState === "listening") && (
         <div className="flex justify-center">
           <Button variant="secondary" size="sm" onClick={handleSkip}>
             Skip (S)

@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
-import { progressApi } from '../services/api';
-import ProgressBar from '../components/ProgressBar';
-import { Container, Card } from '../components/ui';
+import { useState, useEffect } from "react";
+import { progressApi } from "../services/api";
+import ProgressBar from "../components/ProgressBar";
+import { Container, Card } from "../components/ui";
 
 interface Statistics {
   totalWords: number;
@@ -37,7 +37,7 @@ export function Progress() {
         setStatistics(progressData.statistics);
         setDailyStats(statsData);
       } catch (error) {
-        console.error('Error fetching stats:', error);
+        console.error("Error fetching stats:", error);
       } finally {
         setLoading(false);
       }
@@ -60,26 +60,26 @@ export function Progress() {
 
   const getLevelLabel = (level: number): string => {
     const labels: { [key: number]: string } = {
-      0: 'New',
-      1: 'Learning',
-      2: 'Familiar',
-      3: 'Good',
-      4: 'Strong',
-      5: 'Mastered',
+      0: "New",
+      1: "Learning",
+      2: "Familiar",
+      3: "Good",
+      4: "Strong",
+      5: "Mastered",
     };
-    return labels[level] || 'Unknown';
+    return labels[level] || "Unknown";
   };
 
   const getLevelColor = (level: number): string => {
     const colors: { [key: number]: string } = {
-      0: 'bg-gray-400',
-      1: 'bg-red-400',
-      2: 'bg-orange-400',
-      3: 'bg-yellow-400',
-      4: 'bg-green-400',
-      5: 'bg-emerald-500',
+      0: "bg-gray-400",
+      1: "bg-red-400",
+      2: "bg-orange-400",
+      3: "bg-yellow-400",
+      4: "bg-green-400",
+      5: "bg-emerald-500",
     };
-    return colors[level] || 'bg-gray-400';
+    return colors[level] || "bg-gray-400";
   };
 
   return (
@@ -89,18 +89,20 @@ export function Progress() {
         <h1 className="text-3xl font-bold text-text-primary mb-2">
           Your Progress
         </h1>
-        <p className="text-text-secondary">Track your English learning journey</p>
+        <p className="text-text-secondary">
+          Track your English learning journey
+        </p>
       </header>
 
       {/* Overview Cards */}
       <section className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
         {[
-          { value: dailyStats?.todayReviews || 0, label: 'Words Today' },
-          { value: statistics?.learnedWords || 0, label: 'Words Learned' },
-          { value: statistics?.masteredWords || 0, label: 'Words Mastered' },
+          { value: dailyStats?.todayReviews || 0, label: "Words Today" },
+          { value: statistics?.learnedWords || 0, label: "Words Learned" },
+          { value: statistics?.masteredWords || 0, label: "Words Mastered" },
           {
-            value: dailyStats?.averageLevel?.toFixed(1) || '0.0',
-            label: 'Average Level',
+            value: dailyStats?.averageLevel?.toFixed(1) || "0.0",
+            label: "Average Level",
           },
         ].map((stat) => (
           <Card key={stat.label} className="text-center">
@@ -177,7 +179,7 @@ export function Progress() {
             <div className="space-y-3">
               {dailyStats.levelDistribution.map((item) => {
                 const maxCount = Math.max(
-                  ...dailyStats.levelDistribution.map((d) => d._count)
+                  ...dailyStats.levelDistribution.map((d) => d._count),
                 );
                 const width = (item._count / maxCount) * 100;
 
@@ -215,24 +217,24 @@ export function Progress() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {[
             {
-              icon: '🎯',
-              title: 'Focus on Core Words',
-              desc: 'Master the top 1,000 words first. They cover 85% of conversations.',
+              icon: "🎯",
+              title: "Focus on Core Words",
+              desc: "Master the top 1,000 words first. They cover 85% of conversations.",
             },
             {
-              icon: '🔁',
-              title: 'Review Regularly',
-              desc: 'Spaced repetition helps move words to long-term memory.',
+              icon: "🔁",
+              title: "Review Regularly",
+              desc: "Spaced repetition helps move words to long-term memory.",
             },
             {
-              icon: '🖼️',
-              title: 'Think in Images',
-              desc: 'Connect words directly to images, not translations.',
+              icon: "🖼️",
+              title: "Think in Images",
+              desc: "Connect words directly to images, not translations.",
             },
             {
-              icon: '🎧',
-              title: 'Listen Often',
-              desc: 'Use Brain Soaking mode to immerse yourself in English sounds.',
+              icon: "🎧",
+              title: "Listen Often",
+              desc: "Use Brain Soaking mode to immerse yourself in English sounds.",
             },
           ].map((tip) => (
             <Card key={tip.title} className="text-center">

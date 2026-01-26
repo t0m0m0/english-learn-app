@@ -1,6 +1,6 @@
-import { renderHook, act } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { useAudio } from './useAudio';
+import { renderHook, act } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { useAudio } from "./useAudio";
 
 // Mock SpeechSynthesisUtterance
 class MockSpeechSynthesisUtterance {
@@ -21,23 +21,23 @@ class MockSpeechSynthesisUtterance {
 // Mock voices
 const mockVoices: SpeechSynthesisVoice[] = [
   {
-    name: 'Samantha',
-    lang: 'en-US',
-    voiceURI: 'Samantha',
+    name: "Samantha",
+    lang: "en-US",
+    voiceURI: "Samantha",
     localService: true,
     default: true,
   },
   {
-    name: 'Google US English',
-    lang: 'en-US',
-    voiceURI: 'Google US English',
+    name: "Google US English",
+    lang: "en-US",
+    voiceURI: "Google US English",
     localService: false,
     default: false,
   },
   {
-    name: 'Japanese',
-    lang: 'ja-JP',
-    voiceURI: 'Japanese',
+    name: "Japanese",
+    lang: "ja-JP",
+    voiceURI: "Japanese",
     localService: true,
     default: false,
   },
@@ -56,7 +56,7 @@ const mockSpeechSynthesis = {
   resume: vi.fn(),
 };
 
-describe('useAudio', () => {
+describe("useAudio", () => {
   beforeEach(() => {
     vi.useFakeTimers();
 
@@ -70,8 +70,15 @@ describe('useAudio', () => {
     mockSpeechSynthesis.onvoiceschanged = null;
 
     // Setup global mocks
-    (globalThis as typeof globalThis & { SpeechSynthesisUtterance: typeof SpeechSynthesisUtterance }).SpeechSynthesisUtterance = MockSpeechSynthesisUtterance as unknown as typeof SpeechSynthesisUtterance;
-    (globalThis as typeof globalThis & { speechSynthesis: SpeechSynthesis }).speechSynthesis = mockSpeechSynthesis as unknown as SpeechSynthesis;
+    (
+      globalThis as typeof globalThis & {
+        SpeechSynthesisUtterance: typeof SpeechSynthesisUtterance;
+      }
+    ).SpeechSynthesisUtterance =
+      MockSpeechSynthesisUtterance as unknown as typeof SpeechSynthesisUtterance;
+    (
+      globalThis as typeof globalThis & { speechSynthesis: SpeechSynthesis }
+    ).speechSynthesis = mockSpeechSynthesis as unknown as SpeechSynthesis;
   });
 
   afterEach(() => {
@@ -79,28 +86,30 @@ describe('useAudio', () => {
     vi.restoreAllMocks();
   });
 
-  describe('initialization', () => {
-    it('should load voices on mount', () => {
+  describe("initialization", () => {
+    it("should load voices on mount", () => {
       renderHook(() => useAudio());
 
       expect(mockSpeechSynthesis.getVoices).toHaveBeenCalled();
     });
 
-    it('should filter for English voices only', () => {
+    it("should filter for English voices only", () => {
       const { result } = renderHook(() => useAudio());
 
       // English voices should be available
       expect(result.current.availableVoices).toHaveLength(2);
-      expect(result.current.availableVoices.every(v => v.lang.startsWith('en'))).toBe(true);
+      expect(
+        result.current.availableVoices.every((v) => v.lang.startsWith("en")),
+      ).toBe(true);
     });
 
-    it('should set up onvoiceschanged listener for Chrome', () => {
+    it("should set up onvoiceschanged listener for Chrome", () => {
       renderHook(() => useAudio());
 
       expect(mockSpeechSynthesis.onvoiceschanged).not.toBeNull();
     });
 
-    it('should handle voices loading asynchronously via onvoiceschanged', () => {
+    it("should handle voices loading asynchronously via onvoiceschanged", () => {
       // Start with empty voices
       mockSpeechSynthesis.getVoices.mockReturnValue([]);
 
@@ -120,43 +129,45 @@ describe('useAudio', () => {
       expect(result.current.availableVoices).toHaveLength(2);
     });
 
-    it('should return initial isSpeaking as false', () => {
+    it("should return initial isSpeaking as false", () => {
       const { result } = renderHook(() => useAudio());
 
       expect(result.current.isSpeaking).toBe(false);
     });
 
-    it('should set isReady to true when voices are loaded', () => {
+    it("should set isReady to true when voices are loaded", () => {
       const { result } = renderHook(() => useAudio());
 
       expect(result.current.isReady).toBe(true);
     });
 
-    it('should have no error initially', () => {
+    it("should have no error initially", () => {
       const { result } = renderHook(() => useAudio());
 
       expect(result.current.error).toBeNull();
     });
 
-    it('should retry loading voices after timeout if none available initially', () => {
+    it("should retry loading voices after timeout if none available initially", () => {
       mockSpeechSynthesis.getVoices.mockReturnValue([]);
 
       const initialCallCount = mockSpeechSynthesis.getVoices.mock.calls.length;
 
       renderHook(() => useAudio());
 
-      const callsAfterMount = mockSpeechSynthesis.getVoices.mock.calls.length - initialCallCount;
+      const callsAfterMount =
+        mockSpeechSynthesis.getVoices.mock.calls.length - initialCallCount;
 
       // After timeout (now 1000ms), should have more calls
       act(() => {
         vi.advanceTimersByTime(1000);
       });
 
-      const callsAfterTimeout = mockSpeechSynthesis.getVoices.mock.calls.length - initialCallCount;
+      const callsAfterTimeout =
+        mockSpeechSynthesis.getVoices.mock.calls.length - initialCallCount;
       expect(callsAfterTimeout).toBeGreaterThan(callsAfterMount);
     });
 
-    it('should set error after timeout if no voices available', () => {
+    it("should set error after timeout if no voices available", () => {
       mockSpeechSynthesis.getVoices.mockReturnValue([]);
 
       const { result } = renderHook(() => useAudio());
@@ -166,16 +177,18 @@ describe('useAudio', () => {
         vi.advanceTimersByTime(1000);
       });
 
-      expect(result.current.error).toBe('No audio voices available. Please check your browser settings.');
+      expect(result.current.error).toBe(
+        "No audio voices available. Please check your browser settings.",
+      );
     });
   });
 
-  describe('speak', () => {
-    it('should create utterance with correct text', () => {
+  describe("speak", () => {
+    it("should create utterance with correct text", () => {
       const { result } = renderHook(() => useAudio());
 
       act(() => {
-        result.current.speak('hello');
+        result.current.speak("hello");
       });
 
       // Wait for the setTimeout in speak()
@@ -185,14 +198,14 @@ describe('useAudio', () => {
 
       expect(mockSpeechSynthesis.speak).toHaveBeenCalled();
       const utterance = mockSpeechSynthesis.speak.mock.calls[0][0];
-      expect(utterance.text).toBe('hello');
+      expect(utterance.text).toBe("hello");
     });
 
-    it('should use default rate, pitch, and volume', () => {
+    it("should use default rate, pitch, and volume", () => {
       const { result } = renderHook(() => useAudio());
 
       act(() => {
-        result.current.speak('test');
+        result.current.speak("test");
       });
 
       act(() => {
@@ -205,11 +218,11 @@ describe('useAudio', () => {
       expect(utterance.volume).toBe(1);
     });
 
-    it('should use custom rate when provided', () => {
+    it("should use custom rate when provided", () => {
       const { result } = renderHook(() => useAudio());
 
       act(() => {
-        result.current.speak('test', 0.5);
+        result.current.speak("test", 0.5);
       });
 
       act(() => {
@@ -220,11 +233,13 @@ describe('useAudio', () => {
       expect(utterance.rate).toBe(0.5);
     });
 
-    it('should use options rate, pitch, volume from hook options', () => {
-      const { result } = renderHook(() => useAudio({ rate: 1.5, pitch: 0.8, volume: 0.9 }));
+    it("should use options rate, pitch, volume from hook options", () => {
+      const { result } = renderHook(() =>
+        useAudio({ rate: 1.5, pitch: 0.8, volume: 0.9 }),
+      );
 
       act(() => {
-        result.current.speak('test');
+        result.current.speak("test");
       });
 
       act(() => {
@@ -237,11 +252,11 @@ describe('useAudio', () => {
       expect(utterance.volume).toBe(0.9);
     });
 
-    it('should select Samantha voice preferentially for en-US', () => {
+    it("should select Samantha voice preferentially for en-US", () => {
       const { result } = renderHook(() => useAudio());
 
       act(() => {
-        result.current.speak('test');
+        result.current.speak("test");
       });
 
       act(() => {
@@ -249,24 +264,24 @@ describe('useAudio', () => {
       });
 
       const utterance = mockSpeechSynthesis.speak.mock.calls[0][0];
-      expect(utterance.voice?.name).toBe('Samantha');
+      expect(utterance.voice?.name).toBe("Samantha");
     });
 
-    it('should cancel ongoing speech before speaking', () => {
+    it("should cancel ongoing speech before speaking", () => {
       const { result } = renderHook(() => useAudio());
 
       act(() => {
-        result.current.speak('hello');
+        result.current.speak("hello");
       });
 
       expect(mockSpeechSynthesis.cancel).toHaveBeenCalled();
     });
 
-    it('should set isSpeaking to true when speech starts', () => {
+    it("should set isSpeaking to true when speech starts", () => {
       const { result } = renderHook(() => useAudio());
 
       act(() => {
-        result.current.speak('hello');
+        result.current.speak("hello");
       });
 
       act(() => {
@@ -282,11 +297,11 @@ describe('useAudio', () => {
       expect(result.current.isSpeaking).toBe(true);
     });
 
-    it('should set isSpeaking to false when speech ends', () => {
+    it("should set isSpeaking to false when speech ends", () => {
       const { result } = renderHook(() => useAudio());
 
       act(() => {
-        result.current.speak('hello');
+        result.current.speak("hello");
       });
 
       act(() => {
@@ -308,11 +323,11 @@ describe('useAudio', () => {
       expect(result.current.isSpeaking).toBe(false);
     });
 
-    it('should handle speech error and set isSpeaking to false and error state', () => {
+    it("should handle speech error and set isSpeaking to false and error state", () => {
       const { result } = renderHook(() => useAudio());
 
       act(() => {
-        result.current.speak('hello');
+        result.current.speak("hello");
       });
 
       act(() => {
@@ -326,19 +341,21 @@ describe('useAudio', () => {
       });
 
       act(() => {
-        utterance.onerror?.({ error: 'network' });
+        utterance.onerror?.({ error: "network" });
       });
 
       expect(result.current.isSpeaking).toBe(false);
-      expect(result.current.error).toBe('Speech error: network');
+      expect(result.current.error).toBe("Speech error: network");
     });
 
-    it('should not log error for canceled speech', () => {
-      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    it("should not log error for canceled speech", () => {
+      const consoleSpy = vi
+        .spyOn(console, "error")
+        .mockImplementation(() => {});
       const { result } = renderHook(() => useAudio());
 
       act(() => {
-        result.current.speak('hello');
+        result.current.speak("hello");
       });
 
       act(() => {
@@ -348,7 +365,7 @@ describe('useAudio', () => {
       const utterance = mockSpeechSynthesis.speak.mock.calls[0][0];
 
       act(() => {
-        utterance.onerror?.({ error: 'canceled' });
+        utterance.onerror?.({ error: "canceled" });
       });
 
       expect(consoleSpy).not.toHaveBeenCalled();
@@ -356,13 +373,13 @@ describe('useAudio', () => {
       consoleSpy.mockRestore();
     });
 
-    it('should handle when voices are not yet loaded', () => {
+    it("should handle when voices are not yet loaded", () => {
       mockSpeechSynthesis.getVoices.mockReturnValue([]);
 
       const { result } = renderHook(() => useAudio());
 
       act(() => {
-        result.current.speak('test');
+        result.current.speak("test");
       });
 
       act(() => {
@@ -373,11 +390,11 @@ describe('useAudio', () => {
       expect(mockSpeechSynthesis.speak).toHaveBeenCalled();
     });
 
-    it('should set error when speech fails silently', () => {
+    it("should set error when speech fails silently", () => {
       const { result } = renderHook(() => useAudio());
 
       act(() => {
-        result.current.speak('hello');
+        result.current.speak("hello");
       });
 
       // Wait for speak timeout
@@ -394,20 +411,22 @@ describe('useAudio', () => {
         vi.advanceTimersByTime(200);
       });
 
-      expect(result.current.error).toBe('Speech failed to start. Please try again.');
+      expect(result.current.error).toBe(
+        "Speech failed to start. Please try again.",
+      );
     });
 
-    it('should clear previous timers when speak is called again', () => {
+    it("should clear previous timers when speak is called again", () => {
       const { result } = renderHook(() => useAudio());
 
       // First speak call
       act(() => {
-        result.current.speak('first');
+        result.current.speak("first");
       });
 
       // Immediately call speak again before timers fire
       act(() => {
-        result.current.speak('second');
+        result.current.speak("second");
       });
 
       // Advance timers
@@ -418,12 +437,12 @@ describe('useAudio', () => {
       // Only the second speak should have been called
       expect(mockSpeechSynthesis.speak).toHaveBeenCalledTimes(1);
       const utterance = mockSpeechSynthesis.speak.mock.calls[0][0];
-      expect(utterance.text).toBe('second');
+      expect(utterance.text).toBe("second");
     });
   });
 
-  describe('stop', () => {
-    it('should cancel speech synthesis', () => {
+  describe("stop", () => {
+    it("should cancel speech synthesis", () => {
       const { result } = renderHook(() => useAudio());
 
       act(() => {
@@ -433,12 +452,12 @@ describe('useAudio', () => {
       expect(mockSpeechSynthesis.cancel).toHaveBeenCalled();
     });
 
-    it('should set isSpeaking to false', () => {
+    it("should set isSpeaking to false", () => {
       const { result } = renderHook(() => useAudio());
 
       // Start speaking first
       act(() => {
-        result.current.speak('hello');
+        result.current.speak("hello");
       });
 
       act(() => {
@@ -461,8 +480,8 @@ describe('useAudio', () => {
     });
   });
 
-  describe('pause', () => {
-    it('should pause speech synthesis', () => {
+  describe("pause", () => {
+    it("should pause speech synthesis", () => {
       const { result } = renderHook(() => useAudio());
 
       act(() => {
@@ -473,8 +492,8 @@ describe('useAudio', () => {
     });
   });
 
-  describe('resume', () => {
-    it('should resume speech synthesis', () => {
+  describe("resume", () => {
+    it("should resume speech synthesis", () => {
       const { result } = renderHook(() => useAudio());
 
       act(() => {
@@ -485,8 +504,8 @@ describe('useAudio', () => {
     });
   });
 
-  describe('loadVoices', () => {
-    it('should be callable and return English voices', () => {
+  describe("loadVoices", () => {
+    it("should be callable and return English voices", () => {
       const { result } = renderHook(() => useAudio());
 
       let voices: SpeechSynthesisVoice[] = [];
@@ -495,12 +514,12 @@ describe('useAudio', () => {
       });
 
       expect(voices).toHaveLength(2);
-      expect(voices.every(v => v.lang.startsWith('en'))).toBe(true);
+      expect(voices.every((v) => v.lang.startsWith("en"))).toBe(true);
     });
   });
 
-  describe('cancelSequence', () => {
-    it('should cancel speech synthesis when called', () => {
+  describe("cancelSequence", () => {
+    it("should cancel speech synthesis when called", () => {
       const { result } = renderHook(() => useAudio());
 
       act(() => {
@@ -510,12 +529,12 @@ describe('useAudio', () => {
       expect(mockSpeechSynthesis.cancel).toHaveBeenCalled();
     });
 
-    it('should set isSpeaking to false when called', () => {
+    it("should set isSpeaking to false when called", () => {
       const { result } = renderHook(() => useAudio());
 
       // Start speaking first
       act(() => {
-        result.current.speak('hello');
+        result.current.speak("hello");
       });
 
       act(() => {
@@ -538,11 +557,11 @@ describe('useAudio', () => {
     });
   });
 
-  describe('speakSequence', () => {
-    it('should call speak for each word in sequence', () => {
+  describe("speakSequence", () => {
+    it("should call speak for each word in sequence", () => {
       const { result } = renderHook(() => useAudio());
 
-      const words = ['hello', 'world'];
+      const words = ["hello", "world"];
 
       // Start the sequence
       act(() => {
@@ -559,13 +578,13 @@ describe('useAudio', () => {
       });
 
       expect(mockSpeechSynthesis.speak).toHaveBeenCalledTimes(1);
-      expect(mockSpeechSynthesis.speak.mock.calls[0][0].text).toBe('hello');
+      expect(mockSpeechSynthesis.speak.mock.calls[0][0].text).toBe("hello");
     });
 
-    it('should stop sequence when cancelSequence is called', async () => {
+    it("should stop sequence when cancelSequence is called", async () => {
       const { result } = renderHook(() => useAudio());
 
-      const words = ['hello', 'world', 'test'];
+      const words = ["hello", "world", "test"];
 
       // Start the sequence
       act(() => {
@@ -597,8 +616,8 @@ describe('useAudio', () => {
     });
   });
 
-  describe('cleanup', () => {
-    it('should remove onvoiceschanged listener on unmount', () => {
+  describe("cleanup", () => {
+    it("should remove onvoiceschanged listener on unmount", () => {
       const { unmount } = renderHook(() => useAudio());
 
       expect(mockSpeechSynthesis.onvoiceschanged).not.toBeNull();
@@ -608,12 +627,12 @@ describe('useAudio', () => {
       expect(mockSpeechSynthesis.onvoiceschanged).toBeNull();
     });
 
-    it('should cleanup timers on unmount', () => {
+    it("should cleanup timers on unmount", () => {
       const { result, unmount } = renderHook(() => useAudio());
 
       // Start speaking
       act(() => {
-        result.current.speak('hello');
+        result.current.speak("hello");
       });
 
       // Unmount before timers fire

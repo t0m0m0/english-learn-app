@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
-import useAudio from '../hooks/useAudio';
-import { Button, Card } from './ui';
+import { useState, useEffect, useCallback, useRef } from "react";
+import useAudio from "../hooks/useAudio";
+import { Button, Card } from "./ui";
 
 interface Word {
   id: number;
@@ -47,9 +47,12 @@ export function ListeningMode({ words, onComplete }: ListeningModeProps) {
       speak(currentWord.word, speed);
     }
 
-    const timeoutId = setTimeout(() => {
-      playNext();
-    }, delay + 1000 / speed);
+    const timeoutId = setTimeout(
+      () => {
+        playNext();
+      },
+      delay + 1000 / speed,
+    );
 
     return () => clearTimeout(timeoutId);
   }, [currentIndex, isPlaying, currentWord, speak, speed, delay, playNext]);
@@ -99,7 +102,9 @@ export function ListeningMode({ words, onComplete }: ListeningModeProps) {
   return (
     <Card className="max-w-2xl mx-auto">
       <div className="text-center mb-6">
-        <h2 className="text-2xl font-bold text-text-primary mb-2">Brain Soaking Mode</h2>
+        <h2 className="text-2xl font-bold text-text-primary mb-2">
+          Brain Soaking Mode
+        </h2>
         <p className="text-text-secondary">
           Immerse yourself in the language. Listen to the rhythm and patterns.
         </p>
@@ -135,10 +140,10 @@ export function ListeningMode({ words, onComplete }: ListeningModeProps) {
         </span>
         <h1
           className={`text-5xl font-bold mt-2 mb-3 transition-all duration-200 ${
-            isSpeaking ? 'text-primary scale-105' : 'text-text-primary'
+            isSpeaking ? "text-primary scale-105" : "text-text-primary"
           }`}
         >
-          {currentWord?.word || '...'}
+          {currentWord?.word || "..."}
         </h1>
         {currentWord?.partOfSpeech && (
           <span className="inline-block bg-blue-50 dark:bg-blue-900/30 text-primary px-3 py-1 rounded-full text-xs uppercase tracking-wide">
@@ -157,12 +162,12 @@ export function ListeningMode({ words, onComplete }: ListeningModeProps) {
           ⏮ Previous
         </Button>
         <Button
-          variant={isPlaying ? 'error' : 'primary'}
+          variant={isPlaying ? "error" : "primary"}
           onClick={handlePlayPause}
           className="min-w-32"
           disabled={!isReady && !isPlaying}
         >
-          {isPlaying ? '⏸ Pause' : '▶ Play'}
+          {isPlaying ? "⏸ Pause" : "▶ Play"}
         </Button>
         <Button
           variant="secondary"
@@ -176,7 +181,9 @@ export function ListeningMode({ words, onComplete }: ListeningModeProps) {
       {/* Settings */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         <div>
-          <label className="block text-sm text-text-secondary mb-2">Speed</label>
+          <label className="block text-sm text-text-secondary mb-2">
+            Speed
+          </label>
           <div className="flex gap-2">
             {[0.5, 0.75, 1, 1.25, 1.5].map((s) => (
               <button
@@ -184,8 +191,8 @@ export function ListeningMode({ words, onComplete }: ListeningModeProps) {
                 type="button"
                 className={`flex-1 py-2 px-3 rounded-button text-sm transition-colors ${
                   speed === s
-                    ? 'bg-primary text-white'
-                    : 'bg-gray-100 dark:bg-gray-700 text-text-secondary hover:bg-gray-200 dark:hover:bg-gray-600'
+                    ? "bg-primary text-white"
+                    : "bg-gray-100 dark:bg-gray-700 text-text-secondary hover:bg-gray-200 dark:hover:bg-gray-600"
                 }`}
                 onClick={() => handleSpeedChange(s)}
               >
@@ -196,7 +203,9 @@ export function ListeningMode({ words, onComplete }: ListeningModeProps) {
         </div>
 
         <div>
-          <label className="block text-sm text-text-secondary mb-2">Delay between words</label>
+          <label className="block text-sm text-text-secondary mb-2">
+            Delay between words
+          </label>
           <div className="flex gap-2">
             {[1000, 2000, 3000, 5000].map((d) => (
               <button
@@ -204,8 +213,8 @@ export function ListeningMode({ words, onComplete }: ListeningModeProps) {
                 type="button"
                 className={`flex-1 py-2 px-3 rounded-button text-sm transition-colors ${
                   delay === d
-                    ? 'bg-primary text-white'
-                    : 'bg-gray-100 dark:bg-gray-700 text-text-secondary hover:bg-gray-200 dark:hover:bg-gray-600'
+                    ? "bg-primary text-white"
+                    : "bg-gray-100 dark:bg-gray-700 text-text-secondary hover:bg-gray-200 dark:hover:bg-gray-600"
                 }`}
                 onClick={() => handleDelayChange(d)}
               >
