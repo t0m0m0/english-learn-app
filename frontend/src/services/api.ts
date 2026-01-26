@@ -7,6 +7,7 @@ import type {
   Lesson,
   QAItem,
   CallanProgress,
+  CallanProgressSummary,
 } from "../types";
 
 const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:3001/api";
@@ -223,6 +224,13 @@ export const callanProgressApi = {
     }
     const response = await api.get<{ progress: CallanProgress[] }>(
       `/callan/progress/${lessonId}?${params.toString()}`,
+    );
+    return response.data;
+  },
+
+  getSummary: async (userId: number = DEFAULT_USER_ID) => {
+    const response = await api.get<CallanProgressSummary>(
+      `/callan/progress/summary?userId=${userId}`,
     );
     return response.data;
   },
