@@ -170,27 +170,32 @@ router.get('/summary', async (req: Request, res: Response, next: NextFunction) =
   }
 });
 
+// Helper function to format date as YYYY-MM-DD for consistent comparison
+function formatDateString(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
 // Helper function to calculate streak days
 function calculateStreakDays(progress: { lastPracticed: Date | null }[]): number {
   if (progress.length === 0) return 0;
 
-  // Get unique practice dates (in local date format)
+  // Get unique practice dates (in ISO date format YYYY-MM-DD)
   const practiceDates = progress
     .filter(p => p.lastPracticed)
-    .map(p => {
-      const date = new Date(p.lastPracticed!);
-      return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
-    });
+    .map(p => formatDateString(new Date(p.lastPracticed!)));
 
   const uniqueDates = [...new Set(practiceDates)].sort().reverse();
   if (uniqueDates.length === 0) return 0;
 
   // Check if today or yesterday was a practice day
   const today = new Date();
-  const todayStr = `${today.getFullYear()}-${today.getMonth()}-${today.getDate()}`;
+  const todayStr = formatDateString(today);
   const yesterday = new Date(today);
   yesterday.setDate(yesterday.getDate() - 1);
-  const yesterdayStr = `${yesterday.getFullYear()}-${yesterday.getMonth()}-${yesterday.getDate()}`;
+  const yesterdayStr = formatDateString(yesterday);
 
   if (uniqueDates[0] !== todayStr && uniqueDates[0] !== yesterdayStr) {
     return 0;
@@ -206,7 +211,7 @@ function calculateStreakDays(progress: { lastPracticed: Date | null }[]): number
   for (let i = 1; i < uniqueDates.length; i++) {
     const prevDate = new Date(currentDate);
     prevDate.setDate(prevDate.getDate() - 1);
-    const prevDateStr = `${prevDate.getFullYear()}-${prevDate.getMonth()}-${prevDate.getDate()}`;
+    const prevDateStr = formatDateString(prevDate);
 
     if (uniqueDates[i] === prevDateStr) {
       streak++;

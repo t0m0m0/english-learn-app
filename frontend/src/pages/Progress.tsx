@@ -204,6 +204,7 @@ export function Progress() {
   const [callanSummary, setCallanSummary] = useState<CallanProgressSummary | null>(null);
   const [loading, setLoading] = useState(true);
   const [callanLoading, setCallanLoading] = useState(false);
+  const [callanError, setCallanError] = useState(false);
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -226,14 +227,16 @@ export function Progress() {
   }, []);
 
   useEffect(() => {
-    if (activeTab === "callan" && !callanSummary) {
+    if (activeTab === "callan" && !callanSummary && !callanError) {
       const fetchCallanStats = async () => {
         setCallanLoading(true);
+        setCallanError(false);
         try {
           const summary = await callanProgressApi.getSummary();
           setCallanSummary(summary);
         } catch (error) {
           console.error("Error fetching callan stats:", error);
+          setCallanError(true);
         } finally {
           setCallanLoading(false);
         }
@@ -241,7 +244,7 @@ export function Progress() {
 
       fetchCallanStats();
     }
-  }, [activeTab, callanSummary]);
+  }, [activeTab, callanSummary, callanError]);
 
   const getLevelLabel = (level: number): string => {
     const labels: { [key: number]: string } = {
@@ -326,7 +329,12 @@ export function Progress() {
           getLevelColor={getLevelColor}
         />
       ) : (
-        <CallanProgressSection summary={callanSummary} loading={callanLoading} />
+        <CallanProgressSection
+          summary={callanSummary}
+          loading={callanLoading}
+          error={callanError}
+          onRetry={() => setCallanError(false)}
+        />
       )}
     </Container>
   );

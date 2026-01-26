@@ -5,16 +5,36 @@ import type { CallanProgressSummary } from "../types";
 interface CallanProgressSectionProps {
   summary: CallanProgressSummary | null;
   loading?: boolean;
+  error?: boolean;
+  onRetry?: () => void;
 }
 
 export function CallanProgressSection({
   summary,
   loading = false,
+  error = false,
+  onRetry,
 }: CallanProgressSectionProps) {
   if (loading) {
     return (
       <Card className="text-center py-12">
         <div className="text-text-muted animate-pulse">Loading...</div>
+      </Card>
+    );
+  }
+
+  if (error) {
+    return (
+      <Card className="text-center py-12">
+        <p className="text-text-muted mb-4">データの取得に失敗しました</p>
+        {onRetry && (
+          <button
+            onClick={onRetry}
+            className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition-colors"
+          >
+            再試行
+          </button>
+        )}
       </Card>
     );
   }

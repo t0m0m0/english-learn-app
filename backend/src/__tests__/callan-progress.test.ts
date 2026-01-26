@@ -339,7 +339,25 @@ describe('Callan Progress API', () => {
 
       expect(response.status).toBe(200)
       expect(response.body).toHaveProperty('streakDays')
-      expect(typeof response.body.streakDays).toBe('number')
+      expect(response.body.streakDays).toBe(3)
+    })
+
+    it('returns 0 streak when last practice was more than 1 day ago', async () => {
+      const threeDaysAgo = new Date()
+      threeDaysAgo.setDate(threeDaysAgo.getDate() - 3)
+
+      const mockProgressWithOldDates = [
+        { ...mockCallanProgress, lastPracticed: threeDaysAgo },
+      ]
+
+      mockPrisma.lesson.findMany.mockResolvedValueOnce([])
+      mockPrisma.callanProgress.findMany.mockResolvedValueOnce(mockProgressWithOldDates)
+
+      const response = await request(app)
+        .get('/api/callan/progress/summary?userId=1')
+
+      expect(response.status).toBe(200)
+      expect(response.body.streakDays).toBe(0)
     })
   })
 })
