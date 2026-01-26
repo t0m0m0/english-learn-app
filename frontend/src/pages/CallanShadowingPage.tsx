@@ -67,9 +67,14 @@ export function CallanShadowingPage() {
           <h2 className="text-xl font-semibold text-error mb-4">
             {error || 'Lesson not found'}
           </h2>
-          <Link to="/callan/lessons">
-            <Button variant="secondary">Back to Lessons</Button>
-          </Link>
+          <div className="flex gap-4 justify-center">
+            <Button variant="primary" onClick={fetchLesson}>
+              Try Again
+            </Button>
+            <Link to="/callan/lessons">
+              <Button variant="secondary">Back to Lessons</Button>
+            </Link>
+          </div>
         </Card>
       </Container>
     );

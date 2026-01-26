@@ -150,7 +150,8 @@ describe('useAudioRecorder', () => {
     });
 
     it('should set error when getUserMedia fails', async () => {
-      mockGetUserMedia.mockRejectedValueOnce(new Error('Permission denied'));
+      const permissionError = new DOMException('Permission denied', 'NotAllowedError');
+      mockGetUserMedia.mockRejectedValueOnce(permissionError);
 
       const { result } = renderHook(() => useAudioRecorder());
 
@@ -158,7 +159,7 @@ describe('useAudioRecorder', () => {
         await result.current.startRecording();
       });
 
-      expect(result.current.error).toBe('Microphone access denied. Please allow microphone access to record.');
+      expect(result.current.error).toBe('Microphone access denied. Please allow microphone access in your browser settings.');
       expect(result.current.isRecording).toBe(false);
     });
 

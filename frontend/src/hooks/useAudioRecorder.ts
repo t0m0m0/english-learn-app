@@ -85,7 +85,9 @@ export function useAudioRecorder(): UseAudioRecorderReturn {
       };
 
       mediaRecorder.onerror = () => {
-        setError('Recording error occurred');
+        const errorMessage = 'An error occurred during recording';
+        console.error('MediaRecorder error:', errorMessage);
+        setError(`Recording failed: ${errorMessage}`);
         setIsRecording(false);
         cleanupStream();
         stopDurationTimer();
@@ -101,8 +103,33 @@ export function useAudioRecorder(): UseAudioRecorderReturn {
         setDuration(Math.floor((Date.now() - startTimeRef.current) / 1000));
       }, 1000);
     } catch (err) {
-      setError('Microphone access denied. Please allow microphone access to record.');
       setIsRecording(false);
+      
+      if (err instanceof DOMException) {
+        switch (err.name) {
+          case 'NotAllowedError':
+          case 'PermissionDeniedError':
+            setError('Microphone access denied. Please allow microphone access in your browser settings.');
+            break;
+          case 'NotFoundError':
+            setError('No microphone found. Please connect a microphone and try again.');
+            break;
+          case 'NotReadableError':
+            setError('Microphone is in use by another application. Please close other apps using the microphone.');
+            break;
+          case 'OverconstrainedError':
+            setError('Could not find a microphone with the required settings.');
+            break;
+          case 'SecurityError':
+            setError('Recording requires a secure connection (HTTPS).');
+            break;
+          default:
+            setError(`Recording failed: ${err.message || err.name}`);
+        }
+      } else {
+        setError('An unexpected error occurred while starting the recording.');
+        console.error('Recording error:', err);
+      }
     }
   }, [isSupported, cleanupStream, stopDurationTimer]);
 
@@ -124,16 +151,25 @@ export function useAudioRecorder(): UseAudioRecorderReturn {
     chunksRef.current = [];
   }, [recordedAudio?.url]);
 
-  // Cleanup on unmount
+  // Store URL ref for cleanup (to avoid dependency on recordedAudio)
+  const recordedUrlRef = useRef<string | null>(null);
+  
+  // Update ref when recordedAudio changes
+  useEffect(() => {
+    recordedUrlRef.current = recordedAudio?.url ?? null;
+  }, [recordedAudio?.url]);
+
+  // Cleanup on unmount only
   useEffect(() => {
     return () => {
       cleanupStream();
       stopDurationTimer();
-      if (recordedAudio?.url) {
-        URL.revokeObjectURL(recordedAudio.url);
+      if (recordedUrlRef.current) {
+        URL.revokeObjectURL(recordedUrlRef.current);
       }
     };
-  }, [cleanupStream, stopDurationTimer, recordedAudio?.url]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return {
     isRecording,

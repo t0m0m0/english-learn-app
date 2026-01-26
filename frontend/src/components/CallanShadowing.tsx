@@ -27,10 +27,13 @@ export function CallanShadowing({ qaItems, userId, onComplete }: CallanShadowing
   const [retryCount, setRetryCount] = useState(0);
   const [isPlayingRecording, setIsPlayingRecording] = useState(false);
   const [isComparing, setIsComparing] = useState(false);
+  const [playbackError, setPlaybackError] = useState<string | null>(null);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const compareIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const compareTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const { speak, stop: stopSpeaking, isSpeaking } = useAudio();
+  const { speak, stop: stopSpeaking, isSpeaking, error: audioError } = useAudio();
   const {
     isRecording,
     isSupported: recorderSupported,
@@ -68,9 +71,10 @@ export function CallanShadowing({ qaItems, userId, onComplete }: CallanShadowing
   }, [isRecording, stopRecording]);
 
   // Play recorded audio
-  const handlePlayRecording = useCallback(() => {
+  const handlePlayRecording = useCallback(async () => {
     if (!recordedAudio?.url || isPlayingRecording) return;
 
+    setPlaybackError(null);
     const audio = new Audio(recordedAudio.url);
     audioRef.current = audio;
 
@@ -79,14 +83,29 @@ export function CallanShadowing({ qaItems, userId, onComplete }: CallanShadowing
       audioRef.current = null;
     };
 
-    audio.play();
-    setIsPlayingRecording(true);
+    audio.onerror = () => {
+      setPlaybackError('Failed to play recording');
+      setIsPlayingRecording(false);
+      audioRef.current = null;
+    };
+
+    try {
+      await audio.play();
+      setIsPlayingRecording(true);
+    } catch (err) {
+      console.error('Audio playback failed:', err);
+      setPlaybackError('Failed to play recording. Please try again.');
+      setIsPlayingRecording(false);
+      audioRef.current = null;
+    }
   }, [recordedAudio?.url, isPlayingRecording]);
 
   // Stop playing recording
   const handleStopPlayback = useCallback(() => {
     if (audioRef.current) {
       audioRef.current.pause();
+      audioRef.current.onended = null;
+      audioRef.current.onerror = null;
       audioRef.current = null;
     }
     setIsPlayingRecording(false);
@@ -97,17 +116,45 @@ export function CallanShadowing({ qaItems, userId, onComplete }: CallanShadowing
     if (!currentItem || !recordedAudio?.url || isComparing) return;
 
     setIsComparing(true);
+    setPlaybackError(null);
 
     // Play model first
     speak(currentItem.answer, speed);
 
+    // Timeout safety - max 30 seconds wait for TTS
+    const maxWaitTime = 30000;
+    const startTime = Date.now();
+
+    // Clear any existing interval/timeout
+    if (compareIntervalRef.current) {
+      clearInterval(compareIntervalRef.current);
+    }
+    if (compareTimeoutRef.current) {
+      clearTimeout(compareTimeoutRef.current);
+    }
+
     // Wait for TTS to finish, then play recording
-    const checkSpeaking = setInterval(() => {
+    compareIntervalRef.current = setInterval(() => {
+      // Timeout safety
+      if (Date.now() - startTime > maxWaitTime) {
+        if (compareIntervalRef.current) {
+          clearInterval(compareIntervalRef.current);
+          compareIntervalRef.current = null;
+        }
+        setIsComparing(false);
+        setPlaybackError('Compare timed out. Please try again.');
+        return;
+      }
+
       if (!window.speechSynthesis.speaking) {
-        clearInterval(checkSpeaking);
+        if (compareIntervalRef.current) {
+          clearInterval(compareIntervalRef.current);
+          compareIntervalRef.current = null;
+        }
 
         // Small delay before playing recording
-        setTimeout(() => {
+        compareTimeoutRef.current = setTimeout(async () => {
+          compareTimeoutRef.current = null;
           const audio = new Audio(recordedAudio.url);
           audioRef.current = audio;
 
@@ -116,7 +163,20 @@ export function CallanShadowing({ qaItems, userId, onComplete }: CallanShadowing
             audioRef.current = null;
           };
 
-          audio.play();
+          audio.onerror = () => {
+            setPlaybackError('Failed to play recording during compare');
+            setIsComparing(false);
+            audioRef.current = null;
+          };
+
+          try {
+            await audio.play();
+          } catch (err) {
+            console.error('Failed to play recording in compare:', err);
+            setPlaybackError('Failed to play recording. Please try again.');
+            setIsComparing(false);
+            audioRef.current = null;
+          }
         }, 500);
       }
     }, 100);
@@ -234,6 +294,17 @@ export function CallanShadowing({ qaItems, userId, onComplete }: CallanShadowing
     return () => {
       if (audioRef.current) {
         audioRef.current.pause();
+        audioRef.current.onended = null;
+        audioRef.current.onerror = null;
+        audioRef.current = null;
+      }
+      if (compareIntervalRef.current) {
+        clearInterval(compareIntervalRef.current);
+        compareIntervalRef.current = null;
+      }
+      if (compareTimeoutRef.current) {
+        clearTimeout(compareTimeoutRef.current);
+        compareTimeoutRef.current = null;
       }
     };
   }, []);
@@ -346,8 +417,10 @@ export function CallanShadowing({ qaItems, userId, onComplete }: CallanShadowing
         )}
 
         {/* Error message */}
-        {recorderError && (
-          <p className="mt-4 text-error text-sm">{recorderError}</p>
+        {(recorderError || audioError || playbackError) && (
+          <p className="mt-4 text-error text-sm">
+            {recorderError || audioError || playbackError}
+          </p>
         )}
       </Card>
 
