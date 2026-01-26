@@ -1,4 +1,4 @@
-import { useTheme } from '../../context/ThemeContext';
+import { useTheme } from "../../context/ThemeContext";
 
 export function ThemeToggle() {
   const { theme, toggleTheme } = useTheme();
@@ -8,10 +8,17 @@ export function ThemeToggle() {
       type="button"
       onClick={toggleTheme}
       className="p-2 rounded-button text-text-secondary hover:bg-surface hover:text-text-primary transition-colors"
-      aria-label={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
+      aria-label={
+        theme === "light" ? "Switch to dark mode" : "Switch to light mode"
+      }
     >
-      {theme === 'light' ? (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      {theme === "light" ? (
+        <svg
+          className="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -20,7 +27,12 @@ export function ThemeToggle() {
           />
         </svg>
       ) : (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg
+          className="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
           <path
             strokeLinecap="round"
             strokeLinejoin="round"

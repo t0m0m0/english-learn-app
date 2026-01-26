@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef, useEffect } from 'react';
+import { useState, useCallback, useRef, useEffect } from "react";
 
 export interface RecordedAudio {
   blob: Blob;
@@ -19,17 +19,21 @@ interface UseAudioRecorderReturn {
 
 export function useAudioRecorder(): UseAudioRecorderReturn {
   const [isRecording, setIsRecording] = useState(false);
-  const [recordedAudio, setRecordedAudio] = useState<RecordedAudio | null>(null);
+  const [recordedAudio, setRecordedAudio] = useState<RecordedAudio | null>(
+    null,
+  );
   const [duration, setDuration] = useState(0);
   const [error, setError] = useState<string | null>(null);
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const chunksRef = useRef<Blob[]>([]);
-  const durationIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const durationIntervalRef = useRef<ReturnType<typeof setInterval> | null>(
+    null,
+  );
   const startTimeRef = useRef<number>(0);
 
-  const isSupported = typeof MediaRecorder !== 'undefined';
+  const isSupported = typeof MediaRecorder !== "undefined";
 
   const cleanupStream = useCallback(() => {
     if (streamRef.current) {
@@ -47,7 +51,7 @@ export function useAudioRecorder(): UseAudioRecorderReturn {
 
   const startRecording = useCallback(async () => {
     if (!isSupported) {
-      setError('MediaRecorder is not supported in this browser');
+      setError("MediaRecorder is not supported in this browser");
       return;
     }
 
@@ -71,7 +75,7 @@ export function useAudioRecorder(): UseAudioRecorderReturn {
       };
 
       mediaRecorder.onstop = () => {
-        const blob = new Blob(chunksRef.current, { type: 'audio/webm' });
+        const blob = new Blob(chunksRef.current, { type: "audio/webm" });
         const url = URL.createObjectURL(blob);
         const recordedDuration = (Date.now() - startTimeRef.current) / 1000;
 
@@ -85,8 +89,8 @@ export function useAudioRecorder(): UseAudioRecorderReturn {
       };
 
       mediaRecorder.onerror = () => {
-        const errorMessage = 'An error occurred during recording';
-        console.error('MediaRecorder error:', errorMessage);
+        const errorMessage = "An error occurred during recording";
+        console.error("MediaRecorder error:", errorMessage);
         setError(`Recording failed: ${errorMessage}`);
         setIsRecording(false);
         cleanupStream();
@@ -104,37 +108,46 @@ export function useAudioRecorder(): UseAudioRecorderReturn {
       }, 1000);
     } catch (err) {
       setIsRecording(false);
-      
+
       if (err instanceof DOMException) {
         switch (err.name) {
-          case 'NotAllowedError':
-          case 'PermissionDeniedError':
-            setError('Microphone access denied. Please allow microphone access in your browser settings.');
+          case "NotAllowedError":
+          case "PermissionDeniedError":
+            setError(
+              "Microphone access denied. Please allow microphone access in your browser settings.",
+            );
             break;
-          case 'NotFoundError':
-            setError('No microphone found. Please connect a microphone and try again.');
+          case "NotFoundError":
+            setError(
+              "No microphone found. Please connect a microphone and try again.",
+            );
             break;
-          case 'NotReadableError':
-            setError('Microphone is in use by another application. Please close other apps using the microphone.');
+          case "NotReadableError":
+            setError(
+              "Microphone is in use by another application. Please close other apps using the microphone.",
+            );
             break;
-          case 'OverconstrainedError':
-            setError('Could not find a microphone with the required settings.');
+          case "OverconstrainedError":
+            setError("Could not find a microphone with the required settings.");
             break;
-          case 'SecurityError':
-            setError('Recording requires a secure connection (HTTPS).');
+          case "SecurityError":
+            setError("Recording requires a secure connection (HTTPS).");
             break;
           default:
             setError(`Recording failed: ${err.message || err.name}`);
         }
       } else {
-        setError('An unexpected error occurred while starting the recording.');
-        console.error('Recording error:', err);
+        setError("An unexpected error occurred while starting the recording.");
+        console.error("Recording error:", err);
       }
     }
   }, [isSupported, cleanupStream, stopDurationTimer]);
 
   const stopRecording = useCallback(() => {
-    if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
+    if (
+      mediaRecorderRef.current &&
+      mediaRecorderRef.current.state === "recording"
+    ) {
       mediaRecorderRef.current.stop();
       setIsRecording(false);
       stopDurationTimer();
@@ -153,7 +166,7 @@ export function useAudioRecorder(): UseAudioRecorderReturn {
 
   // Store URL ref for cleanup (to avoid dependency on recordedAudio)
   const recordedUrlRef = useRef<string | null>(null);
-  
+
   // Update ref when recordedAudio changes
   useEffect(() => {
     recordedUrlRef.current = recordedAudio?.url ?? null;

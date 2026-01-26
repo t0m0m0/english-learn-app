@@ -1,24 +1,24 @@
-import { useState, useEffect, useCallback } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { lessonsApi, qaItemsApi } from '../services/api';
-import { Container, Card, Button } from '../components/ui';
-import type { QAItem } from '../types';
+import { useState, useEffect, useCallback } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { lessonsApi, qaItemsApi } from "../services/api";
+import { Container, Card, Button } from "../components/ui";
+import type { QAItem } from "../types";
 
 export function CallanLessonForm() {
   const { id } = useParams<{ id?: string }>();
   const navigate = useNavigate();
   const isEditing = Boolean(id);
 
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
   const [order, setOrder] = useState(1);
   const [qaItems, setQaItems] = useState<QAItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
 
   // New QA item form state
-  const [newQuestion, setNewQuestion] = useState('');
-  const [newAnswer, setNewAnswer] = useState('');
+  const [newQuestion, setNewQuestion] = useState("");
+  const [newAnswer, setNewAnswer] = useState("");
 
   const fetchLesson = useCallback(async () => {
     if (!id) return;
@@ -26,13 +26,13 @@ export function CallanLessonForm() {
     try {
       const { lesson } = await lessonsApi.getById(id);
       setTitle(lesson.title);
-      setDescription(lesson.description || '');
+      setDescription(lesson.description || "");
       setOrder(lesson.order);
       setQaItems(lesson.qaItems);
     } catch (err) {
-      console.error('Error fetching lesson:', err);
-      alert('Failed to load lesson');
-      navigate('/callan/lessons');
+      console.error("Error fetching lesson:", err);
+      alert("Failed to load lesson");
+      navigate("/callan/lessons");
     } finally {
       setLoading(false);
     }
@@ -60,10 +60,10 @@ export function CallanLessonForm() {
         navigate(`/callan/lessons/${lesson.id}/edit`);
         return;
       }
-      alert('Lesson saved successfully');
+      alert("Lesson saved successfully");
     } catch (err) {
-      console.error('Error saving lesson:', err);
-      alert('Failed to save lesson');
+      console.error("Error saving lesson:", err);
+      alert("Failed to save lesson");
     } finally {
       setSaving(false);
     }
@@ -79,29 +79,29 @@ export function CallanLessonForm() {
         order: qaItems.length + 1,
       });
       setQaItems((prev) => [...prev, qaItem]);
-      setNewQuestion('');
-      setNewAnswer('');
+      setNewQuestion("");
+      setNewAnswer("");
     } catch (err) {
-      console.error('Error adding QA item:', err);
-      alert('Failed to add Q&A item');
+      console.error("Error adding QA item:", err);
+      alert("Failed to add Q&A item");
     }
   };
 
   const handleDeleteQAItem = async (qaItemId: string) => {
-    if (!confirm('Are you sure you want to delete this Q&A item?')) return;
+    if (!confirm("Are you sure you want to delete this Q&A item?")) return;
 
     try {
       await qaItemsApi.delete(qaItemId);
       setQaItems((prev) => prev.filter((q) => q.id !== qaItemId));
     } catch (err) {
-      console.error('Error deleting QA item:', err);
-      alert('Failed to delete Q&A item');
+      console.error("Error deleting QA item:", err);
+      alert("Failed to delete Q&A item");
     }
   };
 
-  const handleMoveQAItem = async (index: number, direction: 'up' | 'down') => {
+  const handleMoveQAItem = async (index: number, direction: "up" | "down") => {
     if (!id) return;
-    const newIndex = direction === 'up' ? index - 1 : index + 1;
+    const newIndex = direction === "up" ? index - 1 : index + 1;
     if (newIndex < 0 || newIndex >= qaItems.length) return;
 
     const newQaItems = [...qaItems];
@@ -119,8 +119,8 @@ export function CallanLessonForm() {
       await qaItemsApi.reorder(id, reorderedItems);
       setQaItems(newQaItems.map((item, i) => ({ ...item, order: i + 1 })));
     } catch (err) {
-      console.error('Error reordering QA items:', err);
-      alert('Failed to reorder Q&A items');
+      console.error("Error reordering QA items:", err);
+      alert("Failed to reorder Q&A items");
     }
   };
 
@@ -138,12 +138,12 @@ export function CallanLessonForm() {
     <Container size="lg" className="py-10">
       <header className="mb-8">
         <h1 className="text-3xl font-bold text-text-primary mb-2">
-          {isEditing ? 'Edit Lesson' : 'Create New Lesson'}
+          {isEditing ? "Edit Lesson" : "Create New Lesson"}
         </h1>
         <p className="text-text-secondary">
           {isEditing
-            ? 'Update lesson details and manage Q&A items'
-            : 'Create a new lesson for Callan Method practice'}
+            ? "Update lesson details and manage Q&A items"
+            : "Create a new lesson for Callan Method practice"}
         </p>
       </header>
 
@@ -206,12 +206,16 @@ export function CallanLessonForm() {
           </div>
           <div className="mt-6 flex gap-4">
             <Button type="submit" variant="primary" disabled={saving}>
-              {saving ? 'Saving...' : isEditing ? 'Update Lesson' : 'Create Lesson'}
+              {saving
+                ? "Saving..."
+                : isEditing
+                  ? "Update Lesson"
+                  : "Create Lesson"}
             </Button>
             <Button
               type="button"
               variant="secondary"
-              onClick={() => navigate('/callan/lessons')}
+              onClick={() => navigate("/callan/lessons")}
             >
               Cancel
             </Button>
@@ -290,7 +294,7 @@ export function CallanLessonForm() {
                   <div className="flex flex-col gap-1">
                     <button
                       type="button"
-                      onClick={() => handleMoveQAItem(index, 'up')}
+                      onClick={() => handleMoveQAItem(index, "up")}
                       disabled={index === 0}
                       className="text-text-muted hover:text-text-primary disabled:opacity-30"
                     >
@@ -298,7 +302,7 @@ export function CallanLessonForm() {
                     </button>
                     <button
                       type="button"
-                      onClick={() => handleMoveQAItem(index, 'down')}
+                      onClick={() => handleMoveQAItem(index, "down")}
                       disabled={index === qaItems.length - 1}
                       className="text-text-muted hover:text-text-primary disabled:opacity-30"
                     >

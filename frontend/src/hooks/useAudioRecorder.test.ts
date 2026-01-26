@@ -1,16 +1,16 @@
-import { renderHook, act } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { useAudioRecorder } from './useAudioRecorder';
+import { renderHook, act } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { useAudioRecorder } from "./useAudioRecorder";
 
 // Mock MediaRecorder
 class MockMediaRecorder {
-  state: 'inactive' | 'recording' | 'paused' = 'inactive';
+  state: "inactive" | "recording" | "paused" = "inactive";
   ondataavailable: ((event: { data: Blob }) => void) | null = null;
   onstop: (() => void) | null = null;
   onerror: ((event: { error: Error }) => void) | null = null;
   onstart: (() => void) | null = null;
   stream: MediaStream;
-  
+
   static isTypeSupported = vi.fn(() => true);
 
   constructor(stream: MediaStream) {
@@ -18,34 +18,36 @@ class MockMediaRecorder {
   }
 
   start() {
-    this.state = 'recording';
+    this.state = "recording";
     this.onstart?.();
   }
 
   stop() {
-    this.state = 'inactive';
+    this.state = "inactive";
     // Simulate data available event
-    this.ondataavailable?.({ data: new Blob(['test audio'], { type: 'audio/webm' }) });
+    this.ondataavailable?.({
+      data: new Blob(["test audio"], { type: "audio/webm" }),
+    });
     this.onstop?.();
   }
 
   pause() {
-    this.state = 'paused';
+    this.state = "paused";
   }
 
   resume() {
-    this.state = 'recording';
+    this.state = "recording";
   }
 }
 
 // Mock MediaStream
 class MockMediaStream {
   private tracks: { stop: () => void }[] = [];
-  
+
   getTracks() {
     return this.tracks;
   }
-  
+
   addTrack() {
     this.tracks.push({ stop: vi.fn() });
   }
@@ -54,22 +56,24 @@ class MockMediaStream {
 // Mock getUserMedia
 const mockGetUserMedia = vi.fn();
 
-describe('useAudioRecorder', () => {
+describe("useAudioRecorder", () => {
   beforeEach(() => {
     vi.useFakeTimers();
-    
+
     // Setup global mocks
-    (globalThis as typeof globalThis & { MediaRecorder: typeof MediaRecorder }).MediaRecorder = MockMediaRecorder as unknown as typeof MediaRecorder;
-    
+    (
+      globalThis as typeof globalThis & { MediaRecorder: typeof MediaRecorder }
+    ).MediaRecorder = MockMediaRecorder as unknown as typeof MediaRecorder;
+
     // Mock navigator.mediaDevices
-    Object.defineProperty(globalThis.navigator, 'mediaDevices', {
+    Object.defineProperty(globalThis.navigator, "mediaDevices", {
       value: {
         getUserMedia: mockGetUserMedia,
       },
       writable: true,
       configurable: true,
     });
-    
+
     // Default getUserMedia mock implementation
     const mockStream = new MockMediaStream();
     mockStream.addTrack();
@@ -81,20 +85,20 @@ describe('useAudioRecorder', () => {
     vi.restoreAllMocks();
   });
 
-  describe('initialization', () => {
-    it('should return initial state with isRecording false', () => {
+  describe("initialization", () => {
+    it("should return initial state with isRecording false", () => {
       const { result } = renderHook(() => useAudioRecorder());
 
       expect(result.current.isRecording).toBe(false);
     });
 
-    it('should return isSupported true when MediaRecorder is available', () => {
+    it("should return isSupported true when MediaRecorder is available", () => {
       const { result } = renderHook(() => useAudioRecorder());
 
       expect(result.current.isSupported).toBe(true);
     });
 
-    it('should return isSupported false when MediaRecorder is not available', () => {
+    it("should return isSupported false when MediaRecorder is not available", () => {
       // Remove MediaRecorder
       const original = globalThis.MediaRecorder;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -109,27 +113,27 @@ describe('useAudioRecorder', () => {
       (globalThis as any).MediaRecorder = original;
     });
 
-    it('should have no recorded audio initially', () => {
+    it("should have no recorded audio initially", () => {
       const { result } = renderHook(() => useAudioRecorder());
 
       expect(result.current.recordedAudio).toBeNull();
     });
 
-    it('should have no error initially', () => {
+    it("should have no error initially", () => {
       const { result } = renderHook(() => useAudioRecorder());
 
       expect(result.current.error).toBeNull();
     });
 
-    it('should have duration of 0 initially', () => {
+    it("should have duration of 0 initially", () => {
       const { result } = renderHook(() => useAudioRecorder());
 
       expect(result.current.duration).toBe(0);
     });
   });
 
-  describe('startRecording', () => {
-    it('should request microphone permission', async () => {
+  describe("startRecording", () => {
+    it("should request microphone permission", async () => {
       const { result } = renderHook(() => useAudioRecorder());
 
       await act(async () => {
@@ -139,7 +143,7 @@ describe('useAudioRecorder', () => {
       expect(mockGetUserMedia).toHaveBeenCalledWith({ audio: true });
     });
 
-    it('should set isRecording to true after starting', async () => {
+    it("should set isRecording to true after starting", async () => {
       const { result } = renderHook(() => useAudioRecorder());
 
       await act(async () => {
@@ -149,8 +153,11 @@ describe('useAudioRecorder', () => {
       expect(result.current.isRecording).toBe(true);
     });
 
-    it('should set error when getUserMedia fails', async () => {
-      const permissionError = new DOMException('Permission denied', 'NotAllowedError');
+    it("should set error when getUserMedia fails", async () => {
+      const permissionError = new DOMException(
+        "Permission denied",
+        "NotAllowedError",
+      );
       mockGetUserMedia.mockRejectedValueOnce(permissionError);
 
       const { result } = renderHook(() => useAudioRecorder());
@@ -159,11 +166,13 @@ describe('useAudioRecorder', () => {
         await result.current.startRecording();
       });
 
-      expect(result.current.error).toBe('Microphone access denied. Please allow microphone access in your browser settings.');
+      expect(result.current.error).toBe(
+        "Microphone access denied. Please allow microphone access in your browser settings.",
+      );
       expect(result.current.isRecording).toBe(false);
     });
 
-    it('should clear previous recorded audio when starting new recording', async () => {
+    it("should clear previous recorded audio when starting new recording", async () => {
       const { result } = renderHook(() => useAudioRecorder());
 
       // First recording
@@ -185,7 +194,7 @@ describe('useAudioRecorder', () => {
       expect(result.current.recordedAudio).toBeNull();
     });
 
-    it('should track recording duration', async () => {
+    it("should track recording duration", async () => {
       const { result } = renderHook(() => useAudioRecorder());
 
       await act(async () => {
@@ -201,8 +210,8 @@ describe('useAudioRecorder', () => {
     });
   });
 
-  describe('stopRecording', () => {
-    it('should set isRecording to false', async () => {
+  describe("stopRecording", () => {
+    it("should set isRecording to false", async () => {
       const { result } = renderHook(() => useAudioRecorder());
 
       await act(async () => {
@@ -218,7 +227,7 @@ describe('useAudioRecorder', () => {
       expect(result.current.isRecording).toBe(false);
     });
 
-    it('should create recorded audio with blob and url', async () => {
+    it("should create recorded audio with blob and url", async () => {
       const { result } = renderHook(() => useAudioRecorder());
 
       await act(async () => {
@@ -234,7 +243,7 @@ describe('useAudioRecorder', () => {
       expect(result.current.recordedAudio?.url).toBeDefined();
     });
 
-    it('should do nothing if not recording', () => {
+    it("should do nothing if not recording", () => {
       const { result } = renderHook(() => useAudioRecorder());
 
       // Should not throw
@@ -245,7 +254,7 @@ describe('useAudioRecorder', () => {
       expect(result.current.isRecording).toBe(false);
     });
 
-    it('should stop the duration timer', async () => {
+    it("should stop the duration timer", async () => {
       const { result } = renderHook(() => useAudioRecorder());
 
       await act(async () => {
@@ -272,8 +281,8 @@ describe('useAudioRecorder', () => {
     });
   });
 
-  describe('clearRecording', () => {
-    it('should clear recorded audio', async () => {
+  describe("clearRecording", () => {
+    it("should clear recorded audio", async () => {
       const { result } = renderHook(() => useAudioRecorder());
 
       await act(async () => {
@@ -293,7 +302,7 @@ describe('useAudioRecorder', () => {
       expect(result.current.recordedAudio).toBeNull();
     });
 
-    it('should reset duration to 0', async () => {
+    it("should reset duration to 0", async () => {
       const { result } = renderHook(() => useAudioRecorder());
 
       await act(async () => {
@@ -317,8 +326,8 @@ describe('useAudioRecorder', () => {
       expect(result.current.duration).toBe(0);
     });
 
-    it('should clear error', async () => {
-      mockGetUserMedia.mockRejectedValueOnce(new Error('Permission denied'));
+    it("should clear error", async () => {
+      mockGetUserMedia.mockRejectedValueOnce(new Error("Permission denied"));
 
       const { result } = renderHook(() => useAudioRecorder());
 
@@ -336,8 +345,8 @@ describe('useAudioRecorder', () => {
     });
   });
 
-  describe('cleanup', () => {
-    it('should stop media stream tracks on unmount', async () => {
+  describe("cleanup", () => {
+    it("should stop media stream tracks on unmount", async () => {
       const mockTrackStop = vi.fn();
       const mockStream = {
         getTracks: () => [{ stop: mockTrackStop }],
@@ -355,7 +364,7 @@ describe('useAudioRecorder', () => {
       expect(mockTrackStop).toHaveBeenCalled();
     });
 
-    it('should cleanup timers on unmount', async () => {
+    it("should cleanup timers on unmount", async () => {
       const { result, unmount } = renderHook(() => useAudioRecorder());
 
       await act(async () => {
@@ -375,8 +384,8 @@ describe('useAudioRecorder', () => {
     });
   });
 
-  describe('recorded audio format', () => {
-    it('should record in webm format when supported', async () => {
+  describe("recorded audio format", () => {
+    it("should record in webm format when supported", async () => {
       const { result } = renderHook(() => useAudioRecorder());
 
       await act(async () => {
@@ -387,7 +396,7 @@ describe('useAudioRecorder', () => {
         result.current.stopRecording();
       });
 
-      expect(result.current.recordedAudio?.blob.type).toBe('audio/webm');
+      expect(result.current.recordedAudio?.blob.type).toBe("audio/webm");
     });
   });
 });

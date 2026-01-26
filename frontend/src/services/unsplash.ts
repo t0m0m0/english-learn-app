@@ -13,7 +13,7 @@ interface UnsplashImage {
 }
 
 const UNSPLASH_ACCESS_KEY = import.meta.env.VITE_UNSPLASH_ACCESS_KEY;
-const UNSPLASH_API = 'https://api.unsplash.com';
+const UNSPLASH_API = "https://api.unsplash.com";
 
 // Cache for images to reduce API calls
 const imageCache = new Map<string, UnsplashImage>();
@@ -26,7 +26,7 @@ export async function searchImages(query: string): Promise<UnsplashImage[]> {
   }
 
   if (!UNSPLASH_ACCESS_KEY) {
-    console.warn('Unsplash API key not set. Using placeholder images.');
+    console.warn("Unsplash API key not set. Using placeholder images.");
     return getPlaceholderImages(query);
   }
 
@@ -37,7 +37,7 @@ export async function searchImages(query: string): Promise<UnsplashImage[]> {
         headers: {
           Authorization: `Client-ID ${UNSPLASH_ACCESS_KEY}`,
         },
-      }
+      },
     );
 
     if (!response.ok) {
@@ -54,12 +54,14 @@ export async function searchImages(query: string): Promise<UnsplashImage[]> {
 
     return images;
   } catch (error) {
-    console.error('Error fetching images from Unsplash:', error);
+    console.error("Error fetching images from Unsplash:", error);
     return getPlaceholderImages(query);
   }
 }
 
-export async function getRandomImage(query: string): Promise<UnsplashImage | null> {
+export async function getRandomImage(
+  query: string,
+): Promise<UnsplashImage | null> {
   const images = await searchImages(query);
   return images.length > 0 ? images[0] : null;
 }
@@ -77,8 +79,8 @@ function getPlaceholderImages(query: string): UnsplashImage[] {
       },
       alt_description: query,
       user: {
-        name: 'Placeholder',
-        username: 'placeholder',
+        name: "Placeholder",
+        username: "placeholder",
       },
     },
   ];

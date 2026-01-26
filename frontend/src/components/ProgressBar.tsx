@@ -3,7 +3,7 @@ interface ProgressBarProps {
   total: number;
   label?: string;
   showPercentage?: boolean;
-  color?: 'blue' | 'green' | 'purple';
+  color?: "blue" | "green" | "purple";
 }
 
 export function ProgressBar({
@@ -11,14 +11,14 @@ export function ProgressBar({
   total,
   label,
   showPercentage = true,
-  color = 'blue',
+  color = "blue",
 }: ProgressBarProps) {
   const percentage = total > 0 ? Math.round((current / total) * 100) : 0;
 
   const colorStyles = {
-    blue: 'bg-gradient-to-r from-primary to-purple-500',
-    green: 'bg-gradient-to-r from-success to-emerald-400',
-    purple: 'bg-gradient-to-r from-purple-500 to-purple-400',
+    blue: "bg-gradient-to-r from-primary to-purple-500",
+    green: "bg-gradient-to-r from-success to-emerald-400",
+    purple: "bg-gradient-to-r from-purple-500 to-purple-400",
   };
 
   return (

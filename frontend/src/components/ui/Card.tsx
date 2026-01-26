@@ -1,25 +1,28 @@
-import { type HTMLAttributes, forwardRef } from 'react';
+import { type HTMLAttributes, forwardRef } from "react";
 
 interface CardProps extends HTMLAttributes<HTMLDivElement> {
-  variant?: 'default' | 'elevated' | 'outline';
-  padding?: 'none' | 'sm' | 'md' | 'lg';
+  variant?: "default" | "elevated" | "outline";
+  padding?: "none" | "sm" | "md" | "lg";
 }
 
 export const Card = forwardRef<HTMLDivElement, CardProps>(
-  ({ variant = 'default', padding = 'md', className = '', children, ...props }, ref) => {
-    const baseStyles = 'bg-surface rounded-card';
+  (
+    { variant = "default", padding = "md", className = "", children, ...props },
+    ref,
+  ) => {
+    const baseStyles = "bg-surface rounded-card";
 
     const variantStyles = {
-      default: 'shadow-card',
-      elevated: 'shadow-elevated',
-      outline: 'border border-border',
+      default: "shadow-card",
+      elevated: "shadow-elevated",
+      outline: "border border-border",
     };
 
     const paddingStyles = {
-      none: '',
-      sm: 'p-4',
-      md: 'p-6',
-      lg: 'p-8',
+      none: "",
+      sm: "p-4",
+      md: "p-6",
+      lg: "p-8",
     };
 
     return (
@@ -31,7 +34,7 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
         {children}
       </div>
     );
-  }
+  },
 );
 
-Card.displayName = 'Card';
+Card.displayName = "Card";

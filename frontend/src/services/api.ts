@@ -1,12 +1,20 @@
-import axios from 'axios';
-import type { Word, Progress, Statistics, DailyStats, Lesson, QAItem, CallanProgress } from '../types';
+import axios from "axios";
+import type {
+  Word,
+  Progress,
+  Statistics,
+  DailyStats,
+  Lesson,
+  QAItem,
+  CallanProgress,
+} from "../types";
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:3001/api";
 
 const api = axios.create({
   baseURL: API_BASE,
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 });
 
@@ -18,28 +26,33 @@ export const wordsApi = {
   getAll: async (page = 1, limit = 20) => {
     const response = await api.get<{
       words: Word[];
-      pagination: { page: number; limit: number; total: number; totalPages: number };
+      pagination: {
+        page: number;
+        limit: number;
+        total: number;
+        totalPages: number;
+      };
     }>(`/words?page=${page}&limit=${limit}`);
     return response.data;
   },
 
   getByRange: async (start: number, end: number) => {
     const response = await api.get<{ words: Word[]; count: number }>(
-      `/words/range/${start}/${end}`
+      `/words/range/${start}/${end}`,
     );
     return response.data;
   },
 
   getRandom: async (count = 10, maxFrequency = 3000) => {
     const response = await api.get<{ words: Word[] }>(
-      `/words/random?count=${count}&maxFrequency=${maxFrequency}`
+      `/words/random?count=${count}&maxFrequency=${maxFrequency}`,
     );
     return response.data;
   },
 
   getByPartOfSpeech: async (pos: string, count = 10) => {
     const response = await api.get<{ words: Word[] }>(
-      `/words/pos/${pos}?count=${count}`
+      `/words/pos/${pos}?count=${count}`,
     );
     return response.data;
   },
@@ -58,32 +71,44 @@ export const wordsApi = {
 // Progress API
 export const progressApi = {
   getUserProgress: async (userId: number = DEFAULT_USER_ID) => {
-    const response = await api.get<{ progress: Progress[]; statistics: Statistics }>(
-      `/progress/user/${userId}`
-    );
+    const response = await api.get<{
+      progress: Progress[];
+      statistics: Statistics;
+    }>(`/progress/user/${userId}`);
     return response.data;
   },
 
   getReviewWords: async (userId: number = DEFAULT_USER_ID, limit = 20) => {
     const response = await api.get<{ words: Progress[] }>(
-      `/progress/review/${userId}?limit=${limit}`
+      `/progress/review/${userId}?limit=${limit}`,
     );
     return response.data;
   },
 
-  getNewWords: async (userId: number = DEFAULT_USER_ID, limit = 10, maxFrequency = 1000) => {
+  getNewWords: async (
+    userId: number = DEFAULT_USER_ID,
+    limit = 10,
+    maxFrequency = 1000,
+  ) => {
     const response = await api.get<{ words: Word[] }>(
-      `/progress/new/${userId}?limit=${limit}&maxFrequency=${maxFrequency}`
+      `/progress/new/${userId}?limit=${limit}&maxFrequency=${maxFrequency}`,
     );
     return response.data;
   },
 
-  updateProgress: async (userId: number = DEFAULT_USER_ID, wordId: number, correct: boolean) => {
-    const response = await api.post<{ progress: Progress }>('/progress/update', {
-      userId,
-      wordId,
-      correct,
-    });
+  updateProgress: async (
+    userId: number = DEFAULT_USER_ID,
+    wordId: number,
+    correct: boolean,
+  ) => {
+    const response = await api.post<{ progress: Progress }>(
+      "/progress/update",
+      {
+        userId,
+        wordId,
+        correct,
+      },
+    );
     return response.data;
   },
 
@@ -96,7 +121,9 @@ export const progressApi = {
 // Lessons API
 export const lessonsApi = {
   getAll: async (userId: number = DEFAULT_USER_ID) => {
-    const response = await api.get<{ lessons: Lesson[] }>(`/lessons?userId=${userId}`);
+    const response = await api.get<{ lessons: Lesson[] }>(
+      `/lessons?userId=${userId}`,
+    );
     return response.data;
   },
 
@@ -105,15 +132,23 @@ export const lessonsApi = {
     return response.data;
   },
 
-  create: async (data: { title: string; description?: string; order: number; userId?: number }) => {
-    const response = await api.post<{ lesson: Lesson }>('/lessons', {
+  create: async (data: {
+    title: string;
+    description?: string;
+    order: number;
+    userId?: number;
+  }) => {
+    const response = await api.post<{ lesson: Lesson }>("/lessons", {
       ...data,
       userId: data.userId ?? DEFAULT_USER_ID,
     });
     return response.data;
   },
 
-  update: async (id: string, data: { title?: string; description?: string; order?: number }) => {
+  update: async (
+    id: string,
+    data: { title?: string; description?: string; order?: number },
+  ) => {
     const response = await api.put<{ lesson: Lesson }>(`/lessons/${id}`, data);
     return response.data;
   },
@@ -126,12 +161,21 @@ export const lessonsApi = {
 
 // QA Items API
 export const qaItemsApi = {
-  create: async (lessonId: string, data: { question: string; answer: string; order: number }) => {
-    const response = await api.post<{ qaItem: QAItem }>(`/lessons/${lessonId}/qa-items`, data);
+  create: async (
+    lessonId: string,
+    data: { question: string; answer: string; order: number },
+  ) => {
+    const response = await api.post<{ qaItem: QAItem }>(
+      `/lessons/${lessonId}/qa-items`,
+      data,
+    );
     return response.data;
   },
 
-  update: async (id: string, data: { question?: string; answer?: string; order?: number }) => {
+  update: async (
+    id: string,
+    data: { question?: string; answer?: string; order?: number },
+  ) => {
     const response = await api.put<{ qaItem: QAItem }>(`/qa-items/${id}`, data);
     return response.data;
   },
@@ -142,7 +186,10 @@ export const qaItemsApi = {
   },
 
   reorder: async (lessonId: string, items: { id: string; order: number }[]) => {
-    const response = await api.put<{ message: string }>(`/lessons/${lessonId}/qa-items/reorder`, { items });
+    const response = await api.put<{ message: string }>(
+      `/lessons/${lessonId}/qa-items/reorder`,
+      { items },
+    );
     return response.data;
   },
 };
@@ -152,23 +199,30 @@ export const callanProgressApi = {
   recordProgress: async (data: {
     userId?: number;
     qaItemId: string;
-    mode: 'qa' | 'shadowing' | 'dictation';
+    mode: "qa" | "shadowing" | "dictation";
     isCorrect: boolean;
   }) => {
-    const response = await api.post<{ progress: CallanProgress }>('/callan/progress', {
-      ...data,
-      userId: data.userId ?? DEFAULT_USER_ID,
-    });
+    const response = await api.post<{ progress: CallanProgress }>(
+      "/callan/progress",
+      {
+        ...data,
+        userId: data.userId ?? DEFAULT_USER_ID,
+      },
+    );
     return response.data;
   },
 
-  getLessonProgress: async (lessonId: string, userId: number = DEFAULT_USER_ID, mode?: 'qa' | 'shadowing' | 'dictation') => {
+  getLessonProgress: async (
+    lessonId: string,
+    userId: number = DEFAULT_USER_ID,
+    mode?: "qa" | "shadowing" | "dictation",
+  ) => {
     const params = new URLSearchParams({ userId: userId.toString() });
     if (mode) {
-      params.append('mode', mode);
+      params.append("mode", mode);
     }
     const response = await api.get<{ progress: CallanProgress[] }>(
-      `/callan/progress/${lessonId}?${params.toString()}`
+      `/callan/progress/${lessonId}?${params.toString()}`,
     );
     return response.data;
   },

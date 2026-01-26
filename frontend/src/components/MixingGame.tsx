@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
-import { wordsApi } from '../services/api';
-import useAudio from '../hooks/useAudio';
-import { Button, Card } from './ui';
+import { useState, useEffect } from "react";
+import { wordsApi } from "../services/api";
+import useAudio from "../hooks/useAudio";
+import { Button, Card } from "./ui";
 
 interface Word {
   id: number;
@@ -28,7 +28,7 @@ export function MixingGame({ onComplete }: MixingGameProps) {
   });
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState<string | null>(null);
-  const [userSentence, setUserSentence] = useState('');
+  const [userSentence, setUserSentence] = useState("");
   const [round, setRound] = useState(1);
   const [score, setScore] = useState(0);
   const [showExample, setShowExample] = useState(false);
@@ -42,15 +42,15 @@ export function MixingGame({ onComplete }: MixingGameProps) {
   const fetchNewWords = async () => {
     setLoading(true);
     setShowExample(false);
-    setUserSentence('');
+    setUserSentence("");
     setFetchError(null);
 
     try {
       // Fetch random words by part of speech
       const [verbsRes, nounsRes, adjectivesRes] = await Promise.all([
-        wordsApi.getByPartOfSpeech('verb', 1),
-        wordsApi.getByPartOfSpeech('noun', 1),
-        wordsApi.getByPartOfSpeech('adjective', 1),
+        wordsApi.getByPartOfSpeech("verb", 1),
+        wordsApi.getByPartOfSpeech("noun", 1),
+        wordsApi.getByPartOfSpeech("adjective", 1),
       ]);
 
       setWords({
@@ -59,7 +59,7 @@ export function MixingGame({ onComplete }: MixingGameProps) {
         adjective: adjectivesRes.words[0] || null,
       });
     } catch (error) {
-      console.error('Error fetching words:', error);
+      console.error("Error fetching words:", error);
       // Fallback to random words if POS-based fetch fails
       try {
         const { words: randomWords } = await wordsApi.getRandom(3, 1000);
@@ -69,8 +69,10 @@ export function MixingGame({ onComplete }: MixingGameProps) {
           adjective: randomWords[2] || null,
         });
       } catch (fallbackError) {
-        console.error('Error fetching fallback words:', fallbackError);
-        setFetchError('Unable to load words. Please check your connection and try again.');
+        console.error("Error fetching fallback words:", fallbackError);
+        setFetchError(
+          "Unable to load words. Please check your connection and try again.",
+        );
       }
     }
 
@@ -83,7 +85,7 @@ export function MixingGame({ onComplete }: MixingGameProps) {
 
   const generateExampleSentence = (): string => {
     const { verb, noun, adjective } = words;
-    if (!verb || !noun || !adjective) return '';
+    if (!verb || !noun || !adjective) return "";
 
     const examples = [
       `The ${adjective.word} ${noun.word} ${verb.word}s.`,
@@ -106,7 +108,7 @@ export function MixingGame({ onComplete }: MixingGameProps) {
     const { verb, noun, adjective } = words;
     const allWords = [verb, noun, adjective].filter(Boolean) as Word[];
     if (allWords.length === 0) return;
-    const wordStrings = allWords.map((w) => w.word).join(', ');
+    const wordStrings = allWords.map((w) => w.word).join(", ");
     speak(wordStrings);
   };
 
@@ -122,7 +124,10 @@ export function MixingGame({ onComplete }: MixingGameProps) {
       if (words.noun && lowerSentence.includes(words.noun.word.toLowerCase())) {
         points += 1;
       }
-      if (words.adjective && lowerSentence.includes(words.adjective.word.toLowerCase())) {
+      if (
+        words.adjective &&
+        lowerSentence.includes(words.adjective.word.toLowerCase())
+      ) {
         points += 1;
       }
 
@@ -179,15 +184,19 @@ export function MixingGame({ onComplete }: MixingGameProps) {
         type="button"
         className={`flex-1 p-4 rounded-card ${colorClass} text-white transition-all ${
           isDisabled
-            ? 'opacity-50 cursor-not-allowed'
-            : 'cursor-pointer hover:-translate-y-1 hover:shadow-elevated'
+            ? "opacity-50 cursor-not-allowed"
+            : "cursor-pointer hover:-translate-y-1 hover:shadow-elevated"
         }`}
         onClick={() => handleSpeakWord(word)}
         disabled={isDisabled}
       >
-        <span className="block text-xs uppercase tracking-wider opacity-80 mb-1">{type}</span>
-        <span className="block text-xl font-bold">{word?.word || '...'}</span>
-        {isSpeaking && word && <span className="block text-sm mt-1 animate-pulse">🔊</span>}
+        <span className="block text-xs uppercase tracking-wider opacity-80 mb-1">
+          {type}
+        </span>
+        <span className="block text-xl font-bold">{word?.word || "..."}</span>
+        {isSpeaking && word && (
+          <span className="block text-sm mt-1 animate-pulse">🔊</span>
+        )}
       </button>
     );
   };
@@ -195,7 +204,9 @@ export function MixingGame({ onComplete }: MixingGameProps) {
   return (
     <Card className="max-w-2xl mx-auto">
       <div className="text-center mb-6">
-        <h2 className="text-2xl font-bold text-text-primary mb-2">Word Mixing Game</h2>
+        <h2 className="text-2xl font-bold text-text-primary mb-2">
+          Word Mixing Game
+        </h2>
         <p className="text-text-secondary mb-4">
           Combine these words to create a sentence. Be creative!
         </p>
@@ -287,10 +298,12 @@ export function MixingGame({ onComplete }: MixingGameProps) {
             <label className="block text-xs uppercase tracking-wider text-text-muted mb-2">
               Example sentence:
             </label>
-            <p className="text-text-primary font-medium">{generateExampleSentence()}</p>
+            <p className="text-text-primary font-medium">
+              {generateExampleSentence()}
+            </p>
           </div>
           <Button variant="primary" onClick={handleNextRound} fullWidth>
-            {round >= maxRounds ? 'See Results' : 'Next Round →'}
+            {round >= maxRounds ? "See Results" : "Next Round →"}
           </Button>
         </div>
       )}

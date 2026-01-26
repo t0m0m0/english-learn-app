@@ -1,22 +1,23 @@
 import { useState, useEffect, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
+import axios from "axios";
 import { lessonsApi, DEFAULT_USER_ID } from "../services/api";
 import { Container, Card, Button } from "../components/ui";
 import {
-  CallanQAPractice,
-  type PracticeSummary,
-} from "../components/CallanQAPractice";
+  CallanDictation,
+  type DictationSummary,
+} from "../components/CallanDictation";
 import type { Lesson } from "../types";
 
 type PracticeState = "loading" | "ready" | "practicing" | "completed" | "error";
 
-export function CallanPractice() {
+export function CallanDictationPage() {
   const { lessonId } = useParams<{ lessonId: string }>();
 
   const [lesson, setLesson] = useState<Lesson | null>(null);
   const [practiceState, setPracticeState] = useState<PracticeState>("loading");
   const [error, setError] = useState<string | null>(null);
-  const [summary, setSummary] = useState<PracticeSummary | null>(null);
+  const [summary, setSummary] = useState<DictationSummary | null>(null);
 
   const fetchLesson = useCallback(async () => {
     if (!lessonId) return;
@@ -30,7 +31,21 @@ export function CallanPractice() {
       setPracticeState("ready");
     } catch (err) {
       console.error("Error fetching lesson:", err);
-      setError("Failed to load lesson");
+
+      let errorMessage = "Failed to load lesson";
+      if (axios.isAxiosError(err)) {
+        if (err.response?.status === 404) {
+          errorMessage = "This lesson could not be found. It may have been deleted.";
+        } else if (err.response?.status === 403) {
+          errorMessage = "You don't have permission to access this lesson.";
+        } else if (err.response?.status && err.response.status >= 500) {
+          errorMessage = "Server error. Please try again in a few moments.";
+        } else if (err.code === "ERR_NETWORK" || !err.response) {
+          errorMessage = "Network error. Please check your internet connection.";
+        }
+      }
+
+      setError(errorMessage);
       setPracticeState("error");
     }
   }, [lessonId]);
@@ -43,7 +58,7 @@ export function CallanPractice() {
     setPracticeState("practicing");
   }, []);
 
-  const handleComplete = useCallback((practiceSummary: PracticeSummary) => {
+  const handleComplete = useCallback((practiceSummary: DictationSummary) => {
     setSummary(practiceSummary);
     setPracticeState("completed");
   }, []);
@@ -70,9 +85,14 @@ export function CallanPractice() {
           <h2 className="text-xl font-semibold text-error mb-4">
             {error || "Lesson not found"}
           </h2>
-          <Link to="/callan/lessons">
-            <Button variant="secondary">Back to Lessons</Button>
-          </Link>
+          <div className="flex gap-4 justify-center">
+            <Button variant="primary" onClick={fetchLesson}>
+              Try Again
+            </Button>
+            <Link to="/callan/lessons">
+              <Button variant="secondary">Back to Lessons</Button>
+            </Link>
+          </div>
         </Card>
       </Container>
     );
@@ -114,7 +134,7 @@ export function CallanPractice() {
 
           <div className="bg-surface-elevated rounded-lg p-6 mb-8 max-w-md mx-auto">
             <h2 className="text-lg font-semibold text-text-primary mb-4">
-              Practice Info
+              Dictation Practice
             </h2>
             <div className="space-y-2 text-left">
               <div className="flex justify-between">
@@ -125,9 +145,7 @@ export function CallanPractice() {
               </div>
               <div className="flex justify-between">
                 <span className="text-text-secondary">Mode:</span>
-                <span className="text-text-primary font-medium">
-                  Q&A Practice
-                </span>
+                <span className="text-text-primary font-medium">Dictation</span>
               </div>
             </div>
           </div>
@@ -139,7 +157,7 @@ export function CallanPractice() {
               className="w-full max-w-xs"
               onClick={handleStartPractice}
             >
-              Start Practice
+              Start Dictation
             </Button>
 
             <div>
@@ -154,9 +172,10 @@ export function CallanPractice() {
           <div className="mt-8 text-text-muted text-sm">
             <p>Tips:</p>
             <ul className="list-disc list-inside text-left max-w-md mx-auto mt-2 space-y-1">
-              <li>Listen to the question carefully</li>
-              <li>Speak your answer clearly</li>
-              <li>You can also type if voice input doesn't work</li>
+              <li>Listen to the audio carefully</li>
+              <li>Type exactly what you hear</li>
+              <li>Use the hint button if you're stuck</li>
+              <li>Adjust speed if needed (0.5x - 1.5x)</li>
               <li>Use keyboard shortcuts for faster navigation</li>
             </ul>
           </div>
@@ -170,7 +189,7 @@ export function CallanPractice() {
       <Container size="lg" className="py-10">
         <Card className="text-center py-12">
           <h1 className="text-3xl font-bold text-text-primary mb-2">
-            Practice Complete!
+            Dictation Complete!
           </h1>
           <p className="text-text-secondary mb-8">{lesson.title}</p>
 
@@ -179,20 +198,6 @@ export function CallanPractice() {
               Your Results
             </h2>
             <div className="space-y-3">
-              <div className="flex justify-between items-center">
-                <span className="text-text-secondary">Accuracy:</span>
-                <span
-                  className={`text-2xl font-bold ${
-                    summary.accuracy >= 80
-                      ? "text-success"
-                      : summary.accuracy >= 60
-                        ? "text-warning"
-                        : "text-error"
-                  }`}
-                >
-                  {Math.round(summary.accuracy)}%
-                </span>
-              </div>
               <div className="flex justify-between">
                 <span className="text-text-secondary">Total Items:</span>
                 <span className="text-text-primary font-medium">
@@ -200,35 +205,35 @@ export function CallanPractice() {
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-text-secondary">Correct:</span>
+                <span className="text-text-secondary">Perfect Answers:</span>
                 <span className="text-success font-medium">
                   {summary.correctCount}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-text-secondary">Incorrect:</span>
-                <span className="text-error font-medium">
-                  {summary.incorrectCount}
+                <span className="text-text-secondary">Average Accuracy:</span>
+                <span
+                  className={`font-medium ${
+                    summary.totalAccuracy >= 90
+                      ? "text-success"
+                      : summary.totalAccuracy >= 70
+                        ? "text-warning"
+                        : "text-error"
+                  }`}
+                >
+                  {summary.totalAccuracy}%
                 </span>
               </div>
-              {summary.skippedCount > 0 && (
-                <div className="flex justify-between">
-                  <span className="text-text-secondary">Skipped:</span>
-                  <span className="text-warning font-medium">
-                    {summary.skippedCount}
-                  </span>
-                </div>
-              )}
             </div>
           </div>
 
           {/* Encouragement message */}
           <p className="text-text-secondary mb-8">
-            {summary.accuracy >= 80
-              ? "🎉 Excellent work! Keep it up!"
-              : summary.accuracy >= 60
-                ? "👍 Good effort! Practice makes perfect."
-                : "💪 Keep practicing! You'll get better each time."}
+            {summary.totalAccuracy >= 90
+              ? "🎉 Excellent! Your listening skills are impressive!"
+              : summary.totalAccuracy >= 70
+                ? "👍 Good job! Keep practicing to improve your accuracy."
+                : "💪 Keep going! Practice makes perfect."}
           </p>
 
           <div className="flex gap-4 justify-center flex-wrap">
@@ -253,7 +258,7 @@ export function CallanPractice() {
             <h1 className="text-2xl font-bold text-text-primary">
               {lesson.title}
             </h1>
-            <p className="text-text-secondary text-sm">Q&A Practice Mode</p>
+            <p className="text-text-secondary text-sm">Dictation Mode</p>
           </div>
           <Link to="/callan/lessons">
             <Button variant="secondary" size="sm">
@@ -263,7 +268,7 @@ export function CallanPractice() {
         </div>
       </header>
 
-      <CallanQAPractice
+      <CallanDictation
         qaItems={lesson.qaItems}
         userId={DEFAULT_USER_ID}
         onComplete={handleComplete}
@@ -272,4 +277,4 @@ export function CallanPractice() {
   );
 }
 
-export default CallanPractice;
+export default CallanDictationPage;

@@ -1,17 +1,17 @@
-import { type HTMLAttributes, forwardRef } from 'react';
+import { type HTMLAttributes, forwardRef } from "react";
 
 interface ContainerProps extends HTMLAttributes<HTMLDivElement> {
-  size?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
+  size?: "sm" | "md" | "lg" | "xl" | "full";
 }
 
 export const Container = forwardRef<HTMLDivElement, ContainerProps>(
-  ({ size = 'lg', className = '', children, ...props }, ref) => {
+  ({ size = "lg", className = "", children, ...props }, ref) => {
     const sizeStyles = {
-      sm: 'max-w-xl',
-      md: 'max-w-2xl',
-      lg: 'max-w-4xl',
-      xl: 'max-w-6xl',
-      full: 'max-w-full',
+      sm: "max-w-xl",
+      md: "max-w-2xl",
+      lg: "max-w-4xl",
+      xl: "max-w-6xl",
+      full: "max-w-full",
     };
 
     return (
@@ -23,7 +23,7 @@ export const Container = forwardRef<HTMLDivElement, ContainerProps>(
         {children}
       </div>
     );
-  }
+  },
 );
 
-Container.displayName = 'Container';
+Container.displayName = "Container";

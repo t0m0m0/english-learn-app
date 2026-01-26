@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef } from 'react';
-import { searchImages } from '../services/unsplash';
-import useAudio from '../hooks/useAudio';
-import { Button, Card } from './ui';
+import { useState, useEffect, useRef } from "react";
+import { searchImages } from "../services/unsplash";
+import useAudio from "../hooks/useAudio";
+import { Button, Card } from "./ui";
 
 interface Word {
   id: number;
@@ -81,14 +81,17 @@ export function WordCard({
       {showImage && (
         <div className="w-full h-72 bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
           {imageLoading ? (
-            <div className="text-text-muted text-sm animate-pulse">Loading...</div>
+            <div className="text-text-muted text-sm animate-pulse">
+              Loading...
+            </div>
           ) : image ? (
             <img
               src={image.urls.regular}
               alt={image.alt_description || word.word}
               className="w-full h-full object-cover"
               onError={(e) => {
-                (e.target as HTMLImageElement).src = `https://placehold.co/400x400?text=${encodeURIComponent(word.word)}`;
+                (e.target as HTMLImageElement).src =
+                  `https://placehold.co/400x400?text=${encodeURIComponent(word.word)}`;
               }}
             />
           ) : (
@@ -99,7 +102,9 @@ export function WordCard({
 
       <div className="p-6 text-center">
         {revealed ? (
-          <h2 className="text-3xl font-semibold text-text-primary mb-2">{word.word}</h2>
+          <h2 className="text-3xl font-semibold text-text-primary mb-2">
+            {word.word}
+          </h2>
         ) : (
           <button
             type="button"
@@ -123,18 +128,26 @@ export function WordCard({
             disabled={isSpeaking}
             fullWidth
           >
-            {isSpeaking ? 'Speaking...' : '🔊 Listen'}
+            {isSpeaking ? "Speaking..." : "🔊 Listen"}
           </Button>
 
           {(onCorrect || onIncorrect) && revealed && (
             <div className="flex gap-3">
               {onIncorrect && (
-                <Button variant="error" onClick={onIncorrect} className="flex-1">
+                <Button
+                  variant="error"
+                  onClick={onIncorrect}
+                  className="flex-1"
+                >
                   ✗ Don't Know
                 </Button>
               )}
               {onCorrect && (
-                <Button variant="success" onClick={onCorrect} className="flex-1">
+                <Button
+                  variant="success"
+                  onClick={onCorrect}
+                  className="flex-1"
+                >
                   ✓ Know It
                 </Button>
               )}

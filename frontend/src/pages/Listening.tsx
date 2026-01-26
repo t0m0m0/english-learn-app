@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
-import { wordsApi } from '../services/api';
-import ListeningMode from '../components/ListeningMode';
-import { Container, Card, Button } from '../components/ui';
+import { useState, useEffect } from "react";
+import { wordsApi } from "../services/api";
+import ListeningMode from "../components/ListeningMode";
+import { Container, Card, Button } from "../components/ui";
 
 interface Word {
   id: number;
@@ -23,11 +23,11 @@ export function Listening() {
     try {
       const { words: fetchedWords } = await wordsApi.getRandom(
         wordCount,
-        maxFrequency
+        maxFrequency,
       );
       setWords(fetchedWords);
     } catch (error) {
-      console.error('Error fetching words:', error);
+      console.error("Error fetching words:", error);
     } finally {
       setLoading(false);
     }
@@ -48,7 +48,9 @@ export function Listening() {
   if (loading) {
     return (
       <Container size="md" className="py-10">
-        <div className="text-center py-16 text-text-muted">Loading words...</div>
+        <div className="text-center py-16 text-text-muted">
+          Loading words...
+        </div>
       </Container>
     );
   }
@@ -95,7 +97,9 @@ export function Listening() {
           </select>
         </div>
         <div className="flex items-center gap-2">
-          <label className="text-sm text-text-secondary">Frequency Range:</label>
+          <label className="text-sm text-text-secondary">
+            Frequency Range:
+          </label>
           <select
             value={maxFrequency}
             onChange={(e) => setMaxFrequency(Number(e.target.value))}

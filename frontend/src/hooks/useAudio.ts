@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from "react";
 
 interface UseAudioOptions {
   rate?: number;
@@ -12,7 +12,11 @@ interface UseAudioReturn {
   stop: () => void;
   pause: () => void;
   resume: () => void;
-  speakSequence: (words: string[], delayMs?: number, customRate?: number) => Promise<void>;
+  speakSequence: (
+    words: string[],
+    delayMs?: number,
+    customRate?: number,
+  ) => Promise<void>;
   cancelSequence: () => void;
   isSpeaking: boolean;
   availableVoices: SpeechSynthesisVoice[];
@@ -26,15 +30,21 @@ export function useAudio(options: UseAudioOptions = {}): UseAudioReturn {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isReady, setIsReady] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [availableVoices, setAvailableVoices] = useState<SpeechSynthesisVoice[]>([]);
+  const [availableVoices, setAvailableVoices] = useState<
+    SpeechSynthesisVoice[]
+  >([]);
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
   const voicesLoadedRef = useRef(false);
 
   // Refs for timeout/interval cleanup
   const speakTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const checkTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const sequenceIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const sequenceDelayTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const sequenceIntervalRef = useRef<ReturnType<typeof setInterval> | null>(
+    null,
+  );
+  const sequenceDelayTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  );
   const retryTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const sequenceCancelledRef = useRef(false);
 
@@ -64,7 +74,7 @@ export function useAudio(options: UseAudioOptions = {}): UseAudioReturn {
 
   // Get available voices
   const loadVoices = useCallback(() => {
-    if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
+    if (typeof window === "undefined" || !("speechSynthesis" in window)) {
       return [];
     }
 
@@ -72,7 +82,7 @@ export function useAudio(options: UseAudioOptions = {}): UseAudioReturn {
 
     // Filter for English voices
     const englishVoices = voices.filter(
-      (v) => v.lang.startsWith('en-') || v.lang === 'en'
+      (v) => v.lang.startsWith("en-") || v.lang === "en",
     );
 
     setAvailableVoices(englishVoices);
@@ -88,8 +98,8 @@ export function useAudio(options: UseAudioOptions = {}): UseAudioReturn {
 
   // Load voices on mount
   useEffect(() => {
-    if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
-      setError('Speech synthesis not supported in this browser');
+    if (typeof window === "undefined" || !("speechSynthesis" in window)) {
+      setError("Speech synthesis not supported in this browser");
       return;
     }
 
@@ -111,7 +121,9 @@ export function useAudio(options: UseAudioOptions = {}): UseAudioReturn {
       retryTimeoutRef.current = setTimeout(() => {
         const retryVoices = loadVoices();
         if (retryVoices.length === 0) {
-          setError('No audio voices available. Please check your browser settings.');
+          setError(
+            "No audio voices available. Please check your browser settings.",
+          );
         }
         retryTimeoutRef.current = null;
       }, 1000);
@@ -126,8 +138,8 @@ export function useAudio(options: UseAudioOptions = {}): UseAudioReturn {
   // Speak a word or phrase
   const speak = useCallback(
     (text: string, customRate?: number) => {
-      if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
-        setError('Speech synthesis not supported');
+      if (typeof window === "undefined" || !("speechSynthesis" in window)) {
+        setError("Speech synthesis not supported");
         return;
       }
 
@@ -155,10 +167,10 @@ export function useAudio(options: UseAudioOptions = {}): UseAudioReturn {
         // Try to use a native English voice
         const englishVoice =
           voices.find(
-            (v) => v.lang === 'en-US' && v.name.includes('Samantha')
+            (v) => v.lang === "en-US" && v.name.includes("Samantha"),
           ) ||
-          voices.find((v) => v.lang === 'en-US') ||
-          voices.find((v) => v.lang.startsWith('en-'));
+          voices.find((v) => v.lang === "en-US") ||
+          voices.find((v) => v.lang.startsWith("en-"));
 
         if (englishVoice) {
           utterance.voice = englishVoice;
@@ -174,7 +186,7 @@ export function useAudio(options: UseAudioOptions = {}): UseAudioReturn {
       };
 
       utterance.onerror = (e) => {
-        if (e.error !== 'canceled') {
+        if (e.error !== "canceled") {
           setError(`Speech error: ${e.error}`);
         }
         setIsSpeaking(false);
@@ -192,12 +204,12 @@ export function useAudio(options: UseAudioOptions = {}): UseAudioReturn {
         // Check if speech actually started after a short delay
         checkTimeoutRef.current = setTimeout(() => {
           if (!speechSynthesis.speaking && !speechSynthesis.pending) {
-            setError('Speech failed to start. Please try again.');
+            setError("Speech failed to start. Please try again.");
           }
         }, 200);
       }, 150);
     },
-    [rate, pitch, volume, voice]
+    [rate, pitch, volume, voice],
   );
 
   // Stop speaking
@@ -265,7 +277,7 @@ export function useAudio(options: UseAudioOptions = {}): UseAudioReturn {
         });
       }
     },
-    [speak]
+    [speak],
   );
 
   // Cleanup on unmount

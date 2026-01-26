@@ -1,8 +1,8 @@
-import { useState, useEffect, useCallback } from 'react';
-import { Link } from 'react-router-dom';
-import { lessonsApi } from '../services/api';
-import { Container, Card, Button } from '../components/ui';
-import type { Lesson } from '../types';
+import { useState, useEffect, useCallback } from "react";
+import { Link } from "react-router-dom";
+import { lessonsApi } from "../services/api";
+import { Container, Card, Button } from "../components/ui";
+import type { Lesson } from "../types";
 
 export function CallanLessons() {
   const [lessons, setLessons] = useState<Lesson[]>([]);
@@ -17,8 +17,8 @@ export function CallanLessons() {
       const { lessons: fetchedLessons } = await lessonsApi.getAll();
       setLessons(fetchedLessons);
     } catch (err) {
-      console.error('Error fetching lessons:', err);
-      setError('Failed to load lessons');
+      console.error("Error fetching lessons:", err);
+      setError("Failed to load lessons");
     } finally {
       setLoading(false);
     }
@@ -29,14 +29,14 @@ export function CallanLessons() {
   }, [fetchLessons]);
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this lesson?')) return;
+    if (!confirm("Are you sure you want to delete this lesson?")) return;
     setDeletingId(id);
     try {
       await lessonsApi.delete(id);
       setLessons((prev) => prev.filter((l) => l.id !== id));
     } catch (err) {
-      console.error('Error deleting lesson:', err);
-      alert('Failed to delete lesson');
+      console.error("Error deleting lesson:", err);
+      alert("Failed to delete lesson");
     } finally {
       setDeletingId(null);
     }
@@ -46,7 +46,9 @@ export function CallanLessons() {
     return (
       <Container size="lg" className="py-10">
         <Card className="text-center py-12">
-          <div className="text-text-muted animate-pulse">Loading lessons...</div>
+          <div className="text-text-muted animate-pulse">
+            Loading lessons...
+          </div>
         </Card>
       </Container>
     );
@@ -107,15 +109,26 @@ export function CallanLessons() {
                 {lesson.qaItems.length > 0 && (
                   <>
                     <Link to={`/callan/practice/${lesson.id}`}>
-                      <Button variant="primary" size="sm">Q&A</Button>
+                      <Button variant="primary" size="sm">
+                        Q&A
+                      </Button>
                     </Link>
                     <Link to={`/callan/shadowing/${lesson.id}`}>
-                      <Button variant="primary" size="sm">Shadow</Button>
+                      <Button variant="primary" size="sm">
+                        Shadow
+                      </Button>
+                    </Link>
+                    <Link to={`/callan/dictation/${lesson.id}`}>
+                      <Button variant="primary" size="sm">
+                        Dictation
+                      </Button>
                     </Link>
                   </>
                 )}
                 <Link to={`/callan/lessons/${lesson.id}/edit`}>
-                  <Button variant="secondary" size="sm">Edit</Button>
+                  <Button variant="secondary" size="sm">
+                    Edit
+                  </Button>
                 </Link>
                 <Button
                   variant="secondary"
@@ -124,7 +137,7 @@ export function CallanLessons() {
                   disabled={deletingId === lesson.id}
                   className="text-error hover:bg-error/10 disabled:opacity-50"
                 >
-                  {deletingId === lesson.id ? 'Deleting...' : 'Delete'}
+                  {deletingId === lesson.id ? "Deleting..." : "Delete"}
                 </Button>
               </div>
             </Card>

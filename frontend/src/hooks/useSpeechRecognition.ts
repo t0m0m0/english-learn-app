@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from "react";
 
 interface UseSpeechRecognitionOptions {
   language?: string;
@@ -58,22 +58,31 @@ interface SpeechRecognitionInstance {
 type SpeechRecognitionConstructor = new () => SpeechRecognitionInstance;
 
 const getSpeechRecognition = (): SpeechRecognitionConstructor | null => {
-  if (typeof window === 'undefined') return null;
-  
+  if (typeof window === "undefined") return null;
+
   return (
-    (window as unknown as { SpeechRecognition?: SpeechRecognitionConstructor }).SpeechRecognition ||
-    (window as unknown as { webkitSpeechRecognition?: SpeechRecognitionConstructor }).webkitSpeechRecognition ||
+    (window as unknown as { SpeechRecognition?: SpeechRecognitionConstructor })
+      .SpeechRecognition ||
+    (
+      window as unknown as {
+        webkitSpeechRecognition?: SpeechRecognitionConstructor;
+      }
+    ).webkitSpeechRecognition ||
     null
   );
 };
 
 export function useSpeechRecognition(
-  options: UseSpeechRecognitionOptions = {}
+  options: UseSpeechRecognitionOptions = {},
 ): UseSpeechRecognitionReturn {
-  const { language = 'en-US', continuous = false, interimResults = true } = options;
+  const {
+    language = "en-US",
+    continuous = false,
+    interimResults = true,
+  } = options;
 
-  const [transcript, setTranscript] = useState('');
-  const [interimTranscript, setInterimTranscript] = useState('');
+  const [transcript, setTranscript] = useState("");
+  const [interimTranscript, setInterimTranscript] = useState("");
   const [isListening, setIsListening] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -100,8 +109,8 @@ export function useSpeechRecognition(
     };
 
     recognition.onresult = (event: SpeechRecognitionEvent) => {
-      let finalTranscript = '';
-      let interim = '';
+      let finalTranscript = "";
+      let interim = "";
 
       for (let i = 0; i < event.results.length; i++) {
         const result = event.results[i];
@@ -140,7 +149,7 @@ export function useSpeechRecognition(
       recognitionRef.current.start();
     } catch (err) {
       // Recognition might already be started
-      if (err instanceof Error && !err.message.includes('already started')) {
+      if (err instanceof Error && !err.message.includes("already started")) {
         setError(err.message);
       }
     }
@@ -157,8 +166,8 @@ export function useSpeechRecognition(
   }, []);
 
   const resetTranscript = useCallback(() => {
-    setTranscript('');
-    setInterimTranscript('');
+    setTranscript("");
+    setInterimTranscript("");
   }, []);
 
   return {
