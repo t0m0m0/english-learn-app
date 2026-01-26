@@ -88,3 +88,19 @@ export interface CallanProgress {
   createdAt?: string;
   updatedAt?: string;
 }
+
+
+export interface CallanModeStats {
+  qa: { total: number; correct: number; accuracy: number };
+  shadowing: { total: number; practiced: number };
+  dictation: { total: number; correct: number; accuracy: number };
+}
+
+export interface CallanProgressSummary {
+  totalLessons: number;
+  completedLessons: number;
+  totalQAItems: number;
+  practicedQAItems: number;
+  byMode: CallanModeStats;
+  streakDays: number;
+}
