@@ -19,6 +19,29 @@ export interface ShadowingSummary {
 
 type PracticeState = "ready" | "recording" | "review" | "evaluated";
 
+/**
+ * Get a detailed error message from an HTMLAudioElement error.
+ * MediaError codes: 1=MEDIA_ERR_ABORTED, 2=MEDIA_ERR_NETWORK, 3=MEDIA_ERR_DECODE, 4=MEDIA_ERR_SRC_NOT_SUPPORTED
+ */
+function getAudioErrorMessage(error: MediaError | null): string {
+  if (!error) {
+    return "Unknown playback error";
+  }
+
+  switch (error.code) {
+    case MediaError.MEDIA_ERR_ABORTED:
+      return "Playback was aborted";
+    case MediaError.MEDIA_ERR_NETWORK:
+      return "Network error occurred while loading audio";
+    case MediaError.MEDIA_ERR_DECODE:
+      return "Audio decoding failed. The format may not be supported.";
+    case MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED:
+      return "Audio format not supported by your browser. Try recording again.";
+    default:
+      return error.message || "Failed to play recording";
+  }
+}
+
 export function CallanShadowing({
   qaItems,
   userId,
@@ -95,7 +118,9 @@ export function CallanShadowing({
     };
 
     audio.onerror = () => {
-      setPlaybackError("Failed to play recording");
+      const errorMessage = getAudioErrorMessage(audio.error);
+      console.error("Audio playback error:", audio.error?.code, errorMessage);
+      setPlaybackError(errorMessage);
       setIsPlayingRecording(false);
       audioRef.current = null;
     };
@@ -175,7 +200,13 @@ export function CallanShadowing({
           };
 
           audio.onerror = () => {
-            setPlaybackError("Failed to play recording during compare");
+            const errorMessage = getAudioErrorMessage(audio.error);
+            console.error(
+              "Audio playback error during compare:",
+              audio.error?.code,
+              errorMessage,
+            );
+            setPlaybackError(errorMessage);
             setIsComparing(false);
             audioRef.current = null;
           };
