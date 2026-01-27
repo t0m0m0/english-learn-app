@@ -6,9 +6,37 @@ export interface RecordedAudio {
   url: string;
 }
 
+// Priority order: mp4/m4a for Safari compatibility, then webm for Chrome/Firefox
+const MIME_TYPE_PRIORITY = [
+  "audio/mp4",
+  "audio/webm;codecs=opus",
+  "audio/webm",
+  "audio/ogg;codecs=opus",
+  "audio/ogg",
+];
+
+/**
+ * Detect the best supported MIME type for audio recording.
+ * Prioritizes formats with better cross-browser compatibility.
+ */
+function getSupportedMimeType(): string | undefined {
+  if (typeof MediaRecorder === "undefined") {
+    return undefined;
+  }
+
+  for (const mimeType of MIME_TYPE_PRIORITY) {
+    if (MediaRecorder.isTypeSupported(mimeType)) {
+      return mimeType;
+    }
+  }
+
+  return undefined;
+}
+
 interface UseAudioRecorderReturn {
   isRecording: boolean;
   isSupported: boolean;
+  supportedMimeType: string | undefined;
   recordedAudio: RecordedAudio | null;
   duration: number;
   error: string | null;
@@ -34,6 +62,7 @@ export function useAudioRecorder(): UseAudioRecorderReturn {
   const startTimeRef = useRef<number>(0);
 
   const isSupported = typeof MediaRecorder !== "undefined";
+  const supportedMimeType = getSupportedMimeType();
 
   const cleanupStream = useCallback(() => {
     if (streamRef.current) {
@@ -65,7 +94,10 @@ export function useAudioRecorder(): UseAudioRecorderReturn {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       streamRef.current = stream;
 
-      const mediaRecorder = new MediaRecorder(stream);
+      const recorderOptions = supportedMimeType
+        ? { mimeType: supportedMimeType }
+        : undefined;
+      const mediaRecorder = new MediaRecorder(stream, recorderOptions);
       mediaRecorderRef.current = mediaRecorder;
 
       mediaRecorder.ondataavailable = (event) => {
@@ -75,7 +107,10 @@ export function useAudioRecorder(): UseAudioRecorderReturn {
       };
 
       mediaRecorder.onstop = () => {
-        const blob = new Blob(chunksRef.current, { type: "audio/webm" });
+        // Use the actual mimeType from MediaRecorder for consistency
+        const actualMimeType =
+          mediaRecorder.mimeType || supportedMimeType || "audio/webm";
+        const blob = new Blob(chunksRef.current, { type: actualMimeType });
         const url = URL.createObjectURL(blob);
         const recordedDuration = (Date.now() - startTimeRef.current) / 1000;
 
@@ -187,6 +222,7 @@ export function useAudioRecorder(): UseAudioRecorderReturn {
   return {
     isRecording,
     isSupported,
+    supportedMimeType,
     recordedAudio,
     duration,
     error,

@@ -10,11 +10,15 @@ class MockMediaRecorder {
   onerror: ((event: { error: Error }) => void) | null = null;
   onstart: (() => void) | null = null;
   stream: MediaStream;
+  mimeType: string;
 
-  static isTypeSupported = vi.fn(() => true);
+  static isTypeSupported: (mimeType: string) => boolean = vi.fn(() => true);
+  static lastInstance: MockMediaRecorder | null = null;
 
-  constructor(stream: MediaStream) {
+  constructor(stream: MediaStream, options?: { mimeType?: string }) {
     this.stream = stream;
+    this.mimeType = options?.mimeType || "";
+    MockMediaRecorder.lastInstance = this;
   }
 
   start() {
@@ -24,9 +28,9 @@ class MockMediaRecorder {
 
   stop() {
     this.state = "inactive";
-    // Simulate data available event
+    // Simulate data available event - use the mimeType from constructor
     this.ondataavailable?.({
-      data: new Blob(["test audio"], { type: "audio/webm" }),
+      data: new Blob(["test audio"], { type: this.mimeType || "audio/webm" }),
     });
     this.onstop?.();
   }
@@ -385,7 +389,51 @@ describe("useAudioRecorder", () => {
   });
 
   describe("recorded audio format", () => {
-    it("should record in webm format when supported", async () => {
+    it("should detect and use supported MIME type for recording", async () => {
+      // Mock isTypeSupported to return true for audio/mp4
+      MockMediaRecorder.isTypeSupported = vi.fn((mimeType: string) => {
+        return mimeType === "audio/mp4" || mimeType === "audio/webm";
+      });
+
+      const { result } = renderHook(() => useAudioRecorder());
+
+      // The hook should expose supportedMimeType
+      expect(result.current.supportedMimeType).toBeDefined();
+    });
+
+    it("should use audio/mp4 when supported (for Safari compatibility)", async () => {
+      MockMediaRecorder.isTypeSupported = vi.fn((mimeType: string) => {
+        return mimeType === "audio/mp4";
+      });
+
+      const { result } = renderHook(() => useAudioRecorder());
+
+      expect(result.current.supportedMimeType).toBe("audio/mp4");
+    });
+
+    it("should fallback to audio/webm when mp4 is not supported", async () => {
+      MockMediaRecorder.isTypeSupported = vi.fn((mimeType: string) => {
+        return mimeType === "audio/webm";
+      });
+
+      const { result } = renderHook(() => useAudioRecorder());
+
+      expect(result.current.supportedMimeType).toBe("audio/webm");
+    });
+
+    it("should use undefined when no supported types are found", async () => {
+      MockMediaRecorder.isTypeSupported = vi.fn(() => false);
+
+      const { result } = renderHook(() => useAudioRecorder());
+
+      expect(result.current.supportedMimeType).toBeUndefined();
+    });
+
+    it("should create blob with the same MIME type used for recording", async () => {
+      MockMediaRecorder.isTypeSupported = vi.fn((mimeType: string) => {
+        return mimeType === "audio/webm";
+      });
+
       const { result } = renderHook(() => useAudioRecorder());
 
       await act(async () => {
@@ -396,7 +444,45 @@ describe("useAudioRecorder", () => {
         result.current.stopRecording();
       });
 
-      expect(result.current.recordedAudio?.blob.type).toBe("audio/webm");
+      expect(result.current.recordedAudio?.blob.type).toBe(
+        result.current.supportedMimeType,
+      );
+    });
+
+    it("should pass MIME type to MediaRecorder constructor", async () => {
+      MockMediaRecorder.isTypeSupported = vi.fn((mimeType: string) => {
+        return mimeType === "audio/webm;codecs=opus";
+      });
+
+      const { result } = renderHook(() => useAudioRecorder());
+
+      await act(async () => {
+        await result.current.startRecording();
+      });
+
+      expect(MockMediaRecorder.lastInstance?.mimeType).toBe(
+        "audio/webm;codecs=opus",
+      );
+
+      act(() => {
+        result.current.stopRecording();
+      });
+    });
+
+    it("should not pass MIME type option when no supported type is found", async () => {
+      MockMediaRecorder.isTypeSupported = vi.fn(() => false);
+
+      const { result } = renderHook(() => useAudioRecorder());
+
+      await act(async () => {
+        await result.current.startRecording();
+      });
+
+      expect(MockMediaRecorder.lastInstance?.mimeType).toBe("");
+
+      act(() => {
+        result.current.stopRecording();
+      });
     });
   });
 });
