@@ -176,6 +176,8 @@ export function Learn() {
             word={currentWord}
             showImage={true}
             showWord={false}
+            showDictionary={true}
+            showDefinition={true}
             onCorrect={handleCorrect}
             onIncorrect={handleIncorrect}
             autoPlay={true}
