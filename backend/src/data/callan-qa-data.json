@@ -1,0 +1,1108 @@
+{
+  "stages": [
+    {
+      "stage": 1,
+      "title": "Basic Questions",
+      "description": "基礎的な質問 - This/That, What/Where の基本",
+      "lessons": [
+        {
+          "lesson": 1,
+          "title": "Stage 1 - Lesson 1: This and That",
+          "description": "This/Thatの基本的な使い方",
+          "qaItems": [
+            { "question": "What is this?", "answer": "This is a book." },
+            { "question": "What is that?", "answer": "That is a pen." },
+            { "question": "Is this a pen?", "answer": "No, this is not a pen. This is a book." },
+            { "question": "Is that a book?", "answer": "No, that is not a book. That is a pen." },
+            { "question": "What is this?", "answer": "This is a table." },
+            { "question": "What is that?", "answer": "That is a chair." },
+            { "question": "Is this a chair?", "answer": "No, this is not a chair. This is a table." },
+            { "question": "Is that a table?", "answer": "No, that is not a table. That is a chair." },
+            { "question": "What is this?", "answer": "This is a pencil." },
+            { "question": "What is that?", "answer": "That is an eraser." }
+          ]
+        },
+        {
+          "lesson": 2,
+          "title": "Stage 1 - Lesson 2: Articles (A/An/The)",
+          "description": "冠詞の使い方",
+          "qaItems": [
+            { "question": "Is this a book or a pen?", "answer": "It is a book." },
+            { "question": "Is that an apple or an orange?", "answer": "It is an apple." },
+            { "question": "What is the color of the book?", "answer": "The color of the book is blue." },
+            { "question": "Is this an umbrella?", "answer": "Yes, this is an umbrella." },
+            { "question": "Is that a door or a window?", "answer": "That is a door." },
+            { "question": "What is the name of this?", "answer": "The name of this is a clock." },
+            { "question": "Is this an egg?", "answer": "Yes, this is an egg." },
+            { "question": "Is that the teacher's desk?", "answer": "Yes, that is the teacher's desk." },
+            { "question": "What is an hour?", "answer": "An hour is sixty minutes." },
+            { "question": "Is the sky blue?", "answer": "Yes, the sky is blue." }
+          ]
+        },
+        {
+          "lesson": 3,
+          "title": "Stage 1 - Lesson 3: Where Questions",
+          "description": "場所を尋ねる質問",
+          "qaItems": [
+            { "question": "Where is the book?", "answer": "The book is on the table." },
+            { "question": "Where is the pen?", "answer": "The pen is in my hand." },
+            { "question": "Where is the chair?", "answer": "The chair is next to the table." },
+            { "question": "Where is the clock?", "answer": "The clock is on the wall." },
+            { "question": "Where is the teacher?", "answer": "The teacher is in the classroom." },
+            { "question": "Where is the window?", "answer": "The window is behind me." },
+            { "question": "Where is the door?", "answer": "The door is in front of me." },
+            { "question": "Where is the floor?", "answer": "The floor is under my feet." },
+            { "question": "Where is the ceiling?", "answer": "The ceiling is above my head." },
+            { "question": "Where is the picture?", "answer": "The picture is on the wall." }
+          ]
+        },
+        {
+          "lesson": 4,
+          "title": "Stage 1 - Lesson 4: Colors",
+          "description": "色についての質問",
+          "qaItems": [
+            { "question": "What color is this?", "answer": "This is red." },
+            { "question": "What color is the sky?", "answer": "The sky is blue." },
+            { "question": "What color is grass?", "answer": "Grass is green." },
+            { "question": "What color is the sun?", "answer": "The sun is yellow." },
+            { "question": "What color is snow?", "answer": "Snow is white." },
+            { "question": "What color is coal?", "answer": "Coal is black." },
+            { "question": "What color is an orange?", "answer": "An orange is orange." },
+            { "question": "What color is chocolate?", "answer": "Chocolate is brown." },
+            { "question": "What color is the sea?", "answer": "The sea is blue." },
+            { "question": "What color is a banana?", "answer": "A banana is yellow." }
+          ]
+        },
+        {
+          "lesson": 5,
+          "title": "Stage 1 - Lesson 5: Numbers 1-10",
+          "description": "数字1から10",
+          "qaItems": [
+            { "question": "What is one plus one?", "answer": "One plus one is two." },
+            { "question": "What is two plus two?", "answer": "Two plus two is four." },
+            { "question": "What is three plus two?", "answer": "Three plus two is five." },
+            { "question": "What is four plus three?", "answer": "Four plus three is seven." },
+            { "question": "What is five plus five?", "answer": "Five plus five is ten." },
+            { "question": "How many fingers do you have?", "answer": "I have ten fingers." },
+            { "question": "How many eyes do you have?", "answer": "I have two eyes." },
+            { "question": "How many ears do you have?", "answer": "I have two ears." },
+            { "question": "How many legs does a dog have?", "answer": "A dog has four legs." },
+            { "question": "How many days are there in a week?", "answer": "There are seven days in a week." }
+          ]
+        }
+      ]
+    },
+    {
+      "stage": 2,
+      "title": "Basic Grammar",
+      "description": "基本文法 - Do/Does, 現在形",
+      "lessons": [
+        {
+          "lesson": 1,
+          "title": "Stage 2 - Lesson 1: Do/Does Questions",
+          "description": "Do/Doesを使った質問",
+          "qaItems": [
+            { "question": "Do you speak English?", "answer": "Yes, I speak English." },
+            { "question": "Do you understand this question?", "answer": "Yes, I understand this question." },
+            { "question": "Does the teacher speak English?", "answer": "Yes, the teacher speaks English." },
+            { "question": "Do students study every day?", "answer": "Yes, students study every day." },
+            { "question": "Does the sun rise in the east?", "answer": "Yes, the sun rises in the east." },
+            { "question": "Do birds fly?", "answer": "Yes, birds fly." },
+            { "question": "Does a fish swim?", "answer": "Yes, a fish swims." },
+            { "question": "Do you like coffee?", "answer": "Yes, I like coffee." },
+            { "question": "Does she work here?", "answer": "No, she does not work here." },
+            { "question": "Do we need water to live?", "answer": "Yes, we need water to live." }
+          ]
+        },
+        {
+          "lesson": 2,
+          "title": "Stage 2 - Lesson 2: Present Tense",
+          "description": "現在形の使い方",
+          "qaItems": [
+            { "question": "What do you do every morning?", "answer": "I wake up and eat breakfast every morning." },
+            { "question": "What does the sun do?", "answer": "The sun shines and gives us light." },
+            { "question": "Where do you live?", "answer": "I live in this city." },
+            { "question": "What time do you wake up?", "answer": "I wake up at seven o'clock." },
+            { "question": "How do you come to school?", "answer": "I come to school by train." },
+            { "question": "What does a teacher do?", "answer": "A teacher teaches students." },
+            { "question": "What do you eat for lunch?", "answer": "I eat rice and vegetables for lunch." },
+            { "question": "Where does the rain come from?", "answer": "The rain comes from the clouds." },
+            { "question": "How often do you exercise?", "answer": "I exercise three times a week." },
+            { "question": "What language do people speak in Japan?", "answer": "People speak Japanese in Japan." }
+          ]
+        },
+        {
+          "lesson": 3,
+          "title": "Stage 2 - Lesson 3: Negatives",
+          "description": "否定文",
+          "qaItems": [
+            { "question": "Do you speak French?", "answer": "No, I do not speak French." },
+            { "question": "Does the moon shine at night?", "answer": "Yes, the moon shines at night." },
+            { "question": "Do cats bark?", "answer": "No, cats do not bark. Dogs bark." },
+            { "question": "Does ice melt in cold weather?", "answer": "No, ice does not melt in cold weather." },
+            { "question": "Do fish walk?", "answer": "No, fish do not walk. Fish swim." },
+            { "question": "Does the earth move around the sun?", "answer": "Yes, the earth moves around the sun." },
+            { "question": "Do snakes have legs?", "answer": "No, snakes do not have legs." },
+            { "question": "Does water flow uphill?", "answer": "No, water does not flow uphill." },
+            { "question": "Do plants need sunlight?", "answer": "Yes, plants need sunlight." },
+            { "question": "Does fire feel cold?", "answer": "No, fire does not feel cold. Fire is hot." }
+          ]
+        },
+        {
+          "lesson": 4,
+          "title": "Stage 2 - Lesson 4: Have/Has",
+          "description": "Have/Hasの使い方",
+          "qaItems": [
+            { "question": "Do you have a pen?", "answer": "Yes, I have a pen." },
+            { "question": "Does a bird have wings?", "answer": "Yes, a bird has wings." },
+            { "question": "How many hands do you have?", "answer": "I have two hands." },
+            { "question": "Does a car have wheels?", "answer": "Yes, a car has four wheels." },
+            { "question": "Do you have any brothers or sisters?", "answer": "Yes, I have one brother and one sister." },
+            { "question": "Does the room have windows?", "answer": "Yes, the room has windows." },
+            { "question": "Do houses have roofs?", "answer": "Yes, houses have roofs." },
+            { "question": "Does a clock have hands?", "answer": "Yes, a clock has hands." },
+            { "question": "Do you have enough time?", "answer": "Yes, I have enough time." },
+            { "question": "Does this book have pictures?", "answer": "Yes, this book has pictures." }
+          ]
+        },
+        {
+          "lesson": 5,
+          "title": "Stage 2 - Lesson 5: There is/There are",
+          "description": "There is/There areの使い方",
+          "qaItems": [
+            { "question": "Is there a book on the table?", "answer": "Yes, there is a book on the table." },
+            { "question": "Are there students in the classroom?", "answer": "Yes, there are students in the classroom." },
+            { "question": "How many chairs are there in this room?", "answer": "There are five chairs in this room." },
+            { "question": "Is there water in the glass?", "answer": "Yes, there is water in the glass." },
+            { "question": "Are there clouds in the sky today?", "answer": "Yes, there are clouds in the sky today." },
+            { "question": "Is there a clock on the wall?", "answer": "Yes, there is a clock on the wall." },
+            { "question": "Are there any questions?", "answer": "No, there are no questions." },
+            { "question": "How many months are there in a year?", "answer": "There are twelve months in a year." },
+            { "question": "Is there a difference between these two words?", "answer": "Yes, there is a difference between these two words." },
+            { "question": "Are there many people in this city?", "answer": "Yes, there are many people in this city." }
+          ]
+        }
+      ]
+    },
+    {
+      "stage": 3,
+      "title": "Daily Conversation I",
+      "description": "日常会話（初級）",
+      "lessons": [
+        {
+          "lesson": 1,
+          "title": "Stage 3 - Lesson 1: Greetings and Introductions",
+          "description": "挨拶と自己紹介",
+          "qaItems": [
+            { "question": "How are you?", "answer": "I am fine, thank you. How are you?" },
+            { "question": "What is your name?", "answer": "My name is [student's name]." },
+            { "question": "Where are you from?", "answer": "I am from Japan." },
+            { "question": "How old are you?", "answer": "I am twenty years old." },
+            { "question": "What do you do?", "answer": "I am a student." },
+            { "question": "Nice to meet you. What do you say?", "answer": "Nice to meet you too." },
+            { "question": "How do you spell your name?", "answer": "I spell my name as [spelling]." },
+            { "question": "What is your telephone number?", "answer": "My telephone number is [number]." },
+            { "question": "Where do you live?", "answer": "I live in Tokyo." },
+            { "question": "What languages do you speak?", "answer": "I speak Japanese and English." }
+          ]
+        },
+        {
+          "lesson": 2,
+          "title": "Stage 3 - Lesson 2: Family",
+          "description": "家族についての会話",
+          "qaItems": [
+            { "question": "Do you have a big family?", "answer": "No, I have a small family." },
+            { "question": "How many people are there in your family?", "answer": "There are four people in my family." },
+            { "question": "What does your father do?", "answer": "My father works in an office." },
+            { "question": "What does your mother do?", "answer": "My mother is a housewife." },
+            { "question": "Do you have any brothers or sisters?", "answer": "Yes, I have one brother." },
+            { "question": "Is your brother older or younger than you?", "answer": "My brother is older than me." },
+            { "question": "Where do your parents live?", "answer": "My parents live in Osaka." },
+            { "question": "Do you see your family often?", "answer": "Yes, I see my family every weekend." },
+            { "question": "Who is the oldest person in your family?", "answer": "My grandmother is the oldest person in my family." },
+            { "question": "What do you do together with your family?", "answer": "We eat dinner together and watch TV." }
+          ]
+        },
+        {
+          "lesson": 3,
+          "title": "Stage 3 - Lesson 3: Daily Routine",
+          "description": "日常の習慣",
+          "qaItems": [
+            { "question": "What time do you wake up?", "answer": "I wake up at seven o'clock." },
+            { "question": "What do you do after you wake up?", "answer": "After I wake up, I brush my teeth and take a shower." },
+            { "question": "What do you eat for breakfast?", "answer": "I eat toast and drink coffee for breakfast." },
+            { "question": "How do you go to work or school?", "answer": "I go to work by train." },
+            { "question": "What time do you start work?", "answer": "I start work at nine o'clock." },
+            { "question": "What time do you have lunch?", "answer": "I have lunch at twelve o'clock." },
+            { "question": "What do you do after work?", "answer": "After work, I go home and relax." },
+            { "question": "What time do you eat dinner?", "answer": "I eat dinner at seven o'clock." },
+            { "question": "What do you do before you go to bed?", "answer": "Before I go to bed, I read a book." },
+            { "question": "What time do you go to bed?", "answer": "I go to bed at eleven o'clock." }
+          ]
+        },
+        {
+          "lesson": 4,
+          "title": "Stage 3 - Lesson 4: Weather",
+          "description": "天気についての会話",
+          "qaItems": [
+            { "question": "What is the weather like today?", "answer": "It is sunny today." },
+            { "question": "Is it hot or cold today?", "answer": "It is warm today." },
+            { "question": "Does it rain often in your country?", "answer": "Yes, it rains often in the rainy season." },
+            { "question": "What do you do when it rains?", "answer": "When it rains, I stay home and read." },
+            { "question": "What is your favorite season?", "answer": "My favorite season is spring." },
+            { "question": "Why do you like spring?", "answer": "I like spring because the weather is nice and flowers bloom." },
+            { "question": "Does it snow in your city?", "answer": "No, it does not snow often in my city." },
+            { "question": "What do you wear when it is cold?", "answer": "When it is cold, I wear a coat and gloves." },
+            { "question": "What is the weather like in summer?", "answer": "In summer, it is hot and humid." },
+            { "question": "Do you like rainy days?", "answer": "No, I do not like rainy days because I cannot go outside." }
+          ]
+        },
+        {
+          "lesson": 5,
+          "title": "Stage 3 - Lesson 5: Food and Drink",
+          "description": "食べ物と飲み物",
+          "qaItems": [
+            { "question": "What is your favorite food?", "answer": "My favorite food is sushi." },
+            { "question": "Do you like to cook?", "answer": "Yes, I like to cook on weekends." },
+            { "question": "What do you usually drink?", "answer": "I usually drink water and tea." },
+            { "question": "Do you like Japanese food?", "answer": "Yes, I like Japanese food very much." },
+            { "question": "How often do you eat out?", "answer": "I eat out once or twice a week." },
+            { "question": "What did you eat for breakfast today?", "answer": "I ate rice and miso soup for breakfast today." },
+            { "question": "Do you drink coffee?", "answer": "Yes, I drink coffee every morning." },
+            { "question": "Can you cook?", "answer": "Yes, I can cook simple dishes." },
+            { "question": "What food do you not like?", "answer": "I do not like spicy food." },
+            { "question": "Where do you usually buy groceries?", "answer": "I usually buy groceries at the supermarket near my house." }
+          ]
+        }
+      ]
+    },
+    {
+      "stage": 4,
+      "title": "Daily Conversation II",
+      "description": "日常会話（中級）",
+      "lessons": [
+        {
+          "lesson": 1,
+          "title": "Stage 4 - Lesson 1: Shopping",
+          "description": "買い物の会話",
+          "qaItems": [
+            { "question": "Where do you usually go shopping?", "answer": "I usually go shopping at the department store." },
+            { "question": "Do you like shopping?", "answer": "Yes, I like shopping, especially for clothes." },
+            { "question": "How much does this cost?", "answer": "It costs one thousand yen." },
+            { "question": "Is this too expensive?", "answer": "Yes, this is too expensive for me." },
+            { "question": "Do you prefer shopping online or in stores?", "answer": "I prefer shopping online because it is convenient." },
+            { "question": "What did you buy recently?", "answer": "I bought a new book recently." },
+            { "question": "Do you use credit cards or cash?", "answer": "I usually use credit cards." },
+            { "question": "How often do you go shopping?", "answer": "I go shopping once a week." },
+            { "question": "Do you compare prices before you buy something?", "answer": "Yes, I always compare prices before I buy something." },
+            { "question": "What is on sale today?", "answer": "Vegetables and fruits are on sale today." }
+          ]
+        },
+        {
+          "lesson": 2,
+          "title": "Stage 4 - Lesson 2: Travel",
+          "description": "旅行についての会話",
+          "qaItems": [
+            { "question": "Do you like to travel?", "answer": "Yes, I like to travel very much." },
+            { "question": "Where have you traveled?", "answer": "I have traveled to Korea and Taiwan." },
+            { "question": "How do you usually travel?", "answer": "I usually travel by airplane." },
+            { "question": "Where would you like to go next?", "answer": "I would like to go to Europe next." },
+            { "question": "Do you prefer traveling alone or with others?", "answer": "I prefer traveling with friends." },
+            { "question": "What do you do when you travel?", "answer": "When I travel, I visit famous places and try local food." },
+            { "question": "Have you ever been to America?", "answer": "No, I have never been to America." },
+            { "question": "How long was your longest trip?", "answer": "My longest trip was two weeks." },
+            { "question": "Do you take many photos when you travel?", "answer": "Yes, I take many photos when I travel." },
+            { "question": "What do you pack when you travel?", "answer": "I pack clothes, toiletries, and a camera when I travel." }
+          ]
+        },
+        {
+          "lesson": 3,
+          "title": "Stage 4 - Lesson 3: Hobbies",
+          "description": "趣味についての会話",
+          "qaItems": [
+            { "question": "What are your hobbies?", "answer": "My hobbies are reading and watching movies." },
+            { "question": "How often do you read?", "answer": "I read every day before bed." },
+            { "question": "What kind of books do you like?", "answer": "I like mystery novels and history books." },
+            { "question": "Do you play any sports?", "answer": "Yes, I play tennis on weekends." },
+            { "question": "Do you play any musical instruments?", "answer": "Yes, I play the piano." },
+            { "question": "How long have you been playing the piano?", "answer": "I have been playing the piano for ten years." },
+            { "question": "What do you do in your free time?", "answer": "In my free time, I go for walks and listen to music." },
+            { "question": "Do you like watching TV?", "answer": "Yes, I like watching dramas and documentaries." },
+            { "question": "What is your favorite movie?", "answer": "My favorite movie is a Japanese animated film." },
+            { "question": "Have you ever tried cooking as a hobby?", "answer": "Yes, I have tried cooking as a hobby, and I enjoy it." }
+          ]
+        },
+        {
+          "lesson": 4,
+          "title": "Stage 4 - Lesson 4: Work and Study",
+          "description": "仕事と勉強",
+          "qaItems": [
+            { "question": "What do you study?", "answer": "I study English and computer science." },
+            { "question": "Why are you studying English?", "answer": "I am studying English to improve my career opportunities." },
+            { "question": "What is your job?", "answer": "I work as an engineer." },
+            { "question": "Do you like your job?", "answer": "Yes, I like my job because it is interesting." },
+            { "question": "How long have you been working there?", "answer": "I have been working there for three years." },
+            { "question": "What time does your work start?", "answer": "My work starts at nine o'clock in the morning." },
+            { "question": "Do you work on weekends?", "answer": "No, I do not work on weekends." },
+            { "question": "What skills do you need for your job?", "answer": "I need programming and communication skills." },
+            { "question": "Do you want to change your job?", "answer": "No, I am happy with my current job." },
+            { "question": "What are you learning now?", "answer": "I am learning English conversation now." }
+          ]
+        },
+        {
+          "lesson": 5,
+          "title": "Stage 4 - Lesson 5: Health",
+          "description": "健康についての会話",
+          "qaItems": [
+            { "question": "Are you healthy?", "answer": "Yes, I am healthy." },
+            { "question": "Do you exercise regularly?", "answer": "Yes, I exercise three times a week." },
+            { "question": "What kind of exercise do you do?", "answer": "I go jogging and do yoga." },
+            { "question": "How many hours do you sleep?", "answer": "I sleep about seven hours every night." },
+            { "question": "Do you eat healthy food?", "answer": "Yes, I try to eat vegetables and fruits every day." },
+            { "question": "Have you ever been to the hospital?", "answer": "Yes, I have been to the hospital for a check-up." },
+            { "question": "What do you do when you have a cold?", "answer": "When I have a cold, I rest and drink hot tea." },
+            { "question": "Do you smoke?", "answer": "No, I do not smoke." },
+            { "question": "Do you drink alcohol?", "answer": "I drink alcohol occasionally." },
+            { "question": "How do you reduce stress?", "answer": "I reduce stress by listening to music and taking walks." }
+          ]
+        }
+      ]
+    },
+    {
+      "stage": 5,
+      "title": "Intermediate Grammar I",
+      "description": "中級文法（過去形・未来形）",
+      "lessons": [
+        {
+          "lesson": 1,
+          "title": "Stage 5 - Lesson 1: Past Tense",
+          "description": "過去形の使い方",
+          "qaItems": [
+            { "question": "What did you do yesterday?", "answer": "Yesterday, I went to work and had dinner with a friend." },
+            { "question": "Where did you go last weekend?", "answer": "Last weekend, I went to the park." },
+            { "question": "What did you eat for dinner last night?", "answer": "Last night, I ate pasta for dinner." },
+            { "question": "Did you watch TV yesterday?", "answer": "Yes, I watched TV for an hour yesterday." },
+            { "question": "When did you start learning English?", "answer": "I started learning English five years ago." },
+            { "question": "Did it rain yesterday?", "answer": "No, it did not rain yesterday." },
+            { "question": "What time did you wake up this morning?", "answer": "I woke up at six thirty this morning." },
+            { "question": "Where did you live when you were a child?", "answer": "When I was a child, I lived in Osaka." },
+            { "question": "Did you study English at school?", "answer": "Yes, I studied English at school." },
+            { "question": "What was the weather like last week?", "answer": "Last week, the weather was cloudy and cold." }
+          ]
+        },
+        {
+          "lesson": 2,
+          "title": "Stage 5 - Lesson 2: Future Tense",
+          "description": "未来形の使い方",
+          "qaItems": [
+            { "question": "What will you do tomorrow?", "answer": "Tomorrow, I will go to work and study English." },
+            { "question": "Where will you go next weekend?", "answer": "Next weekend, I will go to the mountains." },
+            { "question": "Will you travel this year?", "answer": "Yes, I will travel to Kyoto this year." },
+            { "question": "What time will you arrive?", "answer": "I will arrive at three o'clock." },
+            { "question": "Will it be sunny tomorrow?", "answer": "I think it will be sunny tomorrow." },
+            { "question": "What will you eat for dinner tonight?", "answer": "Tonight, I will eat curry and rice for dinner." },
+            { "question": "Will you watch the movie?", "answer": "Yes, I will watch the movie this weekend." },
+            { "question": "When will you finish your work?", "answer": "I will finish my work at six o'clock." },
+            { "question": "Will you buy a new car?", "answer": "No, I will not buy a new car this year." },
+            { "question": "What will you do after you graduate?", "answer": "After I graduate, I will find a job." }
+          ]
+        },
+        {
+          "lesson": 3,
+          "title": "Stage 5 - Lesson 3: Going to",
+          "description": "Going toの使い方",
+          "qaItems": [
+            { "question": "What are you going to do tonight?", "answer": "Tonight, I am going to watch a movie." },
+            { "question": "Are you going to study this weekend?", "answer": "Yes, I am going to study English this weekend." },
+            { "question": "Is it going to rain tomorrow?", "answer": "I think it is going to rain tomorrow." },
+            { "question": "What are you going to eat for lunch?", "answer": "I am going to eat a sandwich for lunch." },
+            { "question": "When are you going to visit your parents?", "answer": "I am going to visit my parents next month." },
+            { "question": "Are you going to take a vacation?", "answer": "Yes, I am going to take a vacation in August." },
+            { "question": "What time are you going to leave?", "answer": "I am going to leave at eight o'clock." },
+            { "question": "Is she going to come to the party?", "answer": "Yes, she is going to come to the party." },
+            { "question": "Are they going to buy a new house?", "answer": "Yes, they are going to buy a new house next year." },
+            { "question": "What are you going to do after this lesson?", "answer": "After this lesson, I am going to practice speaking." }
+          ]
+        },
+        {
+          "lesson": 4,
+          "title": "Stage 5 - Lesson 4: Present Perfect",
+          "description": "現在完了形の使い方",
+          "qaItems": [
+            { "question": "Have you ever been to America?", "answer": "No, I have never been to America." },
+            { "question": "Have you finished your homework?", "answer": "Yes, I have finished my homework." },
+            { "question": "Has he called you?", "answer": "No, he has not called me yet." },
+            { "question": "How long have you lived here?", "answer": "I have lived here for five years." },
+            { "question": "Have you ever eaten sushi?", "answer": "Yes, I have eaten sushi many times." },
+            { "question": "Has it rained today?", "answer": "No, it has not rained today." },
+            { "question": "Have you seen this movie?", "answer": "Yes, I have seen this movie twice." },
+            { "question": "How many countries have you visited?", "answer": "I have visited three countries." },
+            { "question": "Has she started her new job?", "answer": "Yes, she has started her new job." },
+            { "question": "Have you already had lunch?", "answer": "Yes, I have already had lunch." }
+          ]
+        },
+        {
+          "lesson": 5,
+          "title": "Stage 5 - Lesson 5: Past Perfect",
+          "description": "過去完了形の使い方",
+          "qaItems": [
+            { "question": "Had you eaten before you came here?", "answer": "Yes, I had eaten before I came here." },
+            { "question": "Had she left when you arrived?", "answer": "Yes, she had already left when I arrived." },
+            { "question": "Had you studied English before you came to this school?", "answer": "Yes, I had studied English for three years before I came to this school." },
+            { "question": "Had the movie started when you got to the theater?", "answer": "No, the movie had not started when I got to the theater." },
+            { "question": "Had you met him before the party?", "answer": "No, I had not met him before the party." },
+            { "question": "Had they finished the project before the deadline?", "answer": "Yes, they had finished the project before the deadline." },
+            { "question": "Had it rained before you went outside?", "answer": "Yes, it had rained before I went outside." },
+            { "question": "Had you ever traveled abroad before last year?", "answer": "No, I had never traveled abroad before last year." },
+            { "question": "Had she read the book before she saw the movie?", "answer": "Yes, she had read the book before she saw the movie." },
+            { "question": "Had you learned to drive before you turned twenty?", "answer": "No, I had not learned to drive before I turned twenty." }
+          ]
+        }
+      ]
+    },
+    {
+      "stage": 6,
+      "title": "Intermediate Grammar II",
+      "description": "中級文法（比較級・条件文）",
+      "lessons": [
+        {
+          "lesson": 1,
+          "title": "Stage 6 - Lesson 1: Comparatives",
+          "description": "比較級",
+          "qaItems": [
+            { "question": "Which is bigger, an elephant or a mouse?", "answer": "An elephant is bigger than a mouse." },
+            { "question": "Which is more expensive, gold or silver?", "answer": "Gold is more expensive than silver." },
+            { "question": "Is English easier than Japanese?", "answer": "For me, English is not easier than Japanese." },
+            { "question": "Who is taller, you or your brother?", "answer": "My brother is taller than me." },
+            { "question": "Which is faster, a car or a bicycle?", "answer": "A car is faster than a bicycle." },
+            { "question": "Is summer hotter than spring?", "answer": "Yes, summer is hotter than spring." },
+            { "question": "Which is more interesting, reading or watching TV?", "answer": "For me, reading is more interesting than watching TV." },
+            { "question": "Is Tokyo bigger than Osaka?", "answer": "Yes, Tokyo is bigger than Osaka." },
+            { "question": "Which is healthier, vegetables or candy?", "answer": "Vegetables are healthier than candy." },
+            { "question": "Is speaking harder than listening?", "answer": "Yes, speaking is harder than listening for most people." }
+          ]
+        },
+        {
+          "lesson": 2,
+          "title": "Stage 6 - Lesson 2: Superlatives",
+          "description": "最上級",
+          "qaItems": [
+            { "question": "What is the largest country in the world?", "answer": "Russia is the largest country in the world." },
+            { "question": "What is the highest mountain in Japan?", "answer": "Mount Fuji is the highest mountain in Japan." },
+            { "question": "Who is the most famous person in your country?", "answer": "The most famous person in my country is probably the Prime Minister." },
+            { "question": "What is the most difficult language to learn?", "answer": "Many people say Chinese is one of the most difficult languages to learn." },
+            { "question": "What is the best season for traveling?", "answer": "I think autumn is the best season for traveling." },
+            { "question": "What is the longest river in the world?", "answer": "The Nile is the longest river in the world." },
+            { "question": "Who is the oldest person you know?", "answer": "The oldest person I know is my grandmother." },
+            { "question": "What is the most popular sport in your country?", "answer": "Baseball is the most popular sport in my country." },
+            { "question": "What is the cheapest way to travel?", "answer": "Taking a bus is the cheapest way to travel." },
+            { "question": "What is the most important thing in life?", "answer": "I think health is the most important thing in life." }
+          ]
+        },
+        {
+          "lesson": 3,
+          "title": "Stage 6 - Lesson 3: First Conditional",
+          "description": "条件文（第一条件）",
+          "qaItems": [
+            { "question": "What will you do if it rains tomorrow?", "answer": "If it rains tomorrow, I will stay at home." },
+            { "question": "If you pass the exam, what will you do?", "answer": "If I pass the exam, I will celebrate with my friends." },
+            { "question": "Will you go to the party if you finish your work?", "answer": "Yes, I will go to the party if I finish my work." },
+            { "question": "What will happen if you do not sleep enough?", "answer": "If I do not sleep enough, I will be tired tomorrow." },
+            { "question": "If you have free time, what will you do?", "answer": "If I have free time, I will read a book." },
+            { "question": "Will she be happy if she gets the job?", "answer": "Yes, she will be very happy if she gets the job." },
+            { "question": "What will you buy if you have enough money?", "answer": "If I have enough money, I will buy a new computer." },
+            { "question": "If the weather is nice, will you go outside?", "answer": "Yes, if the weather is nice, I will go outside." },
+            { "question": "What will happen if you miss the train?", "answer": "If I miss the train, I will be late for work." },
+            { "question": "If you study hard, what will happen?", "answer": "If I study hard, I will improve my English." }
+          ]
+        },
+        {
+          "lesson": 4,
+          "title": "Stage 6 - Lesson 4: Second Conditional",
+          "description": "条件文（第二条件）",
+          "qaItems": [
+            { "question": "What would you do if you won the lottery?", "answer": "If I won the lottery, I would travel around the world." },
+            { "question": "If you could speak any language, which would you choose?", "answer": "If I could speak any language, I would choose Spanish." },
+            { "question": "Where would you live if you could live anywhere?", "answer": "If I could live anywhere, I would live by the sea." },
+            { "question": "What would you do if you had more free time?", "answer": "If I had more free time, I would learn to play the guitar." },
+            { "question": "If you were the president, what would you change?", "answer": "If I were the president, I would improve education." },
+            { "question": "Would you be happy if you did not have to work?", "answer": "I think I would be happy, but I would miss my colleagues." },
+            { "question": "If you could meet anyone, who would you meet?", "answer": "If I could meet anyone, I would meet Albert Einstein." },
+            { "question": "What would happen if there were no electricity?", "answer": "If there were no electricity, life would be very difficult." },
+            { "question": "If you could change one thing about yourself, what would it be?", "answer": "If I could change one thing, I would be more patient." },
+            { "question": "Where would you go if you had a month of vacation?", "answer": "If I had a month of vacation, I would go to Europe." }
+          ]
+        },
+        {
+          "lesson": 5,
+          "title": "Stage 6 - Lesson 5: Modal Verbs",
+          "description": "助動詞",
+          "qaItems": [
+            { "question": "Can you swim?", "answer": "Yes, I can swim." },
+            { "question": "May I ask you a question?", "answer": "Yes, you may ask me a question." },
+            { "question": "Should I bring an umbrella?", "answer": "Yes, you should bring an umbrella because it might rain." },
+            { "question": "Must I finish this today?", "answer": "No, you do not have to finish this today." },
+            { "question": "Could you help me?", "answer": "Yes, I could help you." },
+            { "question": "Would you like some tea?", "answer": "Yes, I would like some tea, please." },
+            { "question": "Might it snow tomorrow?", "answer": "Yes, it might snow tomorrow." },
+            { "question": "Can he speak Japanese?", "answer": "Yes, he can speak Japanese fluently." },
+            { "question": "Should children eat vegetables?", "answer": "Yes, children should eat vegetables because they are healthy." },
+            { "question": "May I leave early today?", "answer": "Yes, you may leave early today." }
+          ]
+        }
+      ]
+    },
+    {
+      "stage": 7,
+      "title": "Applied Expressions I",
+      "description": "応用表現（意見・感情）",
+      "lessons": [
+        {
+          "lesson": 1,
+          "title": "Stage 7 - Lesson 1: Expressing Opinions",
+          "description": "意見の表現",
+          "qaItems": [
+            { "question": "What do you think about social media?", "answer": "I think social media is useful, but it can be addictive." },
+            { "question": "Do you agree that learning English is important?", "answer": "Yes, I agree that learning English is important because it is a global language." },
+            { "question": "In your opinion, what is the best way to learn English?", "answer": "In my opinion, the best way to learn English is through conversation practice." },
+            { "question": "What is your view on online education?", "answer": "My view is that online education is convenient but lacks personal interaction." },
+            { "question": "Do you believe that money can buy happiness?", "answer": "I believe that money can buy comfort, but not true happiness." },
+            { "question": "What do you think about working from home?", "answer": "I think working from home is flexible, but it can be isolating." },
+            { "question": "Do you agree that exercise is important for health?", "answer": "Yes, I strongly agree that exercise is important for both physical and mental health." },
+            { "question": "In your opinion, is it better to live in a city or the countryside?", "answer": "In my opinion, it depends on the person, but cities offer more opportunities." },
+            { "question": "What do you think about artificial intelligence?", "answer": "I think AI is revolutionary, but we should be careful about how we use it." },
+            { "question": "Do you believe that climate change is a serious problem?", "answer": "Yes, I believe that climate change is one of the most serious problems we face today." }
+          ]
+        },
+        {
+          "lesson": 2,
+          "title": "Stage 7 - Lesson 2: Expressing Feelings",
+          "description": "感情の表現",
+          "qaItems": [
+            { "question": "How do you feel when you pass an exam?", "answer": "I feel happy and relieved when I pass an exam." },
+            { "question": "What makes you feel sad?", "answer": "I feel sad when I say goodbye to friends and family." },
+            { "question": "When do you feel nervous?", "answer": "I feel nervous when I have to speak in front of many people." },
+            { "question": "What makes you feel excited?", "answer": "I feel excited when I plan a trip to a new place." },
+            { "question": "How do you feel when someone criticizes you?", "answer": "I feel a bit hurt, but I try to learn from the feedback." },
+            { "question": "What makes you feel proud?", "answer": "I feel proud when I achieve a goal I have worked hard for." },
+            { "question": "When do you feel frustrated?", "answer": "I feel frustrated when I cannot understand something despite trying hard." },
+            { "question": "How do you feel when you help someone?", "answer": "I feel good and satisfied when I help someone." },
+            { "question": "What makes you feel worried?", "answer": "I feel worried when I have an important deadline approaching." },
+            { "question": "How do you feel when you learn something new?", "answer": "I feel curious and motivated when I learn something new." }
+          ]
+        },
+        {
+          "lesson": 3,
+          "title": "Stage 7 - Lesson 3: Giving Advice",
+          "description": "アドバイスの表現",
+          "qaItems": [
+            { "question": "What advice would you give to someone learning English?", "answer": "I would advise them to practice speaking every day and not be afraid of making mistakes." },
+            { "question": "What should I do if I cannot sleep at night?", "answer": "You should try reading a book or avoiding screens before bed." },
+            { "question": "What would you recommend for someone visiting your city?", "answer": "I would recommend visiting the historical district and trying the local food." },
+            { "question": "What advice would you give to someone starting a new job?", "answer": "I would advise them to listen more than they speak and ask questions when unsure." },
+            { "question": "What should someone do to stay healthy?", "answer": "They should eat balanced meals, exercise regularly, and get enough sleep." },
+            { "question": "What would you suggest for reducing stress?", "answer": "I would suggest taking breaks, doing exercise, and talking to friends." },
+            { "question": "What advice would you give to someone who wants to save money?", "answer": "I would advise them to make a budget and avoid unnecessary purchases." },
+            { "question": "What should I do if I have a problem with a colleague?", "answer": "You should try to talk to them calmly and understand their perspective." },
+            { "question": "What would you recommend for improving concentration?", "answer": "I would recommend working in a quiet place and taking regular breaks." },
+            { "question": "What advice would you give to someone who is afraid of public speaking?", "answer": "I would advise them to practice a lot and start with small audiences." }
+          ]
+        },
+        {
+          "lesson": 4,
+          "title": "Stage 7 - Lesson 4: Making Requests",
+          "description": "依頼の表現",
+          "qaItems": [
+            { "question": "How do you politely ask someone to help you?", "answer": "You could say: Would you mind helping me with this?" },
+            { "question": "How do you ask someone to repeat what they said?", "answer": "You could say: Could you please repeat that?" },
+            { "question": "How do you ask for permission to leave early?", "answer": "You could say: Would it be possible for me to leave early today?" },
+            { "question": "How do you ask someone to speak more slowly?", "answer": "You could say: Could you speak a little more slowly, please?" },
+            { "question": "How do you request a meeting with your boss?", "answer": "You could say: Could I schedule a meeting with you this week?" },
+            { "question": "How do you ask someone to lend you something?", "answer": "You could say: Would you mind lending me your pen?" },
+            { "question": "How do you ask for more information?", "answer": "You could say: Could you tell me more about that?" },
+            { "question": "How do you politely decline a request?", "answer": "You could say: I am sorry, but I am afraid I cannot do that right now." },
+            { "question": "How do you ask someone to wait?", "answer": "You could say: Could you please wait a moment?" },
+            { "question": "How do you request feedback on your work?", "answer": "You could say: Would you mind giving me some feedback on this?" }
+          ]
+        },
+        {
+          "lesson": 5,
+          "title": "Stage 7 - Lesson 5: Apologizing and Excusing",
+          "description": "謝罪と弁解",
+          "qaItems": [
+            { "question": "How do you apologize for being late?", "answer": "You could say: I am very sorry for being late. The train was delayed." },
+            { "question": "How do you apologize for a mistake at work?", "answer": "You could say: I apologize for the error. I will make sure it does not happen again." },
+            { "question": "How do you excuse yourself when you need to leave?", "answer": "You could say: Please excuse me. I need to take this call." },
+            { "question": "How do you apologize for not understanding?", "answer": "You could say: I am sorry, but I did not understand. Could you explain again?" },
+            { "question": "How do you apologize for forgetting something?", "answer": "You could say: I am so sorry. I completely forgot about it." },
+            { "question": "How do you excuse a misunderstanding?", "answer": "You could say: I am sorry for the confusion. Let me clarify." },
+            { "question": "How do you apologize for interrupting someone?", "answer": "You could say: I apologize for interrupting. Please continue." },
+            { "question": "How do you apologize when you cannot help someone?", "answer": "You could say: I am sorry, but I am not able to help with that." },
+            { "question": "How do you apologize for a delayed response?", "answer": "You could say: I apologize for the late reply. I was very busy." },
+            { "question": "How do you apologize formally in writing?", "answer": "You could write: Please accept my sincere apologies for any inconvenience caused." }
+          ]
+        }
+      ]
+    },
+    {
+      "stage": 8,
+      "title": "Applied Expressions II",
+      "description": "応用表現（説明・議論）",
+      "lessons": [
+        {
+          "lesson": 1,
+          "title": "Stage 8 - Lesson 1: Describing Processes",
+          "description": "プロセスの説明",
+          "qaItems": [
+            { "question": "How do you make tea?", "answer": "First, you boil water. Then, you put a tea bag in a cup. Next, you pour the hot water into the cup. Finally, you wait a few minutes and remove the tea bag." },
+            { "question": "How do you send an email?", "answer": "First, you open your email application. Then, you click compose. Next, you enter the recipient's address and write your message. Finally, you click send." },
+            { "question": "How do you cook rice?", "answer": "First, you wash the rice. Then, you add water. Next, you cook it for about fifteen minutes. Finally, you let it steam for a few more minutes." },
+            { "question": "How do you take a good photo?", "answer": "First, you find good lighting. Then, you compose your shot. Next, you focus on your subject. Finally, you take the photo." },
+            { "question": "How do you start learning a new language?", "answer": "First, you learn basic words and phrases. Then, you practice listening and speaking. Next, you study grammar. Finally, you practice with native speakers." },
+            { "question": "How do you prepare for a job interview?", "answer": "First, you research the company. Then, you prepare answers to common questions. Next, you choose appropriate clothes. Finally, you arrive early and stay calm." },
+            { "question": "How do you plan a trip?", "answer": "First, you decide on a destination. Then, you book transportation and accommodation. Next, you make an itinerary. Finally, you pack your bags." },
+            { "question": "How do you solve a problem?", "answer": "First, you identify the problem clearly. Then, you analyze possible causes. Next, you think of solutions. Finally, you implement the best solution." },
+            { "question": "How do you write a good essay?", "answer": "First, you choose a topic. Then, you make an outline. Next, you write the introduction, body, and conclusion. Finally, you revise and proofread." },
+            { "question": "How do you give a presentation?", "answer": "First, you prepare your content. Then, you create slides. Next, you practice your delivery. Finally, you present confidently and answer questions." }
+          ]
+        },
+        {
+          "lesson": 2,
+          "title": "Stage 8 - Lesson 2: Comparing and Contrasting",
+          "description": "比較と対比",
+          "qaItems": [
+            { "question": "What are the similarities between Japanese and English?", "answer": "Both Japanese and English use formal and informal speech, and both languages borrow words from other languages." },
+            { "question": "What are the differences between living in a city and living in the countryside?", "answer": "Cities have more job opportunities and entertainment, while the countryside has cleaner air and a quieter environment." },
+            { "question": "How is reading different from watching movies?", "answer": "Reading requires imagination and is more personal, whereas watching movies provides visual and audio stimulation." },
+            { "question": "What is similar about cats and dogs?", "answer": "Both cats and dogs are popular pets, and both need care, food, and attention from their owners." },
+            { "question": "How do online classes compare to traditional classes?", "answer": "Online classes are more flexible but lack face-to-face interaction, while traditional classes offer more engagement but less flexibility." },
+            { "question": "What are the differences between coffee and tea?", "answer": "Coffee has more caffeine and a stronger taste, while tea is generally milder and has more varieties." },
+            { "question": "How is working alone different from working in a team?", "answer": "Working alone gives you more control, while working in a team allows for collaboration and diverse ideas." },
+            { "question": "What are the similarities between learning music and learning a language?", "answer": "Both require practice, patience, and repetition. Both also become easier with consistent effort over time." },
+            { "question": "How do traveling by plane and traveling by train compare?", "answer": "Planes are faster for long distances, but trains offer more scenery and are often more comfortable." },
+            { "question": "What are the differences between smartphones and laptops?", "answer": "Smartphones are more portable and convenient for communication, while laptops are better for productivity and have larger screens." }
+          ]
+        },
+        {
+          "lesson": 3,
+          "title": "Stage 8 - Lesson 3: Discussing Advantages and Disadvantages",
+          "description": "長所と短所の議論",
+          "qaItems": [
+            { "question": "What are the advantages of learning English?", "answer": "The advantages include better job opportunities, the ability to communicate globally, and access to more information." },
+            { "question": "What are the disadvantages of social media?", "answer": "The disadvantages include privacy concerns, addiction, and the spread of misinformation." },
+            { "question": "What are the pros and cons of working from home?", "answer": "The pros are flexibility and no commute. The cons are isolation and difficulty separating work and personal life." },
+            { "question": "What are the benefits of exercise?", "answer": "Exercise improves physical health, mental well-being, and energy levels." },
+            { "question": "What are the drawbacks of fast food?", "answer": "Fast food is often unhealthy, high in calories, and lacks nutritional value." },
+            { "question": "What are the advantages of public transportation?", "answer": "Public transportation is cost-effective, environmentally friendly, and reduces traffic congestion." },
+            { "question": "What are the disadvantages of living in a big city?", "answer": "Big cities can be expensive, crowded, and stressful." },
+            { "question": "What are the pros and cons of online shopping?", "answer": "The pros are convenience and variety. The cons are shipping delays and the inability to see products in person." },
+            { "question": "What are the benefits of reading books?", "answer": "Reading improves vocabulary, critical thinking, and provides knowledge and entertainment." },
+            { "question": "What are the drawbacks of watching too much TV?", "answer": "Watching too much TV can waste time, reduce physical activity, and affect sleep quality." }
+          ]
+        },
+        {
+          "lesson": 4,
+          "title": "Stage 8 - Lesson 4: Expressing Cause and Effect",
+          "description": "原因と結果の表現",
+          "qaItems": [
+            { "question": "Why do people learn English?", "answer": "People learn English because it is a global language and helps with career opportunities." },
+            { "question": "What happens when you do not sleep enough?", "answer": "When you do not sleep enough, you become tired and cannot concentrate well." },
+            { "question": "Why is exercise important?", "answer": "Exercise is important because it improves health and reduces the risk of disease." },
+            { "question": "What is the effect of pollution on the environment?", "answer": "Pollution causes damage to ecosystems, affects wildlife, and contributes to climate change." },
+            { "question": "Why do students study abroad?", "answer": "Students study abroad because they want to experience new cultures and improve their language skills." },
+            { "question": "What happens when you eat too much sugar?", "answer": "When you eat too much sugar, you can gain weight and develop health problems." },
+            { "question": "Why is education important?", "answer": "Education is important because it provides knowledge and skills that help people succeed in life." },
+            { "question": "What is the result of practicing English every day?", "answer": "Practicing English every day leads to improved fluency and confidence in speaking." },
+            { "question": "Why do prices increase?", "answer": "Prices increase due to inflation, higher demand, or increased production costs." },
+            { "question": "What happens if you do not save money?", "answer": "If you do not save money, you may face financial difficulties in emergencies." }
+          ]
+        },
+        {
+          "lesson": 5,
+          "title": "Stage 8 - Lesson 5: Hypothetical Situations",
+          "description": "仮定の状況",
+          "qaItems": [
+            { "question": "What would the world be like without the internet?", "answer": "Without the internet, communication would be slower, and access to information would be limited." },
+            { "question": "If you could go back in time, what would you change?", "answer": "If I could go back in time, I would study harder in school." },
+            { "question": "What would happen if everyone spoke the same language?", "answer": "If everyone spoke the same language, international communication would be much easier." },
+            { "question": "If money were not important, what would you do?", "answer": "If money were not important, I would spend more time with family and pursue my hobbies." },
+            { "question": "What would you do if you could not use your phone for a week?", "answer": "If I could not use my phone, I would read more books and spend time outdoors." },
+            { "question": "If you were invisible for a day, what would you do?", "answer": "If I were invisible, I would observe how people behave when they think no one is watching." },
+            { "question": "What would happen if there were no rules?", "answer": "If there were no rules, society would become chaotic and unsafe." },
+            { "question": "If you could have any superpower, what would it be?", "answer": "If I could have any superpower, I would choose the ability to fly." },
+            { "question": "What would you do differently if you started your career again?", "answer": "If I started my career again, I would take more risks and try new things." },
+            { "question": "If robots did all the work, what would humans do?", "answer": "If robots did all the work, humans would focus on creative activities and leisure." }
+          ]
+        }
+      ]
+    },
+    {
+      "stage": 9,
+      "title": "Advanced Expressions I",
+      "description": "上級表現（複雑な文法）",
+      "lessons": [
+        {
+          "lesson": 1,
+          "title": "Stage 9 - Lesson 1: Reported Speech",
+          "description": "間接話法",
+          "qaItems": [
+            { "question": "What did she say about the meeting?", "answer": "She said that the meeting would be postponed until next week." },
+            { "question": "What did your friend tell you?", "answer": "My friend told me that he was going to move to a new city." },
+            { "question": "What did the teacher ask you?", "answer": "The teacher asked me if I had finished my homework." },
+            { "question": "What did they announce?", "answer": "They announced that the company would be hiring more employees." },
+            { "question": "What did he promise?", "answer": "He promised that he would help me with the project." },
+            { "question": "What did the doctor advise you?", "answer": "The doctor advised me to rest and drink plenty of water." },
+            { "question": "What did she explain?", "answer": "She explained that the process would take several weeks to complete." },
+            { "question": "What did he mention about his trip?", "answer": "He mentioned that he had visited five countries during his trip." },
+            { "question": "What did they suggest?", "answer": "They suggested that we should start the project earlier." },
+            { "question": "What did your boss tell you about the deadline?", "answer": "My boss told me that the deadline had been extended by three days." }
+          ]
+        },
+        {
+          "lesson": 2,
+          "title": "Stage 9 - Lesson 2: Passive Voice",
+          "description": "受動態",
+          "qaItems": [
+            { "question": "When was this building built?", "answer": "This building was built in nineteen ninety-five." },
+            { "question": "How is coffee made?", "answer": "Coffee is made by grinding beans and brewing them with hot water." },
+            { "question": "When was the telephone invented?", "answer": "The telephone was invented in eighteen seventy-six by Alexander Graham Bell." },
+            { "question": "How is paper recycled?", "answer": "Paper is collected, sorted, cleaned, and then processed into new paper." },
+            { "question": "Where is rice grown?", "answer": "Rice is grown in many Asian countries, especially China and India." },
+            { "question": "When was this company founded?", "answer": "This company was founded in two thousand and five." },
+            { "question": "How is cheese made?", "answer": "Cheese is made by curdling milk and pressing the curds." },
+            { "question": "Where was this car manufactured?", "answer": "This car was manufactured in Japan." },
+            { "question": "When was the internet created?", "answer": "The internet was created in the late nineteen sixties." },
+            { "question": "How are decisions made in your company?", "answer": "Decisions are made by the management team after consultation with employees." }
+          ]
+        },
+        {
+          "lesson": 3,
+          "title": "Stage 9 - Lesson 3: Relative Clauses",
+          "description": "関係節",
+          "qaItems": [
+            { "question": "Who is the person that you admire most?", "answer": "The person that I admire most is my mother because she is kind and hardworking." },
+            { "question": "What is a skill that you would like to learn?", "answer": "A skill that I would like to learn is playing the guitar." },
+            { "question": "Can you describe a place where you feel relaxed?", "answer": "A place where I feel relaxed is my bedroom, which is quiet and comfortable." },
+            { "question": "What is a book that has influenced you?", "answer": "A book that has influenced me is one about personal development that I read in college." },
+            { "question": "Who is someone whose opinion you trust?", "answer": "Someone whose opinion I trust is my best friend, who always gives honest advice." },
+            { "question": "What is an experience that changed your life?", "answer": "An experience that changed my life was traveling abroad for the first time." },
+            { "question": "Can you describe a time when you felt proud?", "answer": "A time when I felt proud was when I graduated from university." },
+            { "question": "What is a movie that you can watch again and again?", "answer": "A movie that I can watch again and again is a classic comedy that always makes me laugh." },
+            { "question": "Who is a teacher who had a big impact on you?", "answer": "A teacher who had a big impact on me was my English teacher, who encouraged me to study abroad." },
+            { "question": "What is a reason why people travel?", "answer": "A reason why people travel is to experience different cultures and meet new people." }
+          ]
+        },
+        {
+          "lesson": 4,
+          "title": "Stage 9 - Lesson 4: Gerunds and Infinitives",
+          "description": "動名詞と不定詞",
+          "qaItems": [
+            { "question": "Do you enjoy traveling?", "answer": "Yes, I enjoy traveling because I like exploring new places." },
+            { "question": "What do you want to achieve this year?", "answer": "I want to improve my English and pass the certification exam." },
+            { "question": "Do you prefer reading or watching movies?", "answer": "I prefer reading because it allows me to use my imagination." },
+            { "question": "Have you decided to take a vacation?", "answer": "Yes, I have decided to take a vacation next month." },
+            { "question": "Do you mind working late sometimes?", "answer": "No, I do not mind working late if it is necessary." },
+            { "question": "What are you planning to do this weekend?", "answer": "I am planning to visit a museum and have dinner with friends." },
+            { "question": "Do you avoid eating unhealthy food?", "answer": "Yes, I try to avoid eating unhealthy food as much as possible." },
+            { "question": "What do you hope to accomplish in your career?", "answer": "I hope to become a manager and lead a successful team." },
+            { "question": "Do you keep practicing English every day?", "answer": "Yes, I keep practicing English every day to improve my skills." },
+            { "question": "What made you decide to learn English?", "answer": "I decided to learn English because I want to work internationally." }
+          ]
+        },
+        {
+          "lesson": 5,
+          "title": "Stage 9 - Lesson 5: Third Conditional",
+          "description": "条件文（第三条件）",
+          "qaItems": [
+            { "question": "What would have happened if you had studied harder in school?", "answer": "If I had studied harder, I would have gotten better grades." },
+            { "question": "If you had known about the problem earlier, what would you have done?", "answer": "If I had known earlier, I would have tried to solve it immediately." },
+            { "question": "What would you have done if you had missed your flight?", "answer": "If I had missed my flight, I would have booked another one." },
+            { "question": "If it had not rained yesterday, what would you have done?", "answer": "If it had not rained, I would have gone hiking." },
+            { "question": "What would have happened if you had not learned English?", "answer": "If I had not learned English, I would have missed many opportunities." },
+            { "question": "If you had had more time, what would you have done differently?", "answer": "If I had had more time, I would have prepared more thoroughly." },
+            { "question": "What would you have said if someone had asked for your opinion?", "answer": "If someone had asked, I would have shared my honest thoughts." },
+            { "question": "If you had been born in a different country, how would your life have been different?", "answer": "If I had been born elsewhere, I would have grown up with a different culture." },
+            { "question": "What would have happened if the internet had never been invented?", "answer": "If the internet had never been invented, communication would have been much slower." },
+            { "question": "If you had won the lottery last year, what would you have done?", "answer": "If I had won the lottery, I would have traveled around the world." }
+          ]
+        }
+      ]
+    },
+    {
+      "stage": 10,
+      "title": "Advanced Expressions II",
+      "description": "上級表現（慣用句・フレーズ）",
+      "lessons": [
+        {
+          "lesson": 1,
+          "title": "Stage 10 - Lesson 1: Common Idioms",
+          "description": "一般的な慣用句",
+          "qaItems": [
+            { "question": "What does 'break the ice' mean?", "answer": "'Break the ice' means to start a conversation in a social situation to make people feel comfortable." },
+            { "question": "What does 'hit the nail on the head' mean?", "answer": "'Hit the nail on the head' means to describe exactly what is causing a situation or problem." },
+            { "question": "What does 'cost an arm and a leg' mean?", "answer": "'Cost an arm and a leg' means something is very expensive." },
+            { "question": "What does 'once in a blue moon' mean?", "answer": "'Once in a blue moon' means something happens very rarely." },
+            { "question": "What does 'piece of cake' mean?", "answer": "'Piece of cake' means something is very easy to do." },
+            { "question": "What does 'kill two birds with one stone' mean?", "answer": "'Kill two birds with one stone' means to accomplish two things with a single action." },
+            { "question": "What does 'spill the beans' mean?", "answer": "'Spill the beans' means to reveal a secret." },
+            { "question": "What does 'under the weather' mean?", "answer": "'Under the weather' means to feel slightly ill or sick." },
+            { "question": "What does 'bite off more than you can chew' mean?", "answer": "'Bite off more than you can chew' means to take on a task that is too big." },
+            { "question": "What does 'let the cat out of the bag' mean?", "answer": "'Let the cat out of the bag' means to accidentally reveal a secret." }
+          ]
+        },
+        {
+          "lesson": 2,
+          "title": "Stage 10 - Lesson 2: Phrasal Verbs I",
+          "description": "句動詞（その1）",
+          "qaItems": [
+            { "question": "What does 'give up' mean?", "answer": "'Give up' means to stop trying or quit." },
+            { "question": "What does 'look after' mean?", "answer": "'Look after' means to take care of someone or something." },
+            { "question": "What does 'put off' mean?", "answer": "'Put off' means to postpone or delay." },
+            { "question": "What does 'turn down' mean?", "answer": "'Turn down' means to refuse or reject an offer." },
+            { "question": "What does 'figure out' mean?", "answer": "'Figure out' means to understand or solve something." },
+            { "question": "What does 'run out of' mean?", "answer": "'Run out of' means to have no more of something." },
+            { "question": "What does 'look up' mean?", "answer": "'Look up' means to search for information, usually in a book or online." },
+            { "question": "What does 'get along with' mean?", "answer": "'Get along with' means to have a good relationship with someone." },
+            { "question": "What does 'come across' mean?", "answer": "'Come across' means to find something by chance." },
+            { "question": "What does 'carry on' mean?", "answer": "'Carry on' means to continue doing something." }
+          ]
+        },
+        {
+          "lesson": 3,
+          "title": "Stage 10 - Lesson 3: Phrasal Verbs II",
+          "description": "句動詞（その2）",
+          "qaItems": [
+            { "question": "What does 'bring up' mean?", "answer": "'Bring up' means to raise a topic in conversation or to raise children." },
+            { "question": "What does 'break down' mean?", "answer": "'Break down' means to stop working or to become emotional." },
+            { "question": "What does 'set up' mean?", "answer": "'Set up' means to arrange or establish something." },
+            { "question": "What does 'take over' mean?", "answer": "'Take over' means to assume control or responsibility." },
+            { "question": "What does 'point out' mean?", "answer": "'Point out' means to draw attention to something." },
+            { "question": "What does 'cut down on' mean?", "answer": "'Cut down on' means to reduce the amount of something." },
+            { "question": "What does 'work out' mean?", "answer": "'Work out' means to exercise or to solve a problem." },
+            { "question": "What does 'come up with' mean?", "answer": "'Come up with' means to think of or produce an idea." },
+            { "question": "What does 'look forward to' mean?", "answer": "'Look forward to' means to anticipate with pleasure." },
+            { "question": "What does 'put up with' mean?", "answer": "'Put up with' means to tolerate or endure something unpleasant." }
+          ]
+        },
+        {
+          "lesson": 4,
+          "title": "Stage 10 - Lesson 4: Business English",
+          "description": "ビジネス英語",
+          "qaItems": [
+            { "question": "How do you start a business email?", "answer": "You could start with: Dear Mr./Ms. [Name], I hope this email finds you well." },
+            { "question": "How do you ask for clarification in a meeting?", "answer": "You could say: Could you please elaborate on that point?" },
+            { "question": "How do you schedule a meeting?", "answer": "You could say: Would you be available for a meeting on Monday at ten AM?" },
+            { "question": "How do you give a positive response to a proposal?", "answer": "You could say: That sounds like a great idea. I think we should move forward with it." },
+            { "question": "How do you politely disagree in a meeting?", "answer": "You could say: I see your point, but I have a different perspective." },
+            { "question": "How do you summarize a discussion?", "answer": "You could say: To summarize, we have agreed to proceed with option A." },
+            { "question": "How do you end a business email?", "answer": "You could end with: Thank you for your time. Best regards, [Your name]." },
+            { "question": "How do you ask for a deadline extension?", "answer": "You could say: Would it be possible to extend the deadline by a few days?" },
+            { "question": "How do you introduce yourself in a professional setting?", "answer": "You could say: Hello, my name is [Name], and I am the [job title] at [company]." },
+            { "question": "How do you express appreciation for help received?", "answer": "You could say: Thank you very much for your assistance. I really appreciate it." }
+          ]
+        },
+        {
+          "lesson": 5,
+          "title": "Stage 10 - Lesson 5: Academic English",
+          "description": "アカデミック英語",
+          "qaItems": [
+            { "question": "How do you introduce a topic in an essay?", "answer": "You could write: This essay will examine the impact of technology on education." },
+            { "question": "How do you present evidence in an academic paper?", "answer": "You could write: According to recent research, seventy percent of students prefer online learning." },
+            { "question": "How do you transition between paragraphs?", "answer": "You could use: Furthermore, In addition, Moreover, On the other hand, or However." },
+            { "question": "How do you express a conclusion?", "answer": "You could write: In conclusion, the evidence suggests that renewable energy is the future." },
+            { "question": "How do you cite a source?", "answer": "You could write: As Smith (two thousand twenty) argues, climate change requires immediate action." },
+            { "question": "How do you express uncertainty academically?", "answer": "You could write: This suggests that, It appears that, or The data indicates." },
+            { "question": "How do you define a term in an essay?", "answer": "You could write: Globalization can be defined as the increasing interconnection of world economies." },
+            { "question": "How do you acknowledge a counter-argument?", "answer": "You could write: While some argue that X, the evidence suggests otherwise." },
+            { "question": "How do you make a recommendation?", "answer": "You could write: It is recommended that further research be conducted in this area." },
+            { "question": "How do you summarize findings?", "answer": "You could write: To summarize, the study found three main factors contributing to the phenomenon." }
+          ]
+        }
+      ]
+    },
+    {
+      "stage": 11,
+      "title": "Advanced Expressions III",
+      "description": "上級表現（文化・社会）",
+      "lessons": [
+        {
+          "lesson": 1,
+          "title": "Stage 11 - Lesson 1: Cultural Topics",
+          "description": "文化的話題",
+          "qaItems": [
+            { "question": "What is a unique aspect of Japanese culture?", "answer": "A unique aspect of Japanese culture is the emphasis on respect and harmony in social interactions." },
+            { "question": "How do cultural differences affect communication?", "answer": "Cultural differences can lead to misunderstandings because of different norms for eye contact, gestures, and politeness." },
+            { "question": "What can we learn from other cultures?", "answer": "We can learn different perspectives, values, and ways of solving problems from other cultures." },
+            { "question": "How has globalization affected local cultures?", "answer": "Globalization has spread Western culture worldwide but has also allowed local cultures to reach global audiences." },
+            { "question": "What is cultural appropriation?", "answer": "Cultural appropriation is when people adopt elements of another culture without understanding or respecting their original meaning." },
+            { "question": "How do you show respect for other cultures?", "answer": "You can show respect by learning about their customs, being open-minded, and avoiding stereotypes." },
+            { "question": "What role does food play in culture?", "answer": "Food is central to culture, representing history, traditions, and social connections." },
+            { "question": "How has the internet changed cultural exchange?", "answer": "The internet has made it easier to share and learn about different cultures through videos, music, and social media." },
+            { "question": "What is the importance of preserving traditional customs?", "answer": "Preserving traditional customs helps maintain cultural identity and passes knowledge to future generations." },
+            { "question": "How do holidays reflect cultural values?", "answer": "Holidays reflect what a culture values, such as family, religion, history, or seasons." }
+          ]
+        },
+        {
+          "lesson": 2,
+          "title": "Stage 11 - Lesson 2: Social Issues",
+          "description": "社会問題",
+          "qaItems": [
+            { "question": "What is one major social issue in the world today?", "answer": "One major social issue is climate change, which affects everyone on the planet." },
+            { "question": "Why is education important for society?", "answer": "Education is important because it creates informed citizens and drives economic development." },
+            { "question": "What are the causes of poverty?", "answer": "Poverty is caused by lack of education, unemployment, discrimination, and unequal distribution of resources." },
+            { "question": "How can we reduce inequality in society?", "answer": "We can reduce inequality through fair policies, education access, and support for disadvantaged groups." },
+            { "question": "What is the impact of aging populations?", "answer": "Aging populations put pressure on healthcare systems, pensions, and the workforce." },
+            { "question": "How does technology affect employment?", "answer": "Technology creates new jobs but also eliminates others, requiring workers to learn new skills." },
+            { "question": "What are the effects of urbanization?", "answer": "Urbanization leads to economic growth but also creates challenges like pollution and housing shortages." },
+            { "question": "How can communities address homelessness?", "answer": "Communities can address homelessness through affordable housing, mental health services, and job training." },
+            { "question": "What is the importance of gender equality?", "answer": "Gender equality ensures that everyone has equal opportunities regardless of gender." },
+            { "question": "How can individuals contribute to solving social problems?", "answer": "Individuals can volunteer, donate, vote, raise awareness, and make ethical consumer choices." }
+          ]
+        },
+        {
+          "lesson": 3,
+          "title": "Stage 11 - Lesson 3: Technology and Society",
+          "description": "テクノロジーと社会",
+          "qaItems": [
+            { "question": "How has technology changed the way we work?", "answer": "Technology has enabled remote work, automation, and faster communication." },
+            { "question": "What are the benefits of artificial intelligence?", "answer": "AI can improve efficiency, make predictions, and solve complex problems faster than humans." },
+            { "question": "What are the risks of artificial intelligence?", "answer": "Risks include job displacement, privacy concerns, and potential misuse of the technology." },
+            { "question": "How has social media changed society?", "answer": "Social media has changed how we communicate, access news, and form opinions." },
+            { "question": "What is the digital divide?", "answer": "The digital divide refers to the gap between those who have access to technology and those who do not." },
+            { "question": "How can we protect privacy in the digital age?", "answer": "We can protect privacy by using strong passwords, being careful about sharing information, and supporting privacy laws." },
+            { "question": "What is the future of transportation technology?", "answer": "The future may include electric vehicles, autonomous cars, and faster public transit systems." },
+            { "question": "How does technology affect education?", "answer": "Technology provides new learning tools but also creates distractions and accessibility challenges." },
+            { "question": "What are smart cities?", "answer": "Smart cities use technology to improve services like transportation, energy, and public safety." },
+            { "question": "How should society regulate new technologies?", "answer": "Society should balance innovation with regulations that protect safety, privacy, and fairness." }
+          ]
+        },
+        {
+          "lesson": 4,
+          "title": "Stage 11 - Lesson 4: Environment and Sustainability",
+          "description": "環境と持続可能性",
+          "qaItems": [
+            { "question": "What is climate change?", "answer": "Climate change refers to long-term shifts in global temperatures and weather patterns, primarily caused by human activities." },
+            { "question": "What are renewable energy sources?", "answer": "Renewable energy sources include solar, wind, hydro, and geothermal power." },
+            { "question": "Why is biodiversity important?", "answer": "Biodiversity is important because it maintains ecosystem balance and provides resources for medicine and food." },
+            { "question": "What is sustainable development?", "answer": "Sustainable development meets present needs without compromising the ability of future generations to meet theirs." },
+            { "question": "How can individuals reduce their carbon footprint?", "answer": "Individuals can use public transport, reduce energy consumption, eat less meat, and recycle." },
+            { "question": "What are the effects of deforestation?", "answer": "Deforestation leads to habitat loss, increased carbon dioxide, and soil erosion." },
+            { "question": "How does plastic pollution affect the ocean?", "answer": "Plastic pollution harms marine life, enters the food chain, and damages ecosystems." },
+            { "question": "What is the Paris Agreement?", "answer": "The Paris Agreement is an international treaty to limit global warming to well below two degrees Celsius." },
+            { "question": "Why is water conservation important?", "answer": "Water conservation is important because fresh water is limited and essential for all life." },
+            { "question": "What role do businesses play in sustainability?", "answer": "Businesses can reduce waste, use sustainable materials, and invest in clean energy." }
+          ]
+        },
+        {
+          "lesson": 5,
+          "title": "Stage 11 - Lesson 5: Ethics and Values",
+          "description": "倫理と価値観",
+          "qaItems": [
+            { "question": "What is ethics?", "answer": "Ethics is the study of what is right and wrong behavior." },
+            { "question": "Why is honesty important?", "answer": "Honesty is important because it builds trust and maintains healthy relationships." },
+            { "question": "What is empathy?", "answer": "Empathy is the ability to understand and share the feelings of another person." },
+            { "question": "How do values influence decisions?", "answer": "Values guide what we consider important and affect the choices we make." },
+            { "question": "What is the Golden Rule?", "answer": "The Golden Rule is to treat others as you would want to be treated." },
+            { "question": "Why is fairness important in society?", "answer": "Fairness ensures that everyone has equal opportunities and is treated justly." },
+            { "question": "What is corporate social responsibility?", "answer": "Corporate social responsibility means businesses should act ethically and contribute to society." },
+            { "question": "How can we teach children about ethics?", "answer": "We can teach children through example, discussion, and encouraging them to consider others' feelings." },
+            { "question": "What is the difference between morals and ethics?", "answer": "Morals are personal beliefs about right and wrong, while ethics are standards set by society or professions." },
+            { "question": "Why is it important to take responsibility for our actions?", "answer": "Taking responsibility shows maturity, builds character, and helps us learn from mistakes." }
+          ]
+        }
+      ]
+    },
+    {
+      "stage": 12,
+      "title": "Advanced Expressions IV",
+      "description": "上級表現（ディベート・プレゼンテーション）",
+      "lessons": [
+        {
+          "lesson": 1,
+          "title": "Stage 12 - Lesson 1: Debate Skills",
+          "description": "ディベートのスキル",
+          "qaItems": [
+            { "question": "How do you present an argument effectively?", "answer": "Present your main point clearly, support it with evidence, and explain why it matters." },
+            { "question": "How do you respond to a counter-argument?", "answer": "Acknowledge the point, explain why your argument is stronger, and provide additional evidence." },
+            { "question": "What is the importance of logical reasoning?", "answer": "Logical reasoning helps make arguments clear, convincing, and hard to refute." },
+            { "question": "How do you support your opinion with evidence?", "answer": "Use facts, statistics, expert opinions, and examples to back up your claims." },
+            { "question": "What is a fallacy?", "answer": "A fallacy is an error in reasoning that weakens an argument." },
+            { "question": "How do you respectfully disagree?", "answer": "Acknowledge the other person's point, then explain your different perspective calmly." },
+            { "question": "What makes a strong conclusion in a debate?", "answer": "A strong conclusion summarizes your main points and reinforces why your position is correct." },
+            { "question": "How do you handle emotional arguments?", "answer": "Stay calm, focus on facts, and redirect the discussion to the main issues." },
+            { "question": "Why is it important to consider opposing views?", "answer": "Understanding opposing views helps you strengthen your own argument and find common ground." },
+            { "question": "How do you prepare for a debate?", "answer": "Research the topic thoroughly, anticipate counter-arguments, and practice your delivery." }
+          ]
+        },
+        {
+          "lesson": 2,
+          "title": "Stage 12 - Lesson 2: Presentation Skills",
+          "description": "プレゼンテーションのスキル",
+          "qaItems": [
+            { "question": "How do you start a presentation?", "answer": "Start with a greeting, introduce yourself, and state the purpose of your presentation." },
+            { "question": "How do you engage your audience?", "answer": "Ask questions, use stories, make eye contact, and vary your tone of voice." },
+            { "question": "What is the structure of a good presentation?", "answer": "A good presentation has an introduction, body with main points, and a conclusion with a summary." },
+            { "question": "How do you handle nervousness before presenting?", "answer": "Practice beforehand, take deep breaths, and focus on your message rather than yourself." },
+            { "question": "How do you use visual aids effectively?", "answer": "Keep slides simple, use images to support points, and do not read directly from them." },
+            { "question": "How do you answer questions after a presentation?", "answer": "Listen carefully, thank the questioner, and give a clear, concise answer." },
+            { "question": "What should you do if you do not know the answer to a question?", "answer": "Admit that you do not know, offer to find out, and move on professionally." },
+            { "question": "How do you conclude a presentation?", "answer": "Summarize your key points, restate your main message, and thank the audience." },
+            { "question": "Why is body language important in presentations?", "answer": "Body language conveys confidence and helps keep the audience engaged." },
+            { "question": "How long should a presentation be?", "answer": "The length depends on the topic and audience, but it should be long enough to cover key points without losing attention." }
+          ]
+        },
+        {
+          "lesson": 3,
+          "title": "Stage 12 - Lesson 3: Negotiation Skills",
+          "description": "交渉のスキル",
+          "qaItems": [
+            { "question": "What is the key to successful negotiation?", "answer": "The key is to understand both parties' needs and find a mutually beneficial solution." },
+            { "question": "How do you prepare for a negotiation?", "answer": "Research the other party, know your priorities, and decide your limits beforehand." },
+            { "question": "What is a win-win outcome?", "answer": "A win-win outcome is when both parties feel they have gained something valuable from the negotiation." },
+            { "question": "How do you handle a difficult negotiator?", "answer": "Stay calm, focus on interests rather than positions, and look for creative solutions." },
+            { "question": "Why is listening important in negotiation?", "answer": "Listening helps you understand the other party's needs and find common ground." },
+            { "question": "What should you do if negotiations stall?", "answer": "Take a break, look for alternative solutions, or bring in a mediator." },
+            { "question": "How do you make a concession?", "answer": "Make concessions strategically, ensuring you get something in return." },
+            { "question": "What is BATNA?", "answer": "BATNA stands for Best Alternative To a Negotiated Agreement, meaning your backup plan if negotiations fail." },
+            { "question": "How do you close a negotiation?", "answer": "Summarize what has been agreed, confirm the details, and express appreciation for the discussion." },
+            { "question": "Why is building rapport important in negotiation?", "answer": "Building rapport creates trust and makes the other party more willing to cooperate." }
+          ]
+        },
+        {
+          "lesson": 4,
+          "title": "Stage 12 - Lesson 4: Critical Thinking",
+          "description": "批判的思考",
+          "qaItems": [
+            { "question": "What is critical thinking?", "answer": "Critical thinking is the ability to analyze information objectively and make reasoned judgments." },
+            { "question": "Why is critical thinking important?", "answer": "Critical thinking helps us make better decisions, solve problems, and avoid being misled." },
+            { "question": "How do you evaluate the reliability of information?", "answer": "Check the source, look for evidence, consider potential biases, and compare with other sources." },
+            { "question": "What is the difference between fact and opinion?", "answer": "A fact can be proven true or false, while an opinion is a personal belief or judgment." },
+            { "question": "How do you identify bias in media?", "answer": "Look for one-sided arguments, emotional language, and missing perspectives." },
+            { "question": "What is confirmation bias?", "answer": "Confirmation bias is the tendency to seek information that supports our existing beliefs." },
+            { "question": "How can asking questions improve critical thinking?", "answer": "Asking questions helps us dig deeper, challenge assumptions, and find better answers." },
+            { "question": "What is the importance of evidence in arguments?", "answer": "Evidence supports claims and makes arguments more credible and convincing." },
+            { "question": "How do you approach a problem critically?", "answer": "Define the problem clearly, gather information, consider alternatives, and evaluate outcomes." },
+            { "question": "Why is it important to consider multiple perspectives?", "answer": "Considering multiple perspectives helps us understand issues fully and make fairer judgments." }
+          ]
+        },
+        {
+          "lesson": 5,
+          "title": "Stage 12 - Lesson 5: Final Review",
+          "description": "総復習",
+          "qaItems": [
+            { "question": "What have you learned about English through this course?", "answer": "I have learned vocabulary, grammar, expressions, and communication skills in English." },
+            { "question": "What is the most important skill for English communication?", "answer": "The most important skill is practicing regularly and not being afraid to make mistakes." },
+            { "question": "How will you continue improving your English?", "answer": "I will continue practicing speaking, reading, and listening every day." },
+            { "question": "What advice would you give to someone starting to learn English?", "answer": "I would advise them to be patient, practice consistently, and enjoy the learning process." },
+            { "question": "What is your favorite topic we have discussed?", "answer": "My favorite topic was discussing cultural differences and social issues." },
+            { "question": "How has your confidence in speaking English changed?", "answer": "My confidence has increased because I have practiced speaking many times." },
+            { "question": "What is still challenging for you in English?", "answer": "Listening to fast speech and using idioms naturally are still challenging for me." },
+            { "question": "How do you plan to use English in the future?", "answer": "I plan to use English for work, travel, and connecting with people from other countries." },
+            { "question": "What is the most useful phrase you have learned?", "answer": "One useful phrase I learned is how to politely express disagreement in discussions." },
+            { "question": "Why is lifelong learning important for language skills?", "answer": "Lifelong learning is important because languages evolve and there is always more to learn." }
+          ]
+        }
+      ]
+    }
+  ]
+}
