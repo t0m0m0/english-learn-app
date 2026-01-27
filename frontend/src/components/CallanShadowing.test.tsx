@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { CallanShadowing } from "./CallanShadowing";
+import { CallanShadowing, getAudioErrorMessage } from "./CallanShadowing";
 import type { QAItem } from "../types";
 
 // Mock useAudio hook
@@ -235,16 +235,13 @@ describe("CallanShadowing", () => {
   });
 
   describe("audio playback error handling", () => {
-    it("should display detailed error message when audio playback fails", async () => {
-      // Set up recorded audio for testing playback
+    it("should not display error message initially", () => {
       mockRecordedAudio = {
         blob: new Blob(["test"], { type: "audio/webm" }),
         duration: 1,
         url: "blob:test-url",
       };
 
-      // Note: This test verifies the error handling structure exists.
-      // Full integration testing of audio errors requires a more complex setup.
       render(
         <CallanShadowing
           qaItems={mockQAItems}
@@ -253,9 +250,50 @@ describe("CallanShadowing", () => {
         />,
       );
 
-      // The component should be able to display errors
-      // Actual error simulation would require mocking Audio constructor
-      expect(screen.queryByText(/failed to play/i)).not.toBeInTheDocument();
+      expect(screen.queryByText(/playback/i)).not.toBeInTheDocument();
+      expect(screen.queryByText(/error/i)).not.toBeInTheDocument();
     });
+  });
+});
+
+describe("getAudioErrorMessage", () => {
+  it("should return 'Unknown playback error' for null error", () => {
+    expect(getAudioErrorMessage(null)).toBe("Unknown playback error");
+  });
+
+  it("should return correct message for MEDIA_ERR_ABORTED (code 1)", () => {
+    const error = { code: 1, message: "" } as MediaError;
+    expect(getAudioErrorMessage(error)).toBe("Playback was aborted");
+  });
+
+  it("should return correct message for MEDIA_ERR_NETWORK (code 2)", () => {
+    const error = { code: 2, message: "" } as MediaError;
+    expect(getAudioErrorMessage(error)).toBe(
+      "Network error occurred while loading audio",
+    );
+  });
+
+  it("should return correct message for MEDIA_ERR_DECODE (code 3)", () => {
+    const error = { code: 3, message: "" } as MediaError;
+    expect(getAudioErrorMessage(error)).toBe(
+      "Audio decoding failed. The format may not be supported.",
+    );
+  });
+
+  it("should return correct message for MEDIA_ERR_SRC_NOT_SUPPORTED (code 4)", () => {
+    const error = { code: 4, message: "" } as MediaError;
+    expect(getAudioErrorMessage(error)).toBe(
+      "Audio format not supported by your browser. Try recording again.",
+    );
+  });
+
+  it("should use error.message for unknown error code when message exists", () => {
+    const error = { code: 99, message: "Custom error message" } as MediaError;
+    expect(getAudioErrorMessage(error)).toBe("Custom error message");
+  });
+
+  it("should return default message for unknown error code without message", () => {
+    const error = { code: 99, message: "" } as MediaError;
+    expect(getAudioErrorMessage(error)).toBe("Failed to play recording");
   });
 });

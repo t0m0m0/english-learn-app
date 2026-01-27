@@ -28,9 +28,9 @@ class MockMediaRecorder {
 
   stop() {
     this.state = "inactive";
-    // Simulate data available event
+    // Simulate data available event - use the mimeType from constructor
     this.ondataavailable?.({
-      data: new Blob(["test audio"], { type: "audio/webm" }),
+      data: new Blob(["test audio"], { type: this.mimeType || "audio/webm" }),
     });
     this.onstop?.();
   }
