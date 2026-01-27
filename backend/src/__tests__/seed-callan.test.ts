@@ -1,29 +1,7 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, beforeAll } from 'vitest'
 import * as fs from 'fs'
 import * as path from 'path'
-
-interface QAItemData {
-  question: string
-  answer: string
-}
-
-interface LessonData {
-  lesson: number
-  title: string
-  description: string
-  qaItems: QAItemData[]
-}
-
-interface StageData {
-  stage: number
-  title: string
-  description: string
-  lessons: LessonData[]
-}
-
-interface CallanData {
-  stages: StageData[]
-}
+import type { CallanData } from '../types/callan-data'
 
 describe('Callan Q&A Seed Data', () => {
   const dataPath = path.join(__dirname, '../data/callan-qa-data.json')
@@ -80,16 +58,14 @@ describe('Callan Q&A Seed Data', () => {
     }
   })
 
-  it('has approximately 500 QA items', () => {
+  it('has exactly 600 QA items (12 stages x 5 lessons x 10 items)', () => {
     let totalQAItems = 0
     for (const stage of data.stages) {
       for (const lesson of stage.lessons) {
         totalQAItems += lesson.qaItems.length
       }
     }
-    // Should be around 500 (within 400-700 range)
-    expect(totalQAItems).toBeGreaterThanOrEqual(400)
-    expect(totalQAItems).toBeLessThanOrEqual(700)
+    expect(totalQAItems).toBe(600)
   })
 
   it('has unique stage numbers in sequential order', () => {
