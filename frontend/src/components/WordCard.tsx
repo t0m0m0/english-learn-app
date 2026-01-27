@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import { searchImages } from "../services/unsplash";
 import useAudio from "../hooks/useAudio";
 import { Button, Card } from "./ui";
+import { DictionaryLink } from "./DictionaryLink";
+import { DictionaryDefinition } from "./DictionaryDefinition";
 
 interface Word {
   id: number;
@@ -23,6 +25,9 @@ interface WordCardProps {
   onCorrect?: () => void;
   onIncorrect?: () => void;
   autoPlay?: boolean;
+  showDictionary?: boolean;
+  showDefinition?: boolean;
+  collapsed?: boolean;
 }
 
 export function WordCard({
@@ -32,6 +37,9 @@ export function WordCard({
   onCorrect,
   onIncorrect,
   autoPlay = false,
+  showDictionary = false,
+  showDefinition = false,
+  collapsed = false,
 }: WordCardProps) {
   const [image, setImage] = useState<UnsplashImage | null>(null);
   const [imageLoading, setImageLoading] = useState(true);
@@ -119,6 +127,18 @@ export function WordCard({
           <span className="inline-block bg-blue-50 dark:bg-blue-900/30 text-primary px-3 py-1 rounded-full text-xs uppercase tracking-wide mb-4">
             {word.partOfSpeech}
           </span>
+        )}
+
+        {showDictionary && (
+          <div className="mt-3 mb-4">
+            <DictionaryLink word={word.word} />
+          </div>
+        )}
+
+        {showDefinition && (
+          <div className="mt-3 mb-4 border-t border-border pt-3">
+            <DictionaryDefinition word={word.word} collapsed={collapsed} />
+          </div>
         )}
 
         <div className="flex flex-col gap-3 mt-4">
