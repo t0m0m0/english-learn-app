@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { fetchDefinition, DictionaryEntry } from "../services/dictionary";
+import { fetchDefinition } from "../services/dictionary";
+import type { DictionaryEntry } from "../services/dictionary";
 
 interface DictionaryDefinitionProps {
   word: string;

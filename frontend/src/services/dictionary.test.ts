@@ -2,9 +2,12 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { fetchDefinition, clearDefinitionCache } from "./dictionary";
 
 describe("dictionary service", () => {
+  let mockFetch: ReturnType<typeof vi.fn>;
+
   beforeEach(() => {
     clearDefinitionCache();
-    vi.restoreAllMocks();
+    mockFetch = vi.fn();
+    vi.stubGlobal("fetch", mockFetch);
   });
 
   afterEach(() => {
@@ -40,7 +43,7 @@ describe("dictionary service", () => {
         },
       ];
 
-      global.fetch = vi.fn().mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         json: () => Promise.resolve(mockResponse),
       });
@@ -58,7 +61,7 @@ describe("dictionary service", () => {
     });
 
     it("returns null for non-existent word", async () => {
-      global.fetch = vi.fn().mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: false,
         status: 404,
       });
@@ -68,7 +71,7 @@ describe("dictionary service", () => {
     });
 
     it("returns null on network error", async () => {
-      global.fetch = vi.fn().mockRejectedValueOnce(new Error("Network error"));
+      mockFetch.mockRejectedValueOnce(new Error("Network error"));
 
       const result = await fetchDefinition("test");
       expect(result).toBeNull();
@@ -88,7 +91,7 @@ describe("dictionary service", () => {
         },
       ];
 
-      global.fetch = vi.fn().mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         json: () => Promise.resolve(mockResponse),
       });
@@ -96,12 +99,11 @@ describe("dictionary service", () => {
       await fetchDefinition("test");
       await fetchDefinition("test");
 
-      expect(global.fetch).toHaveBeenCalledTimes(1);
+      expect(mockFetch).toHaveBeenCalledTimes(1);
     });
 
     it("caches null results for 404 and does not re-fetch", async () => {
-      global.fetch = vi
-        .fn()
+      mockFetch
         .mockResolvedValueOnce({
           ok: false,
           status: 404,
@@ -114,12 +116,11 @@ describe("dictionary service", () => {
       await fetchDefinition("nonexistent");
       await fetchDefinition("nonexistent");
 
-      expect(global.fetch).toHaveBeenCalledTimes(1);
+      expect(mockFetch).toHaveBeenCalledTimes(1);
     });
 
     it("does not cache transient errors (network failure)", async () => {
-      global.fetch = vi
-        .fn()
+      mockFetch
         .mockRejectedValueOnce(new Error("Network error"))
         .mockResolvedValueOnce({
           ok: true,
@@ -144,12 +145,11 @@ describe("dictionary service", () => {
       const second = await fetchDefinition("retry");
       expect(second).not.toBeNull();
       expect(second?.word).toBe("retry");
-      expect(global.fetch).toHaveBeenCalledTimes(2);
+      expect(mockFetch).toHaveBeenCalledTimes(2);
     });
 
     it("does not cache transient errors (server 500)", async () => {
-      global.fetch = vi
-        .fn()
+      mockFetch
         .mockResolvedValueOnce({
           ok: false,
           status: 500,
@@ -175,11 +175,11 @@ describe("dictionary service", () => {
 
       const second = await fetchDefinition("server");
       expect(second).not.toBeNull();
-      expect(global.fetch).toHaveBeenCalledTimes(2);
+      expect(mockFetch).toHaveBeenCalledTimes(2);
     });
 
     it("returns null for empty array response", async () => {
-      global.fetch = vi.fn().mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         json: () => Promise.resolve([]),
       });
@@ -189,7 +189,7 @@ describe("dictionary service", () => {
     });
 
     it("returns null for non-array response", async () => {
-      global.fetch = vi.fn().mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         json: () => Promise.resolve({ error: "unexpected" }),
       });
@@ -199,7 +199,7 @@ describe("dictionary service", () => {
     });
 
     it("returns null for response with missing word field", async () => {
-      global.fetch = vi.fn().mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         json: () => Promise.resolve([{ phonetic: "/test/" }]),
       });
@@ -209,7 +209,7 @@ describe("dictionary service", () => {
     });
 
     it("returns null for response with missing meanings array", async () => {
-      global.fetch = vi.fn().mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         json: () => Promise.resolve([{ word: "test" }]),
       });
@@ -219,14 +219,14 @@ describe("dictionary service", () => {
     });
 
     it("encodes special characters in the word", async () => {
-      global.fetch = vi.fn().mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: false,
         status: 404,
       });
 
       await fetchDefinition("ice cream");
 
-      expect(global.fetch).toHaveBeenCalledWith(
+      expect(mockFetch).toHaveBeenCalledWith(
         "https://api.dictionaryapi.dev/api/v2/entries/en/ice%20cream",
       );
     });
@@ -247,8 +247,7 @@ describe("dictionary service", () => {
         },
       ];
 
-      global.fetch = vi
-        .fn()
+      mockFetch
         .mockResolvedValueOnce({
           ok: true,
           json: () => Promise.resolve(mockResponse),
@@ -262,7 +261,7 @@ describe("dictionary service", () => {
       clearDefinitionCache();
       await fetchDefinition("cache");
 
-      expect(global.fetch).toHaveBeenCalledTimes(2);
+      expect(mockFetch).toHaveBeenCalledTimes(2);
     });
   });
 });
