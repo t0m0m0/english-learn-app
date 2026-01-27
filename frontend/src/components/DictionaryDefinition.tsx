@@ -15,11 +15,27 @@ export function DictionaryDefinition({
   const [isExpanded, setIsExpanded] = useState(!collapsed);
 
   useEffect(() => {
+    let cancelled = false;
     setLoading(true);
-    fetchDefinition(word).then((result) => {
-      setDefinition(result);
-      setLoading(false);
-    });
+    fetchDefinition(word)
+      .then((result) => {
+        if (!cancelled) {
+          setDefinition(result);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setDefinition(null);
+        }
+      })
+      .finally(() => {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
   }, [word]);
 
   if (loading) {
@@ -90,5 +106,3 @@ export function DictionaryDefinition({
     </div>
   );
 }
-
-export default DictionaryDefinition;

@@ -5,24 +5,20 @@ interface DictionaryLinkProps {
 interface DictionarySite {
   name: string;
   baseUrl: string;
-  encode?: boolean;
 }
 
 const DICTIONARY_SITES: DictionarySite[] = [
   {
     name: "Cambridge",
     baseUrl: "https://dictionary.cambridge.org/dictionary/english/",
-    encode: true,
   },
   {
     name: "Merriam-Webster",
     baseUrl: "https://www.merriam-webster.com/dictionary/",
-    encode: true,
   },
   {
     name: "Oxford",
     baseUrl: "https://www.oxfordlearnersdictionaries.com/definition/english/",
-    encode: true,
   },
 ];
 
@@ -30,8 +26,7 @@ export function DictionaryLink({ word }: DictionaryLinkProps) {
   return (
     <div className="flex flex-wrap gap-2 justify-center">
       {DICTIONARY_SITES.map((site) => {
-        const encodedWord = site.encode ? encodeURIComponent(word) : word;
-        const url = `${site.baseUrl}${encodedWord}`;
+        const url = `${site.baseUrl}${encodeURIComponent(word)}`;
 
         return (
           <a
@@ -48,5 +43,3 @@ export function DictionaryLink({ word }: DictionaryLinkProps) {
     </div>
   );
 }
-
-export default DictionaryLink;

@@ -99,6 +99,125 @@ describe("dictionary service", () => {
       expect(global.fetch).toHaveBeenCalledTimes(1);
     });
 
+    it("caches null results for 404 and does not re-fetch", async () => {
+      global.fetch = vi
+        .fn()
+        .mockResolvedValueOnce({
+          ok: false,
+          status: 404,
+        })
+        .mockResolvedValueOnce({
+          ok: false,
+          status: 404,
+        });
+
+      await fetchDefinition("nonexistent");
+      await fetchDefinition("nonexistent");
+
+      expect(global.fetch).toHaveBeenCalledTimes(1);
+    });
+
+    it("does not cache transient errors (network failure)", async () => {
+      global.fetch = vi
+        .fn()
+        .mockRejectedValueOnce(new Error("Network error"))
+        .mockResolvedValueOnce({
+          ok: true,
+          json: () =>
+            Promise.resolve([
+              {
+                word: "retry",
+                phonetic: "/ˈriːtraɪ/",
+                meanings: [
+                  {
+                    partOfSpeech: "verb",
+                    definitions: [{ definition: "To try again." }],
+                  },
+                ],
+              },
+            ]),
+        });
+
+      const first = await fetchDefinition("retry");
+      expect(first).toBeNull();
+
+      const second = await fetchDefinition("retry");
+      expect(second).not.toBeNull();
+      expect(second?.word).toBe("retry");
+      expect(global.fetch).toHaveBeenCalledTimes(2);
+    });
+
+    it("does not cache transient errors (server 500)", async () => {
+      global.fetch = vi
+        .fn()
+        .mockResolvedValueOnce({
+          ok: false,
+          status: 500,
+        })
+        .mockResolvedValueOnce({
+          ok: true,
+          json: () =>
+            Promise.resolve([
+              {
+                word: "server",
+                meanings: [
+                  {
+                    partOfSpeech: "noun",
+                    definitions: [{ definition: "A server definition." }],
+                  },
+                ],
+              },
+            ]),
+        });
+
+      const first = await fetchDefinition("server");
+      expect(first).toBeNull();
+
+      const second = await fetchDefinition("server");
+      expect(second).not.toBeNull();
+      expect(global.fetch).toHaveBeenCalledTimes(2);
+    });
+
+    it("returns null for empty array response", async () => {
+      global.fetch = vi.fn().mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve([]),
+      });
+
+      const result = await fetchDefinition("empty");
+      expect(result).toBeNull();
+    });
+
+    it("returns null for non-array response", async () => {
+      global.fetch = vi.fn().mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({ error: "unexpected" }),
+      });
+
+      const result = await fetchDefinition("malformed");
+      expect(result).toBeNull();
+    });
+
+    it("returns null for response with missing word field", async () => {
+      global.fetch = vi.fn().mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve([{ phonetic: "/test/" }]),
+      });
+
+      const result = await fetchDefinition("noword");
+      expect(result).toBeNull();
+    });
+
+    it("returns null for response with missing meanings array", async () => {
+      global.fetch = vi.fn().mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve([{ word: "test" }]),
+      });
+
+      const result = await fetchDefinition("nomeanings");
+      expect(result).toBeNull();
+    });
+
     it("encodes special characters in the word", async () => {
       global.fetch = vi.fn().mockResolvedValueOnce({
         ok: false,

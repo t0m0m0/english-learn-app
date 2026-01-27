@@ -34,7 +34,9 @@ export async function fetchDefinition(
     );
 
     if (!response.ok) {
-      definitionCache.set(word, null);
+      if (response.status === 404) {
+        definitionCache.set(word, null);
+      }
       return null;
     }
 
@@ -45,27 +47,27 @@ export async function fetchDefinition(
       return null;
     }
 
+    const firstEntry = data[0];
+    if (!firstEntry?.word || !Array.isArray(firstEntry?.meanings)) {
+      return null;
+    }
+
     const entry: DictionaryEntry = {
-      word: data[0].word,
-      phonetic: data[0].phonetic,
-      meanings: data[0].meanings.map(
-        (meaning: { partOfSpeech: string; definitions: Definition[] }) => ({
-          partOfSpeech: meaning.partOfSpeech,
-          definitions: meaning.definitions.map(
-            (def: { definition: string; example?: string }) => ({
-              definition: def.definition,
-              example: def.example,
-            }),
-          ),
-        }),
-      ),
+      word: firstEntry.word,
+      phonetic: firstEntry.phonetic,
+      meanings: firstEntry.meanings.map((meaning: Meaning) => ({
+        partOfSpeech: meaning.partOfSpeech,
+        definitions: meaning.definitions.map((def: Definition) => ({
+          definition: def.definition,
+          example: def.example,
+        })),
+      })),
     };
 
     definitionCache.set(word, entry);
     return entry;
   } catch (error) {
     console.error("Error fetching definition:", error);
-    definitionCache.set(word, null);
     return null;
   }
 }

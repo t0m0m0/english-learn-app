@@ -109,6 +109,96 @@ describe("DictionaryDefinition", () => {
     });
   });
 
+  it("can collapse back after expanding", async () => {
+    vi.mocked(dictionaryService.fetchDefinition).mockResolvedValueOnce(
+      mockDefinition,
+    );
+
+    render(<DictionaryDefinition word="hello" collapsed />);
+    const user = userEvent.setup();
+
+    // Wait for load and expand
+    await waitFor(() => {
+      expect(screen.getByRole("button")).toBeInTheDocument();
+    });
+    await user.click(screen.getByRole("button", { name: /show definition/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText("/həˈloʊ/")).toBeInTheDocument();
+    });
+
+    // Collapse back
+    await user.click(
+      screen.getByRole("button", { name: /hide definition/i }),
+    );
+
+    await waitFor(() => {
+      expect(screen.queryByText("/həˈloʊ/")).not.toBeInTheDocument();
+    });
+    expect(
+      screen.getByRole("button", { name: /show definition/i }),
+    ).toBeInTheDocument();
+  });
+
+  it("renders without phonetic field", async () => {
+    vi.mocked(dictionaryService.fetchDefinition).mockResolvedValueOnce({
+      word: "test",
+      meanings: [
+        {
+          partOfSpeech: "noun",
+          definitions: [{ definition: "A test definition." }],
+        },
+      ],
+    });
+
+    render(<DictionaryDefinition word="test" />);
+
+    await waitFor(() => {
+      expect(screen.getByText("A test definition.")).toBeInTheDocument();
+    });
+
+    expect(screen.queryByText("/")).not.toBeInTheDocument();
+  });
+
+  it("limits displayed definitions to 2 per meaning", async () => {
+    vi.mocked(dictionaryService.fetchDefinition).mockResolvedValueOnce({
+      word: "run",
+      meanings: [
+        {
+          partOfSpeech: "verb",
+          definitions: [
+            { definition: "Definition one." },
+            { definition: "Definition two." },
+            { definition: "Definition three." },
+            { definition: "Definition four." },
+          ],
+        },
+      ],
+    });
+
+    render(<DictionaryDefinition word="run" />);
+
+    await waitFor(() => {
+      expect(screen.getByText("Definition one.")).toBeInTheDocument();
+    });
+
+    expect(screen.getByText("Definition two.")).toBeInTheDocument();
+    expect(screen.queryByText("Definition three.")).not.toBeInTheDocument();
+    expect(screen.queryByText("Definition four.")).not.toBeInTheDocument();
+  });
+
+  it("handles fetch rejection gracefully", async () => {
+    vi.mocked(dictionaryService.fetchDefinition).mockRejectedValueOnce(
+      new Error("Network error"),
+    );
+
+    render(<DictionaryDefinition word="error" />);
+
+    await waitFor(() => {
+      expect(screen.getByText(/no definition found/i)).toBeInTheDocument();
+    });
+  });
+
   it("fetches new definition when word changes", async () => {
     vi.mocked(dictionaryService.fetchDefinition)
       .mockResolvedValueOnce(mockDefinition)
