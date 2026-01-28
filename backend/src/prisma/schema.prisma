@@ -8,14 +8,15 @@ datasource db {
 }
 
 model User {
-  id              Int              @id @default(autoincrement())
-  email           String           @unique
-  name            String
-  progress        Progress[]
-  lessons         Lesson[]
-  callanProgress  CallanProgress[]
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
+  id                  Int                 @id @default(autoincrement())
+  email               String              @unique
+  name                String
+  progress            Progress[]
+  lessons             Lesson[]
+  callanProgress      CallanProgress[]
+  listeningProgress   ListeningProgress[]
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
 }
 
 model Word {
@@ -82,4 +83,42 @@ model CallanProgress {
   updatedAt     DateTime  @updatedAt
 
   @@unique([userId, qaItemId, mode])
+}
+
+model ListeningPassage {
+  id         String              @id @default(uuid())
+  title      String
+  text       String              // パッセージ本文
+  difficulty String              // beginner, intermediate, advanced
+  topic      String?             // トピックカテゴリ
+  order      Int                 // 表示順
+  questions  ListeningQuestion[]
+  createdAt  DateTime            @default(now())
+  updatedAt  DateTime            @updatedAt
+}
+
+model ListeningQuestion {
+  id         String              @id @default(uuid())
+  passageId  String
+  passage    ListeningPassage    @relation(fields: [passageId], references: [id], onDelete: Cascade)
+  type       String              // multiple_choice, true_false, fill_blank
+  question   String
+  options    String?             // JSON array for multiple choice options
+  answer     String
+  order      Int
+  progresses ListeningProgress[]
+  createdAt  DateTime            @default(now())
+  updatedAt  DateTime            @updatedAt
+}
+
+model ListeningProgress {
+  id         String            @id @default(uuid())
+  userId     Int
+  user       User              @relation(fields: [userId], references: [id])
+  questionId String
+  question   ListeningQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  isCorrect  Boolean
+  answeredAt DateTime          @default(now())
+
+  @@index([userId, questionId])
 }
