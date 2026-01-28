@@ -104,3 +104,44 @@ export interface CallanProgressSummary {
   byMode: CallanModeStats;
   streakDays: number;
 }
+
+// Listening Practice types
+export interface ListeningPassage {
+  id: string;
+  title: string;
+  text: string;
+  difficulty: "beginner" | "intermediate" | "advanced";
+  topic: string | null;
+  order: number;
+  questions: ListeningQuestion[];
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface ListeningQuestion {
+  id: string;
+  passageId: string;
+  type: "multiple_choice" | "true_false" | "fill_blank";
+  question: string;
+  options: string | null;
+  answer: string;
+  order: number;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface ListeningProgress {
+  id: string;
+  userId: number;
+  questionId: string;
+  isCorrect: boolean;
+  answeredAt: string;
+}
+
+export interface ListeningProgressSummary {
+  totalPassages: number;
+  totalQuestions: number;
+  answeredQuestions: number;
+  correctAnswers: number;
+  accuracy: number;
+}
