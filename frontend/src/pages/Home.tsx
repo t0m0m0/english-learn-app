@@ -65,7 +65,7 @@ export function Home() {
         <h2 className="text-2xl font-bold text-text-primary text-center mb-8">
           Learning Modes
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <Link to="/learn" className="block group">
             <Card className="border-t-4 border-t-primary h-full hover:shadow-elevated hover:-translate-y-1 transition-all">
               <div className="text-4xl mb-4">🖼️</div>
@@ -109,6 +109,22 @@ export function Home() {
               </p>
               <span className="text-primary font-medium text-sm group-hover:underline">
                 Start Mixing →
+              </span>
+            </Card>
+          </Link>
+
+          <Link to="/listening-practice" className="block group">
+            <Card className="border-t-4 border-t-purple-500 h-full hover:shadow-elevated hover:-translate-y-1 transition-all">
+              <div className="text-4xl mb-4">📖</div>
+              <h3 className="text-xl font-semibold text-text-primary mb-2">
+                Listening Practice
+              </h3>
+              <p className="text-sm text-text-secondary mb-4 leading-relaxed">
+                Listen to passages and answer comprehension questions to build
+                understanding.
+              </p>
+              <span className="text-primary font-medium text-sm group-hover:underline">
+                Start Practice →
               </span>
             </Card>
           </Link>

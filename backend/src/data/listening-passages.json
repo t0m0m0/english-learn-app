@@ -1,0 +1,359 @@
+{
+  "passages": [
+    {
+      "title": "At the Coffee Shop",
+      "text": "Sarah walks into a coffee shop every morning. She orders a large cappuccino and a blueberry muffin. The barista knows her name because she comes every day.",
+      "difficulty": "beginner",
+      "topic": "daily life",
+      "questions": [
+        {
+          "type": "multiple_choice",
+          "question": "What does Sarah order every morning?",
+          "options": ["A cappuccino and a muffin", "A tea and a cookie", "A latte and a cake", "A coffee and a sandwich"],
+          "answer": "A cappuccino and a muffin"
+        },
+        {
+          "type": "true_false",
+          "question": "The barista does not know Sarah's name.",
+          "answer": "false"
+        }
+      ]
+    },
+    {
+      "title": "The Weather Today",
+      "text": "It is sunny today, but it was rainy yesterday. Tomorrow will be cloudy. I need to bring an umbrella just in case.",
+      "difficulty": "beginner",
+      "topic": "weather",
+      "questions": [
+        {
+          "type": "multiple_choice",
+          "question": "What is the weather like today?",
+          "options": ["Sunny", "Rainy", "Cloudy", "Snowy"],
+          "answer": "Sunny"
+        },
+        {
+          "type": "true_false",
+          "question": "Tomorrow will be sunny.",
+          "answer": "false"
+        }
+      ]
+    },
+    {
+      "title": "My Family",
+      "text": "I have a small family. There are four people: my mother, my father, my sister, and me. We live in a house near the park.",
+      "difficulty": "beginner",
+      "topic": "family",
+      "questions": [
+        {
+          "type": "multiple_choice",
+          "question": "How many people are in the family?",
+          "options": ["Four", "Three", "Five", "Two"],
+          "answer": "Four"
+        },
+        {
+          "type": "fill_blank",
+          "question": "They live in a house near the ____.",
+          "answer": "park"
+        }
+      ]
+    },
+    {
+      "title": "Going to School",
+      "text": "Tom goes to school by bus. He leaves home at eight o'clock every morning. His school starts at half past eight. He likes math and science.",
+      "difficulty": "beginner",
+      "topic": "education",
+      "questions": [
+        {
+          "type": "multiple_choice",
+          "question": "How does Tom go to school?",
+          "options": ["By bus", "By car", "On foot", "By train"],
+          "answer": "By bus"
+        },
+        {
+          "type": "true_false",
+          "question": "Tom leaves home at nine o'clock.",
+          "answer": "false"
+        }
+      ]
+    },
+    {
+      "title": "At the Supermarket",
+      "text": "Lisa goes to the supermarket every Saturday. She buys milk, bread, eggs, and fruit. She pays with her credit card. The total is usually about thirty dollars.",
+      "difficulty": "beginner",
+      "topic": "shopping",
+      "questions": [
+        {
+          "type": "multiple_choice",
+          "question": "When does Lisa go to the supermarket?",
+          "options": ["Every Saturday", "Every Sunday", "Every Monday", "Every Friday"],
+          "answer": "Every Saturday"
+        },
+        {
+          "type": "fill_blank",
+          "question": "She pays with her ____ card.",
+          "answer": "credit"
+        }
+      ]
+    },
+    {
+      "title": "A Day at the Office",
+      "text": "John works at a technology company in the city center. He usually arrives at nine in the morning and finishes at six in the evening. During lunch, he often goes to a nearby restaurant with his colleagues. They discuss their projects and sometimes share ideas for improving their work. John enjoys his job because he gets to solve interesting problems every day.",
+      "difficulty": "intermediate",
+      "topic": "work",
+      "questions": [
+        {
+          "type": "multiple_choice",
+          "question": "Where does John work?",
+          "options": ["At a technology company", "At a hospital", "At a school", "At a restaurant"],
+          "answer": "At a technology company"
+        },
+        {
+          "type": "true_false",
+          "question": "John usually eats lunch alone.",
+          "answer": "false"
+        },
+        {
+          "type": "fill_blank",
+          "question": "John enjoys his job because he gets to solve interesting ____ every day.",
+          "answer": "problems"
+        }
+      ]
+    },
+    {
+      "title": "Planning a Holiday",
+      "text": "Emma and her family are planning a holiday to Spain. They want to visit Barcelona and Madrid. The flight takes about two hours from London. They have booked a hotel near the beach in Barcelona for five nights. Emma is excited because she has never been to Spain before. She is learning some basic Spanish phrases to use during the trip.",
+      "difficulty": "intermediate",
+      "topic": "travel",
+      "questions": [
+        {
+          "type": "multiple_choice",
+          "question": "How long is the flight from London?",
+          "options": ["About two hours", "About four hours", "About one hour", "About three hours"],
+          "answer": "About two hours"
+        },
+        {
+          "type": "true_false",
+          "question": "Emma has visited Spain before.",
+          "answer": "false"
+        },
+        {
+          "type": "fill_blank",
+          "question": "They have booked a hotel near the ____ in Barcelona.",
+          "answer": "beach"
+        }
+      ]
+    },
+    {
+      "title": "Healthy Eating Habits",
+      "text": "Dr. Smith recommends eating five servings of fruits and vegetables every day. She says that breakfast is the most important meal because it gives you energy for the morning. It is also important to drink at least eight glasses of water daily. Processed foods should be avoided because they contain too much sugar and salt. Instead, people should cook meals at home using fresh ingredients.",
+      "difficulty": "intermediate",
+      "topic": "health",
+      "questions": [
+        {
+          "type": "multiple_choice",
+          "question": "How many servings of fruits and vegetables does Dr. Smith recommend?",
+          "options": ["Five", "Three", "Seven", "Ten"],
+          "answer": "Five"
+        },
+        {
+          "type": "true_false",
+          "question": "Dr. Smith says lunch is the most important meal.",
+          "answer": "false"
+        },
+        {
+          "type": "multiple_choice",
+          "question": "Why should processed foods be avoided?",
+          "options": ["They contain too much sugar and salt", "They are too expensive", "They taste bad", "They are difficult to find"],
+          "answer": "They contain too much sugar and salt"
+        }
+      ]
+    },
+    {
+      "title": "The History of the Internet",
+      "text": "The internet was originally developed in the late 1960s as a military communication network in the United States. It was called ARPANET and connected only a few universities and research centers. In the early 1990s, Tim Berners-Lee invented the World Wide Web, which made the internet accessible to ordinary people. By the year 2000, millions of people around the world were using the internet for email, shopping, and finding information. Today, we cannot imagine life without it.",
+      "difficulty": "intermediate",
+      "topic": "technology",
+      "questions": [
+        {
+          "type": "multiple_choice",
+          "question": "When was the internet originally developed?",
+          "options": ["In the late 1960s", "In the 1950s", "In the 1980s", "In the early 1990s"],
+          "answer": "In the late 1960s"
+        },
+        {
+          "type": "fill_blank",
+          "question": "Tim Berners-Lee invented the World Wide ____.",
+          "answer": "Web"
+        },
+        {
+          "type": "true_false",
+          "question": "ARPANET was originally a commercial network.",
+          "answer": "false"
+        }
+      ]
+    },
+    {
+      "title": "Learning a Musical Instrument",
+      "text": "Playing a musical instrument has many benefits beyond just making music. Research shows that musicians develop better memory, improved concentration, and enhanced coordination compared to non-musicians. Learning an instrument also teaches discipline and patience, as progress often comes slowly. Children who start playing an instrument at a young age tend to perform better in school, particularly in mathematics and reading. Whether it is the piano, guitar, or violin, the skills gained from musical training can last a lifetime.",
+      "difficulty": "intermediate",
+      "topic": "music",
+      "questions": [
+        {
+          "type": "multiple_choice",
+          "question": "What do musicians develop according to the passage?",
+          "options": ["Better memory and improved concentration", "Better eyesight", "Faster running speed", "Stronger muscles"],
+          "answer": "Better memory and improved concentration"
+        },
+        {
+          "type": "true_false",
+          "question": "Progress in learning an instrument usually comes quickly.",
+          "answer": "false"
+        },
+        {
+          "type": "fill_blank",
+          "question": "Children who play instruments tend to perform better in mathematics and ____.",
+          "answer": "reading"
+        }
+      ]
+    },
+    {
+      "title": "The Impact of Social Media on Communication",
+      "text": "Social media has fundamentally transformed the way people communicate with each other across the globe. Platforms such as Facebook, Twitter, and Instagram allow individuals to share their thoughts, photographs, and experiences instantly with millions of people. However, this digital revolution has also raised significant concerns about privacy, mental health, and the spread of misinformation. Studies have shown that excessive use of social media can lead to feelings of anxiety and depression, particularly among young people. Furthermore, the algorithms used by these platforms tend to create echo chambers, where users are primarily exposed to opinions that reinforce their existing beliefs rather than challenging them.",
+      "difficulty": "advanced",
+      "topic": "technology",
+      "questions": [
+        {
+          "type": "multiple_choice",
+          "question": "What concerns has social media raised according to the passage?",
+          "options": ["Privacy, mental health, and misinformation", "Cost, availability, and speed", "Language barriers and translation issues", "Environmental impact and energy consumption"],
+          "answer": "Privacy, mental health, and misinformation"
+        },
+        {
+          "type": "true_false",
+          "question": "Social media algorithms help users see diverse opinions.",
+          "answer": "false"
+        },
+        {
+          "type": "fill_blank",
+          "question": "Excessive use of social media can lead to feelings of anxiety and ____.",
+          "answer": "depression"
+        },
+        {
+          "type": "multiple_choice",
+          "question": "What do echo chambers do?",
+          "options": ["Expose users primarily to opinions that reinforce their existing beliefs", "Help users learn new languages", "Connect users with people from different backgrounds", "Encourage critical thinking"],
+          "answer": "Expose users primarily to opinions that reinforce their existing beliefs"
+        }
+      ]
+    },
+    {
+      "title": "Climate Change and Its Effects",
+      "text": "Climate change represents one of the most pressing challenges facing humanity in the twenty-first century. The average global temperature has risen by approximately 1.1 degrees Celsius since the pre-industrial era, primarily due to the burning of fossil fuels and deforestation. This warming has led to more frequent and severe weather events, including hurricanes, droughts, and floods. The Arctic ice cap is melting at an unprecedented rate, contributing to rising sea levels that threaten coastal communities worldwide. Scientists warn that without significant reductions in greenhouse gas emissions, the consequences could be catastrophic, including widespread food shortages, mass displacement of populations, and the extinction of numerous species.",
+      "difficulty": "advanced",
+      "topic": "environment",
+      "questions": [
+        {
+          "type": "multiple_choice",
+          "question": "By how much has the average global temperature risen?",
+          "options": ["Approximately 1.1 degrees Celsius", "Approximately 2.5 degrees Celsius", "Approximately 0.5 degrees Celsius", "Approximately 3.0 degrees Celsius"],
+          "answer": "Approximately 1.1 degrees Celsius"
+        },
+        {
+          "type": "true_false",
+          "question": "The Arctic ice cap is melting at a normal rate.",
+          "answer": "false"
+        },
+        {
+          "type": "fill_blank",
+          "question": "The warming is primarily due to the burning of fossil fuels and ____.",
+          "answer": "deforestation"
+        },
+        {
+          "type": "multiple_choice",
+          "question": "What could happen without significant reductions in greenhouse gas emissions?",
+          "options": ["Widespread food shortages and mass displacement", "Improved agricultural production", "Decreased ocean temperatures", "Expansion of forests"],
+          "answer": "Widespread food shortages and mass displacement"
+        }
+      ]
+    },
+    {
+      "title": "The Psychology of Decision Making",
+      "text": "Human decision-making is far more complex than most people realize. Psychologist Daniel Kahneman, who won the Nobel Prize in Economics, proposed that we have two systems of thinking: System 1, which is fast, intuitive, and emotional, and System 2, which is slow, deliberate, and logical. Most everyday decisions are made using System 1, which can lead to cognitive biases and systematic errors in judgment. For example, the anchoring effect causes people to rely too heavily on the first piece of information they receive, while confirmation bias leads individuals to seek out evidence that supports their pre-existing beliefs. Understanding these biases is essential for making better decisions in both personal and professional contexts.",
+      "difficulty": "advanced",
+      "topic": "psychology",
+      "questions": [
+        {
+          "type": "multiple_choice",
+          "question": "Who proposed the two systems of thinking?",
+          "options": ["Daniel Kahneman", "Albert Einstein", "Sigmund Freud", "Charles Darwin"],
+          "answer": "Daniel Kahneman"
+        },
+        {
+          "type": "true_false",
+          "question": "System 1 thinking is slow and deliberate.",
+          "answer": "false"
+        },
+        {
+          "type": "fill_blank",
+          "question": "The anchoring effect causes people to rely too heavily on the ____ piece of information they receive.",
+          "answer": "first"
+        },
+        {
+          "type": "multiple_choice",
+          "question": "What does confirmation bias lead people to do?",
+          "options": ["Seek out evidence that supports their pre-existing beliefs", "Question their own assumptions", "Ignore all available evidence", "Make random decisions"],
+          "answer": "Seek out evidence that supports their pre-existing beliefs"
+        }
+      ]
+    },
+    {
+      "title": "The Future of Artificial Intelligence",
+      "text": "Artificial intelligence is rapidly advancing and reshaping industries across the globe. Machine learning algorithms can now diagnose diseases, drive vehicles, translate languages, and even compose music with remarkable accuracy. However, these developments have sparked heated debates about the ethical implications of AI technology. Critics argue that widespread automation could eliminate millions of jobs, exacerbate economic inequality, and concentrate power in the hands of a few technology companies. Proponents counter that AI will create new types of employment, increase productivity, and solve problems that have long eluded human capability. The challenge lies in developing appropriate regulatory frameworks that harness the benefits of AI while mitigating its potential risks to society.",
+      "difficulty": "advanced",
+      "topic": "technology",
+      "questions": [
+        {
+          "type": "multiple_choice",
+          "question": "What can machine learning algorithms do according to the passage?",
+          "options": ["Diagnose diseases, drive vehicles, and translate languages", "Only play chess and solve puzzles", "Only process financial transactions", "Only recognize faces"],
+          "answer": "Diagnose diseases, drive vehicles, and translate languages"
+        },
+        {
+          "type": "true_false",
+          "question": "Critics believe AI will have no impact on employment.",
+          "answer": "false"
+        },
+        {
+          "type": "fill_blank",
+          "question": "The challenge lies in developing appropriate ____ frameworks.",
+          "answer": "regulatory"
+        },
+        {
+          "type": "multiple_choice",
+          "question": "What do proponents of AI argue?",
+          "options": ["AI will create new types of employment and increase productivity", "AI should be completely banned", "AI is too expensive to develop", "AI cannot solve real-world problems"],
+          "answer": "AI will create new types of employment and increase productivity"
+        }
+      ]
+    },
+    {
+      "title": "Pet Care Basics",
+      "text": "Dogs need food, water, and exercise every day. You should walk your dog at least once a day. Dogs also need to visit the vet once a year.",
+      "difficulty": "beginner",
+      "topic": "animals",
+      "questions": [
+        {
+          "type": "multiple_choice",
+          "question": "How often should you walk your dog?",
+          "options": ["At least once a day", "Once a week", "Once a month", "Twice a year"],
+          "answer": "At least once a day"
+        },
+        {
+          "type": "true_false",
+          "question": "Dogs need to visit the vet every month.",
+          "answer": "false"
+        }
+      ]
+    }
+  ]
+}

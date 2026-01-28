@@ -6,6 +6,7 @@ import progressRouter from './routes/progress';
 import lessonsRouter from './routes/lessons';
 import qaItemsRouter from './routes/qa-items';
 import callanProgressRouter from './routes/callan-progress';
+import listeningPracticeRouter from './routes/listening-practice';
 
 export function createApp(prisma?: unknown) {
   const app = express();
@@ -48,6 +49,7 @@ export function createApp(prisma?: unknown) {
   app.use('/api/lessons', lessonsRouter);
   app.use('/api/qa-items', qaItemsRouter);
   app.use('/api/callan/progress', callanProgressRouter);
+  app.use('/api/listening', listeningPracticeRouter);
 
   // Error handling
   app.use((err: Error, _req: express.Request, res: express.Response, _next: express.NextFunction) => {

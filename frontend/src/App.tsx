@@ -12,6 +12,8 @@ import CallanLessonForm from "./pages/CallanLessonForm";
 import CallanPractice from "./pages/CallanPractice";
 import CallanShadowingPage from "./pages/CallanShadowingPage";
 import CallanDictationPage from "./pages/CallanDictationPage";
+import ListeningPractice from "./pages/ListeningPractice";
+import ListeningPracticeSession from "./pages/ListeningPracticeSession";
 
 function App() {
   return (
@@ -47,6 +49,14 @@ function App() {
               <Route
                 path="/callan/dictation/:lessonId"
                 element={<CallanDictationPage />}
+              />
+              <Route
+                path="/listening-practice"
+                element={<ListeningPractice />}
+              />
+              <Route
+                path="/listening-practice/:passageId"
+                element={<ListeningPracticeSession />}
               />
             </Routes>
           </main>
