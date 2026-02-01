@@ -125,9 +125,10 @@ router.get('/progress/summary', async (req: Request, res: Response, next: NextFu
     const totalQuestions = passages.reduce((sum, p) => sum + p.questions.length, 0);
     const answeredQuestionIds = new Set(allProgress.map(p => p.questionId));
     const answeredQuestions = answeredQuestionIds.size;
-    const correctAnswers = allProgress.filter(p => p.isCorrect).length;
-    const accuracy = allProgress.length > 0
-      ? Math.round((correctAnswers / allProgress.length) * 100)
+    const correctQuestionIds = new Set(allProgress.filter(p => p.isCorrect).map(p => p.questionId));
+    const correctAnswers = correctQuestionIds.size;
+    const accuracy = answeredQuestions > 0
+      ? Math.round((correctAnswers / answeredQuestions) * 100)
       : 0;
 
     res.json({

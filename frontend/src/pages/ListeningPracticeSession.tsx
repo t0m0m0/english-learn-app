@@ -10,12 +10,25 @@ import { useAudio } from "../hooks/useAudio";
 import type { ListeningPassage } from "../types";
 
 type SessionState = "loading" | "ready" | "practicing" | "completed" | "error";
+type Difficulty = "beginner" | "intermediate" | "advanced";
 
-const DIFFICULTY_LABELS: Record<string, string> = {
+const DIFFICULTY_LABELS: Record<Difficulty, string> = {
   beginner: "Beginner",
   intermediate: "Intermediate",
   advanced: "Advanced",
 };
+
+function getAccuracyColor(accuracy: number): string {
+  if (accuracy >= 80) return "text-success";
+  if (accuracy >= 60) return "text-warning";
+  return "text-error";
+}
+
+function getAccuracyMessage(accuracy: number): string {
+  if (accuracy >= 80) return "Excellent work! Your listening skills are strong!";
+  if (accuracy >= 60) return "Good effort! Keep practicing to improve.";
+  return "Keep going! Regular practice makes a difference.";
+}
 
 export function ListeningPracticeSession() {
   const { passageId } = useParams<{ passageId: string }>();
@@ -27,7 +40,13 @@ export function ListeningPracticeSession() {
   const [speechRate, setSpeechRate] = useState(1);
   const hasFetched = useRef(false);
 
-  const { speak, stop } = useAudio({ rate: speechRate });
+  const { speak, stop, error: audioError, isReady: audioReady } = useAudio({ rate: speechRate });
+
+  useEffect(() => {
+    return () => {
+      stop();
+    };
+  }, [stop]);
 
   useEffect(() => {
     if (!passageId || hasFetched.current) return;
@@ -42,7 +61,8 @@ export function ListeningPracticeSession() {
           setPassage(fetched);
           setSessionState("ready");
         }
-      } catch {
+      } catch (err) {
+        console.error("Failed to load passage:", err);
         if (!cancelled) {
           setError("Failed to load passage");
           setSessionState("error");
@@ -72,11 +92,15 @@ export function ListeningPracticeSession() {
 
   const handleRecordProgress = useCallback(
     async (questionId: string, isCorrect: boolean) => {
-      await listeningApi.recordProgress({
-        userId: DEFAULT_USER_ID,
-        questionId,
-        isCorrect,
-      });
+      try {
+        await listeningApi.recordProgress({
+          userId: DEFAULT_USER_ID,
+          questionId,
+          isCorrect,
+        });
+      } catch (err) {
+        console.error("Failed to record progress:", err);
+      }
     },
     [],
   );
@@ -156,14 +180,21 @@ export function ListeningPracticeSession() {
             </div>
           </div>
 
+          {audioError && (
+            <div className="bg-error/10 text-error text-sm rounded-lg p-3 mb-4 max-w-md mx-auto">
+              {audioError}
+            </div>
+          )}
+
           <div className="space-y-4">
             <Button
               variant="primary"
               size="lg"
               className="w-full max-w-xs"
               onClick={handleStart}
+              disabled={!audioReady}
             >
-              Start Listening
+              {audioReady ? "Start Listening" : "Loading Audio..."}
             </Button>
 
             <div>
@@ -196,13 +227,7 @@ export function ListeningPracticeSession() {
               <div className="flex justify-between items-center">
                 <span className="text-text-secondary">Accuracy:</span>
                 <span
-                  className={`text-2xl font-bold ${
-                    summary.accuracy >= 80
-                      ? "text-success"
-                      : summary.accuracy >= 60
-                        ? "text-warning"
-                        : "text-error"
-                  }`}
+                  className={`text-2xl font-bold ${getAccuracyColor(summary.accuracy)}`}
                 >
                   {summary.accuracy}%
                 </span>
@@ -229,11 +254,7 @@ export function ListeningPracticeSession() {
           </div>
 
           <p className="text-text-secondary mb-8">
-            {summary.accuracy >= 80
-              ? "Excellent work! Your listening skills are strong!"
-              : summary.accuracy >= 60
-                ? "Good effort! Keep practicing to improve."
-                : "Keep going! Regular practice makes a difference."}
+            {getAccuracyMessage(summary.accuracy)}
           </p>
 
           <div className="flex gap-4 justify-center flex-wrap">

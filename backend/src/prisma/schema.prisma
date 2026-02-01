@@ -114,7 +114,7 @@ model ListeningQuestion {
 model ListeningProgress {
   id         String            @id @default(uuid())
   userId     Int
-  user       User              @relation(fields: [userId], references: [id])
+  user       User              @relation(fields: [userId], references: [id], onDelete: Cascade)
   questionId String
   question   ListeningQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
   isCorrect  Boolean

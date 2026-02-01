@@ -33,7 +33,15 @@ export function ListeningPlayer({
   const [correctCount, setCorrectCount] = useState(0);
   const [showTranscript, setShowTranscript] = useState(false);
 
-  const { speak, stop, isSpeaking } = useAudio({ rate: speechRate });
+  const { speak, stop, isSpeaking, error: audioError, isReady: audioReady } = useAudio({ rate: speechRate });
+
+  if (questions.length === 0) {
+    return (
+      <Card>
+        <p className="text-error">No questions available for this passage.</p>
+      </Card>
+    );
+  }
 
   const currentQuestion = questions[currentIndex];
   const isLastQuestion = currentIndex === questions.length - 1;
@@ -42,7 +50,8 @@ export function ListeningPlayer({
     if (question.type === "multiple_choice" && question.options) {
       try {
         return JSON.parse(question.options);
-      } catch {
+      } catch (e) {
+        console.error(`Failed to parse options for question ${question.id}:`, e);
         return [];
       }
     }
@@ -74,27 +83,24 @@ export function ListeningPlayer({
   );
 
   const handleOptionClick = (option: string) => {
-    if (currentQuestion.type === "true_false") {
-      checkAnswer(option.toLowerCase());
-    } else {
-      checkAnswer(option);
-    }
+    checkAnswer(option).catch((err) => {
+      console.error("Error checking answer:", err);
+    });
   };
 
   const handleFillBlankSubmit = () => {
     if (!fillBlankInput.trim()) return;
-    checkAnswer(fillBlankInput);
+    checkAnswer(fillBlankInput).catch((err) => {
+      console.error("Error checking answer:", err);
+    });
   };
 
   const handleNext = () => {
     if (isLastQuestion) {
-      const totalQuestions = questions.length;
-      const finalCorrectCount =
-        answerState === "correct" ? correctCount : correctCount;
       onComplete({
-        totalQuestions,
-        correctCount: finalCorrectCount,
-        accuracy: Math.round((finalCorrectCount / totalQuestions) * 100),
+        totalQuestions: questions.length,
+        correctCount,
+        accuracy: Math.round((correctCount / questions.length) * 100),
       });
     } else {
       setCurrentIndex((prev) => prev + 1);
@@ -116,13 +122,19 @@ export function ListeningPlayer({
     <div className="space-y-6">
       {/* Audio Controls */}
       <Card>
+        {audioError && (
+          <div className="bg-error/10 text-error text-sm rounded-lg p-3 mb-4">
+            {audioError}
+          </div>
+        )}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Button
               variant={isSpeaking ? "error" : "primary"}
               onClick={handlePlayPassage}
+              disabled={!audioReady && !isSpeaking}
             >
-              {isSpeaking ? "Stop" : "Play Passage"}
+              {isSpeaking ? "Stop" : audioReady ? "Play Passage" : "Loading..."}
             </Button>
             <span className="text-sm text-text-muted">
               {isSpeaking ? "Playing..." : "Click to listen"}
@@ -163,17 +175,13 @@ export function ListeningPlayer({
               let optionStyle = "border-border hover:border-primary";
 
               if (answerState !== "waiting") {
-                const normalizedOption =
-                  currentQuestion.type === "true_false"
-                    ? option.toLowerCase()
-                    : option;
+                const normalizedOption = option.toLowerCase();
                 const normalizedAnswer =
                   currentQuestion.answer.trim().toLowerCase();
                 const isCorrectOption =
-                  normalizedOption.toLowerCase() === normalizedAnswer;
+                  normalizedOption === normalizedAnswer;
                 const isSelected =
-                  selectedAnswer?.toLowerCase() ===
-                  normalizedOption.toLowerCase();
+                  selectedAnswer?.toLowerCase() === normalizedOption;
 
                 if (isCorrectOption) {
                   optionStyle = "border-success bg-success/10";

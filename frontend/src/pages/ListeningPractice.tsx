@@ -29,7 +29,8 @@ export function ListeningPractice() {
           difficulty || undefined,
         );
         setPassages(data);
-      } catch {
+      } catch (err) {
+        console.error("Failed to load passages:", err);
         setError("Failed to load passages");
       } finally {
         setLoading(false);
@@ -60,34 +61,21 @@ export function ListeningPractice() {
 
       {/* Difficulty Filter */}
       <div className="flex justify-center gap-3 mb-8">
-        <Button
-          variant={selectedDifficulty === null ? "primary" : "outline"}
-          size="sm"
-          onClick={() => handleFilterChange(null)}
-        >
-          All
-        </Button>
-        <Button
-          variant={selectedDifficulty === "beginner" ? "primary" : "outline"}
-          size="sm"
-          onClick={() => handleFilterChange("beginner")}
-        >
-          Beginner
-        </Button>
-        <Button
-          variant={selectedDifficulty === "intermediate" ? "primary" : "outline"}
-          size="sm"
-          onClick={() => handleFilterChange("intermediate")}
-        >
-          Intermediate
-        </Button>
-        <Button
-          variant={selectedDifficulty === "advanced" ? "primary" : "outline"}
-          size="sm"
-          onClick={() => handleFilterChange("advanced")}
-        >
-          Advanced
-        </Button>
+        {([
+          { label: "All", value: null },
+          { label: "Beginner", value: "beginner" },
+          { label: "Intermediate", value: "intermediate" },
+          { label: "Advanced", value: "advanced" },
+        ] as const).map(({ label, value }) => (
+          <Button
+            key={label}
+            variant={selectedDifficulty === value ? "primary" : "outline"}
+            size="sm"
+            onClick={() => handleFilterChange(value)}
+          >
+            {label}
+          </Button>
+        ))}
       </div>
 
       {/* Loading */}
@@ -103,7 +91,7 @@ export function ListeningPractice() {
       {error && (
         <Card className="text-center py-12">
           <h2 className="text-xl font-semibold text-error mb-4">{error}</h2>
-          <Button variant="secondary" onClick={() => fetchPassages()}>
+          <Button variant="secondary" onClick={() => fetchPassages(selectedDifficulty || undefined)}>
             Retry
           </Button>
         </Card>

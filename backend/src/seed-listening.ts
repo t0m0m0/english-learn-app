@@ -35,10 +35,14 @@ function validateData(data: unknown): ListeningData {
     throw new Error('Data file contains no passages - nothing to seed');
   }
 
+  const validDifficulties = ['beginner', 'intermediate', 'advanced'];
   for (let i = 0; i < obj.passages.length; i++) {
     const passage = obj.passages[i] as Record<string, unknown>;
     if (!passage.title || !passage.text || !passage.difficulty) {
       throw new Error(`Passage ${i + 1} is missing required properties (title, text, difficulty)`);
+    }
+    if (!validDifficulties.includes(passage.difficulty as string)) {
+      throw new Error(`Passage "${passage.title}" has invalid difficulty "${passage.difficulty}". Must be one of: ${validDifficulties.join(', ')}`);
     }
     if (!Array.isArray(passage.questions) || passage.questions.length === 0) {
       throw new Error(`Passage "${passage.title}" must have at least one question`);

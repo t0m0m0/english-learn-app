@@ -267,11 +267,11 @@ describe('Listening Practice API', () => {
         .get('/api/listening/progress/summary?userId=1')
 
       expect(response.status).toBe(200)
-      expect(response.body).toHaveProperty('totalPassages')
-      expect(response.body).toHaveProperty('totalQuestions')
-      expect(response.body).toHaveProperty('answeredQuestions')
-      expect(response.body).toHaveProperty('correctAnswers')
-      expect(response.body).toHaveProperty('accuracy')
+      expect(response.body.totalPassages).toBe(1)
+      expect(response.body.totalQuestions).toBe(2)
+      expect(response.body.answeredQuestions).toBe(2)
+      expect(response.body.correctAnswers).toBe(1)
+      expect(response.body.accuracy).toBe(50)
     })
 
     it('returns 400 when userId is missing', async () => {
