@@ -545,4 +545,124 @@ describe("CallanDictation", () => {
       expect(mockStop).toHaveBeenCalled();
     });
   });
+
+  describe("auto-play on next", () => {
+    it("should auto-play audio for the next item after clicking Next", async () => {
+      render(
+        <CallanDictation
+          qaItems={mockQAItems}
+          userId={1}
+          onComplete={mockOnComplete}
+        />,
+      );
+
+      // Check first answer
+      const input = screen.getByRole("textbox");
+      fireEvent.change(input, { target: { value: "My name is John." } });
+      fireEvent.click(screen.getByRole("button", { name: /check/i }));
+
+      // Wait for checked state and click next
+      await waitFor(() => {
+        fireEvent.click(screen.getByRole("button", { name: /next/i }));
+      });
+
+      // speak is called once during handleCheck (for correct answer playback)
+      // and should be called again for the next item's auto-play
+      await waitFor(() => {
+        expect(mockSpeak).toHaveBeenCalledWith(
+          "I live in Tokyo.",
+          expect.any(Number),
+        );
+      });
+    });
+
+    it("should auto-play audio after pressing N key to go next", async () => {
+      render(
+        <CallanDictation
+          qaItems={mockQAItems}
+          userId={1}
+          onComplete={mockOnComplete}
+        />,
+      );
+
+      // Check first answer
+      const input = screen.getByRole("textbox");
+      fireEvent.change(input, { target: { value: "My name is John." } });
+      fireEvent.click(screen.getByRole("button", { name: /check/i }));
+
+      // Wait for checked state, then press N key
+      await waitFor(() => {
+        expect(screen.getByRole("button", { name: /next/i })).toBeInTheDocument();
+      });
+
+      mockSpeak.mockClear();
+      fireEvent.keyDown(window, { key: "n" });
+
+      // Should auto-play the next item's audio
+      await waitFor(() => {
+        expect(mockSpeak).toHaveBeenCalledWith(
+          "I live in Tokyo.",
+          expect.any(Number),
+        );
+      });
+    });
+
+    it("should auto-play audio after pressing Enter key to go next in checked state", async () => {
+      render(
+        <CallanDictation
+          qaItems={mockQAItems}
+          userId={1}
+          onComplete={mockOnComplete}
+        />,
+      );
+
+      // Check first answer
+      const input = screen.getByRole("textbox");
+      fireEvent.change(input, { target: { value: "My name is John." } });
+      fireEvent.click(screen.getByRole("button", { name: /check/i }));
+
+      // Wait for checked state
+      await waitFor(() => {
+        expect(screen.getByRole("button", { name: /next/i })).toBeInTheDocument();
+      });
+
+      mockSpeak.mockClear();
+      fireEvent.keyDown(window, { key: "Enter" });
+
+      // Should auto-play the next item's audio
+      await waitFor(() => {
+        expect(mockSpeak).toHaveBeenCalledWith(
+          "I live in Tokyo.",
+          expect.any(Number),
+        );
+      });
+    });
+
+    it("should not auto-play when finishing last item", async () => {
+      render(
+        <CallanDictation
+          qaItems={[mockQAItems[0]]}
+          userId={1}
+          onComplete={mockOnComplete}
+        />,
+      );
+
+      // Check answer
+      const input = screen.getByRole("textbox");
+      fireEvent.change(input, { target: { value: "My name is John." } });
+      fireEvent.click(screen.getByRole("button", { name: /check/i }));
+
+      // Clear speak calls from handleCheck
+      await waitFor(() => {
+        expect(screen.getByRole("button", { name: /finish/i })).toBeInTheDocument();
+      });
+      mockSpeak.mockClear();
+
+      // Click finish
+      fireEvent.click(screen.getByRole("button", { name: /finish/i }));
+
+      // speak should NOT be called again (no next item)
+      expect(mockSpeak).not.toHaveBeenCalled();
+    });
+  });
 });

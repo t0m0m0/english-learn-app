@@ -112,17 +112,21 @@ export function CallanDictation({
       };
       onComplete(summary);
     } else {
+      const nextItem = qaItems[currentIndex + 1];
       setCurrentIndex((prev) => prev + 1);
       setUserInput("");
       setHint(null);
       setResult(null);
       setPracticeState("input");
-      // Focus on input after state update
+      // Focus on input and auto-play next item's audio after state update
       setTimeout(() => {
         inputRef.current?.focus();
+        if (nextItem) {
+          speak(nextItem.answer, speed);
+        }
       }, 0);
     }
-  }, [isLastItem, qaItems.length, correctCount, accuracySum, result, onComplete]);
+  }, [isLastItem, qaItems, currentIndex, correctCount, accuracySum, result, onComplete, speak, speed]);
 
   // Keyboard shortcuts
   useEffect(() => {
