@@ -8,6 +8,9 @@ import type {
   QAItem,
   CallanProgress,
   CallanProgressSummary,
+  ListeningPassage,
+  ListeningProgress,
+  ListeningProgressSummary,
 } from "../types";
 
 const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:3001/api";
@@ -231,6 +234,46 @@ export const callanProgressApi = {
   getSummary: async (userId: number = DEFAULT_USER_ID) => {
     const response = await api.get<CallanProgressSummary>(
       `/callan/progress/summary?userId=${userId}`,
+    );
+    return response.data;
+  },
+};
+
+// Listening Practice API
+export const listeningApi = {
+  getPassages: async (difficulty?: string) => {
+    const params = difficulty ? `?difficulty=${difficulty}` : "";
+    const response = await api.get<{ passages: ListeningPassage[] }>(
+      `/listening/passages${params}`,
+    );
+    return response.data;
+  },
+
+  getPassageById: async (id: string) => {
+    const response = await api.get<{ passage: ListeningPassage }>(
+      `/listening/passages/${id}`,
+    );
+    return response.data;
+  },
+
+  recordProgress: async (data: {
+    userId?: number;
+    questionId: string;
+    isCorrect: boolean;
+  }) => {
+    const response = await api.post<{ progress: ListeningProgress }>(
+      "/listening/progress",
+      {
+        ...data,
+        userId: data.userId ?? DEFAULT_USER_ID,
+      },
+    );
+    return response.data;
+  },
+
+  getSummary: async (userId: number = DEFAULT_USER_ID) => {
+    const response = await api.get<ListeningProgressSummary>(
+      `/listening/progress/summary?userId=${userId}`,
     );
     return response.data;
   },
