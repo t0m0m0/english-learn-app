@@ -35,6 +35,7 @@ export function CallanDictation({
   const [progressSaveError, setProgressSaveError] = useState<string | null>(null);
 
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const autoPlayTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const {
     speak,
@@ -99,16 +100,13 @@ export function CallanDictation({
     setHint(hintWords + "...");
   }, [currentItem]);
 
-  // Go to next item - use functional update to get latest state values
+  // Go to next item or complete the practice
   const handleNext = useCallback(() => {
     if (isLastItem) {
-      // Use current result to include the last item's accuracy in the summary
-      const finalAccuracySum = result ? accuracySum : accuracySum;
-      const finalCorrectCount = result?.isCorrect ? correctCount : correctCount;
       const summary: DictationSummary = {
         totalItems: qaItems.length,
-        correctCount: finalCorrectCount,
-        totalAccuracy: qaItems.length > 0 ? Math.round(finalAccuracySum / qaItems.length) : 0,
+        correctCount,
+        totalAccuracy: qaItems.length > 0 ? Math.round(accuracySum / qaItems.length) : 0,
       };
       onComplete(summary);
     } else {
@@ -118,12 +116,10 @@ export function CallanDictation({
       setHint(null);
       setResult(null);
       setPracticeState("input");
-      // Focus on input and auto-play next item's audio after state update
-      setTimeout(() => {
+      // Defer focus and auto-play until after React re-renders with the new state
+      autoPlayTimeoutRef.current = setTimeout(() => {
         inputRef.current?.focus();
-        if (nextItem) {
-          speak(nextItem.answer, speed);
-        }
+        speak(nextItem.answer, speed);
       }, 0);
     }
   }, [isLastItem, qaItems, currentIndex, correctCount, accuracySum, result, onComplete, speak, speed]);
@@ -185,12 +181,16 @@ export function CallanDictation({
     if (currentItem) {
       speak(currentItem.answer, speed);
     }
+    // Run only on mount - auto-play the initial item once, not on every speak/speed change
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Cleanup TTS on unmount
+  // Cleanup TTS and pending auto-play on unmount
   useEffect(() => {
     return () => {
+      if (autoPlayTimeoutRef.current) {
+        clearTimeout(autoPlayTimeoutRef.current);
+      }
       stopSpeaking();
     };
   }, [stopSpeaking]);
