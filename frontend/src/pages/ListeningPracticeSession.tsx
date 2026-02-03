@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
 import { listeningApi, DEFAULT_USER_ID } from "../services/api";
 import { Container, Card, Button } from "../components/ui";
@@ -38,7 +38,6 @@ export function ListeningPracticeSession() {
   const [error, setError] = useState<string | null>(null);
   const [summary, setSummary] = useState<PracticeSummary | null>(null);
   const [speechRate, setSpeechRate] = useState(1);
-  const hasFetched = useRef(false);
 
   const { speak, stop, error: audioError, isReady: audioReady } = useAudio({ rate: speechRate });
 
@@ -49,8 +48,7 @@ export function ListeningPracticeSession() {
   }, [stop]);
 
   useEffect(() => {
-    if (!passageId || hasFetched.current) return;
-    hasFetched.current = true;
+    if (!passageId) return;
 
     let cancelled = false;
 
