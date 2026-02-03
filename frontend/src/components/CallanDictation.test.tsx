@@ -546,6 +546,25 @@ describe("CallanDictation", () => {
     });
   });
 
+  describe("auto-play on start", () => {
+    it("should auto-play audio for the first item on mount", async () => {
+      render(
+        <CallanDictation
+          qaItems={mockQAItems}
+          userId={1}
+          onComplete={mockOnComplete}
+        />,
+      );
+
+      await waitFor(() => {
+        expect(mockSpeak).toHaveBeenCalledWith(
+          "My name is John.",
+          expect.any(Number),
+        );
+      });
+    });
+  });
+
   describe("auto-play on next", () => {
     it("should auto-play audio for the next item after clicking Next", async () => {
       render(

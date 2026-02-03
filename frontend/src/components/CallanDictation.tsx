@@ -179,9 +179,13 @@ export function CallanDictation({
     stopSpeaking,
   ]);
 
-  // Focus input on mount
+  // Focus input and auto-play first item on mount
   useEffect(() => {
     inputRef.current?.focus();
+    if (currentItem) {
+      speak(currentItem.answer, speed);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Cleanup TTS on unmount
