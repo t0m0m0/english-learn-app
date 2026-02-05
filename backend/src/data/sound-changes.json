@@ -1,0 +1,404 @@
+{
+  "categories": [
+    {
+      "name": "Linking",
+      "nameJa": "連結",
+      "slug": "linking",
+      "description": "When a word ending in a consonant is followed by a word beginning with a vowel, they connect smoothly. Example: 'pick up' sounds like 'pi-kup'.",
+      "exercises": [
+        {
+          "title": "Basic Linking Practice",
+          "difficulty": "beginner",
+          "items": [
+            {
+              "type": "fill_blank",
+              "audioPath": "/audio/sound-changes/linking/01-001.mp3",
+              "sentence": "Can I pick it up?",
+              "blank": "pick it up",
+              "blankIndex": 2,
+              "explanation": "'pick it up' links together as 'pi-ki-tup'"
+            },
+            {
+              "type": "fill_blank",
+              "audioPath": "/audio/sound-changes/linking/01-002.mp3",
+              "sentence": "Turn it off right away.",
+              "blank": "Turn it off",
+              "blankIndex": 0,
+              "explanation": "'Turn it off' links as 'tur-ni-toff'"
+            },
+            {
+              "type": "fill_blank",
+              "audioPath": "/audio/sound-changes/linking/01-003.mp3",
+              "sentence": "I need an apple.",
+              "blank": "an apple",
+              "blankIndex": 2,
+              "explanation": "'an apple' links as 'a-napple'"
+            },
+            {
+              "type": "dictation",
+              "audioPath": "/audio/sound-changes/linking/01-004.mp3",
+              "sentence": "Look at it again.",
+              "explanation": "'Look at it again' links as 'loo-ka-ti-tagain'"
+            },
+            {
+              "type": "dictation",
+              "audioPath": "/audio/sound-changes/linking/01-005.mp3",
+              "sentence": "Put it on the table.",
+              "explanation": "'Put it on' links as 'pu-ti-ton'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Elision",
+      "nameJa": "脱落",
+      "slug": "elision",
+      "description": "Certain sounds are dropped in natural speech, especially /t/ and /d/ between consonants. Example: 'next day' sounds like 'neks day'.",
+      "exercises": [
+        {
+          "title": "Basic Elision Practice",
+          "difficulty": "beginner",
+          "items": [
+            {
+              "type": "fill_blank",
+              "audioPath": "/audio/sound-changes/elision/01-001.mp3",
+              "sentence": "See you next week.",
+              "blank": "next week",
+              "blankIndex": 2,
+              "explanation": "The /t/ in 'next' is dropped before the /w/ in 'week'"
+            },
+            {
+              "type": "fill_blank",
+              "audioPath": "/audio/sound-changes/elision/01-002.mp3",
+              "sentence": "He left the building.",
+              "blank": "left the",
+              "blankIndex": 1,
+              "explanation": "The /t/ in 'left' is often dropped before 'the'"
+            },
+            {
+              "type": "fill_blank",
+              "audioPath": "/audio/sound-changes/elision/01-003.mp3",
+              "sentence": "I must go now.",
+              "blank": "must go",
+              "blankIndex": 1,
+              "explanation": "The /t/ in 'must' is dropped before the /g/ in 'go'"
+            },
+            {
+              "type": "dictation",
+              "audioPath": "/audio/sound-changes/elision/01-004.mp3",
+              "sentence": "The last time we met.",
+              "explanation": "The /t/ in 'last' is dropped before 'time'"
+            },
+            {
+              "type": "dictation",
+              "audioPath": "/audio/sound-changes/elision/01-005.mp3",
+              "sentence": "Send me the documents.",
+              "explanation": "The /d/ in 'send' is dropped before 'me'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Assimilation",
+      "nameJa": "同化",
+      "slug": "assimilation",
+      "description": "Adjacent sounds influence each other and change. Example: 'would you' sounds like 'wʊdʒuː' where /d/+/j/ becomes /dʒ/.",
+      "exercises": [
+        {
+          "title": "Basic Assimilation Practice",
+          "difficulty": "beginner",
+          "items": [
+            {
+              "type": "fill_blank",
+              "audioPath": "/audio/sound-changes/assimilation/01-001.mp3",
+              "sentence": "Would you like some tea?",
+              "blank": "Would you",
+              "blankIndex": 0,
+              "explanation": "'Would you' assimilates to sound like 'wʊdʒu' (/d/+/j/ → /dʒ/)"
+            },
+            {
+              "type": "fill_blank",
+              "audioPath": "/audio/sound-changes/assimilation/01-002.mp3",
+              "sentence": "Did you see that?",
+              "blank": "Did you",
+              "blankIndex": 0,
+              "explanation": "'Did you' assimilates to 'didʒu' (/d/+/j/ → /dʒ/)"
+            },
+            {
+              "type": "fill_blank",
+              "audioPath": "/audio/sound-changes/assimilation/01-003.mp3",
+              "sentence": "I miss you so much.",
+              "blank": "miss you",
+              "blankIndex": 1,
+              "explanation": "'miss you' assimilates to 'miʃu' (/s/+/j/ → /ʃ/)"
+            },
+            {
+              "type": "dictation",
+              "audioPath": "/audio/sound-changes/assimilation/01-004.mp3",
+              "sentence": "What do you think?",
+              "explanation": "'What do you' assimilates: 'wɒdʒə' (/t/+/d/ → /d/, /d/+/j/ → /dʒ/)"
+            },
+            {
+              "type": "dictation",
+              "audioPath": "/audio/sound-changes/assimilation/01-005.mp3",
+              "sentence": "Could you help me with this?",
+              "explanation": "'Could you' assimilates to 'kʊdʒu' (/d/+/j/ → /dʒ/)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Reduction",
+      "nameJa": "弱化",
+      "slug": "reduction",
+      "description": "Function words (articles, prepositions, auxiliaries) are pronounced weakly and shortened. Example: 'can' becomes /kən/, 'to' becomes /tə/.",
+      "exercises": [
+        {
+          "title": "Basic Reduction Practice",
+          "difficulty": "beginner",
+          "items": [
+            {
+              "type": "fill_blank",
+              "audioPath": "/audio/sound-changes/reduction/01-001.mp3",
+              "sentence": "I can do it.",
+              "blank": "can",
+              "blankIndex": 1,
+              "explanation": "'can' is reduced to /kən/ in natural speech"
+            },
+            {
+              "type": "fill_blank",
+              "audioPath": "/audio/sound-changes/reduction/01-002.mp3",
+              "sentence": "I want to go home.",
+              "blank": "want to",
+              "blankIndex": 1,
+              "explanation": "'want to' reduces to 'wanna' /wɒnə/ in casual speech"
+            },
+            {
+              "type": "fill_blank",
+              "audioPath": "/audio/sound-changes/reduction/01-003.mp3",
+              "sentence": "Give it to him.",
+              "blank": "to him",
+              "blankIndex": 2,
+              "explanation": "'to' reduces to /tə/ and 'him' reduces to /ɪm/"
+            },
+            {
+              "type": "dictation",
+              "audioPath": "/audio/sound-changes/reduction/01-004.mp3",
+              "sentence": "She was at the store.",
+              "explanation": "'was' reduces to /wəz/, 'at' to /ət/, 'the' to /ðə/"
+            },
+            {
+              "type": "dictation",
+              "audioPath": "/audio/sound-changes/reduction/01-005.mp3",
+              "sentence": "He has been working for hours.",
+              "explanation": "'has' reduces to /əz/, 'been' to /bɪn/, 'for' to /fər/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Flapping",
+      "nameJa": "フラッピング",
+      "slug": "flapping",
+      "description": "In American English, /t/ and /d/ between vowels become a quick tap sound (like Japanese ラ). Example: 'water' sounds like 'wader'.",
+      "exercises": [
+        {
+          "title": "Basic Flapping Practice",
+          "difficulty": "beginner",
+          "items": [
+            {
+              "type": "fill_blank",
+              "audioPath": "/audio/sound-changes/flapping/01-001.mp3",
+              "sentence": "Can I have some water?",
+              "blank": "water",
+              "blankIndex": 4,
+              "explanation": "The /t/ in 'water' becomes a flap [ɾ], sounding like 'wader'"
+            },
+            {
+              "type": "fill_blank",
+              "audioPath": "/audio/sound-changes/flapping/01-002.mp3",
+              "sentence": "That is a lot better.",
+              "blank": "better",
+              "blankIndex": 4,
+              "explanation": "The /tt/ in 'better' becomes a flap, sounding like 'bedder'"
+            },
+            {
+              "type": "fill_blank",
+              "audioPath": "/audio/sound-changes/flapping/01-003.mp3",
+              "sentence": "I need a little more time.",
+              "blank": "little",
+              "blankIndex": 3,
+              "explanation": "The /tt/ in 'little' becomes a flap, sounding like 'liddle'"
+            },
+            {
+              "type": "dictation",
+              "audioPath": "/audio/sound-changes/flapping/01-004.mp3",
+              "sentence": "The city is really beautiful.",
+              "explanation": "The /t/ in 'city' and 'beautiful' both become flaps"
+            },
+            {
+              "type": "dictation",
+              "audioPath": "/audio/sound-changes/flapping/01-005.mp3",
+              "sentence": "I got a letter from my daughter.",
+              "explanation": "The /t/ in 'got a', 'letter', and 'daughter' all become flaps"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Contraction",
+      "nameJa": "短縮",
+      "slug": "contraction",
+      "description": "Words are combined and shortened in natural speech. Example: 'I will' becomes 'I'll', 'do not' becomes 'don't'.",
+      "exercises": [
+        {
+          "title": "Basic Contraction Practice",
+          "difficulty": "beginner",
+          "items": [
+            {
+              "type": "fill_blank",
+              "audioPath": "/audio/sound-changes/contraction/01-001.mp3",
+              "sentence": "I'll be there soon.",
+              "blank": "I'll",
+              "blankIndex": 0,
+              "explanation": "'I will' contracts to 'I'll' /aɪl/"
+            },
+            {
+              "type": "fill_blank",
+              "audioPath": "/audio/sound-changes/contraction/01-002.mp3",
+              "sentence": "She's been working all day.",
+              "blank": "She's",
+              "blankIndex": 0,
+              "explanation": "'She has' contracts to 'She's' /ʃiːz/"
+            },
+            {
+              "type": "fill_blank",
+              "audioPath": "/audio/sound-changes/contraction/01-003.mp3",
+              "sentence": "They wouldn't have known.",
+              "blank": "wouldn't have",
+              "blankIndex": 1,
+              "explanation": "'would not have' contracts to 'wouldn't have' or even 'wouldn't've'"
+            },
+            {
+              "type": "dictation",
+              "audioPath": "/audio/sound-changes/contraction/01-004.mp3",
+              "sentence": "We've got to leave now.",
+              "explanation": "'We have' contracts to 'We've', 'got to' often sounds like 'gotta'"
+            },
+            {
+              "type": "dictation",
+              "audioPath": "/audio/sound-changes/contraction/01-005.mp3",
+              "sentence": "I don't think he's coming.",
+              "explanation": "'do not' → 'don't', 'he is' → 'he's'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Dark L",
+      "nameJa": "暗いL",
+      "slug": "dark-l",
+      "description": "The /l/ sound at the end of a syllable or before a consonant becomes 'dark' (velarized). Example: 'all' has a dark L that sounds almost like a vowel.",
+      "exercises": [
+        {
+          "title": "Basic Dark L Practice",
+          "difficulty": "beginner",
+          "items": [
+            {
+              "type": "fill_blank",
+              "audioPath": "/audio/sound-changes/dark-l/01-001.mp3",
+              "sentence": "I like milk a lot.",
+              "blank": "milk",
+              "blankIndex": 2,
+              "explanation": "The /l/ in 'milk' is dark, sounding almost like 'miok'"
+            },
+            {
+              "type": "fill_blank",
+              "audioPath": "/audio/sound-changes/dark-l/01-002.mp3",
+              "sentence": "She is a helpful person.",
+              "blank": "helpful",
+              "blankIndex": 3,
+              "explanation": "The /l/ at the end of 'helpful' is dark and vowel-like"
+            },
+            {
+              "type": "fill_blank",
+              "audioPath": "/audio/sound-changes/dark-l/01-003.mp3",
+              "sentence": "The ball rolled down the hill.",
+              "blank": "ball",
+              "blankIndex": 1,
+              "explanation": "The /l/ in 'ball' and 'hill' are both dark L sounds"
+            },
+            {
+              "type": "dictation",
+              "audioPath": "/audio/sound-changes/dark-l/01-004.mp3",
+              "sentence": "All the people were helpful.",
+              "explanation": "'All', 'people', and 'helpful' all contain dark L sounds"
+            },
+            {
+              "type": "dictation",
+              "audioPath": "/audio/sound-changes/dark-l/01-005.mp3",
+              "sentence": "I feel like I should call them.",
+              "explanation": "'feel', 'call' contain dark L at syllable end"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Glottalization",
+      "nameJa": "声門閉鎖音化",
+      "slug": "glottalization",
+      "description": "The /t/ sound is replaced by a glottal stop (a catch in the throat). Example: 'button' sounds like 'bu-ʔn' where the /t/ becomes a glottal stop.",
+      "exercises": [
+        {
+          "title": "Basic Glottalization Practice",
+          "difficulty": "beginner",
+          "items": [
+            {
+              "type": "fill_blank",
+              "audioPath": "/audio/sound-changes/glottalization/01-001.mp3",
+              "sentence": "Press the button to start.",
+              "blank": "button",
+              "blankIndex": 2,
+              "explanation": "The /t/ in 'button' becomes a glottal stop: 'bu-ʔn'"
+            },
+            {
+              "type": "fill_blank",
+              "audioPath": "/audio/sound-changes/glottalization/01-002.mp3",
+              "sentence": "The kitten is very cute.",
+              "blank": "kitten",
+              "blankIndex": 1,
+              "explanation": "The /t/ in 'kitten' becomes a glottal stop: 'ki-ʔn'"
+            },
+            {
+              "type": "fill_blank",
+              "audioPath": "/audio/sound-changes/glottalization/01-003.mp3",
+              "sentence": "We went to the mountain.",
+              "blank": "mountain",
+              "blankIndex": 4,
+              "explanation": "The /t/ in 'mountain' becomes a glottal stop: 'moun-ʔn'"
+            },
+            {
+              "type": "dictation",
+              "audioPath": "/audio/sound-changes/glottalization/01-004.mp3",
+              "sentence": "The cotton shirt has a button missing.",
+              "explanation": "'cotton' and 'button' both have glottal stops replacing /t/"
+            },
+            {
+              "type": "dictation",
+              "audioPath": "/audio/sound-changes/glottalization/01-005.mp3",
+              "sentence": "I bought a carton of milk at the market.",
+              "explanation": "'carton' and 'market' can have glottal stops for /t/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
