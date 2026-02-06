@@ -15,6 +15,7 @@ model User {
   lessons             Lesson[]
   callanProgress      CallanProgress[]
   listeningProgress   ListeningProgress[]
+  soundChangeProgress SoundChangeProgress[]
   createdAt           DateTime            @default(now())
   updatedAt           DateTime            @updatedAt
 }
@@ -121,4 +122,57 @@ model ListeningProgress {
   answeredAt DateTime          @default(now())
 
   @@index([userId, questionId])
+}
+
+model SoundChangeCategory {
+  id          String                @id @default(uuid())
+  name        String                // "Linking"
+  nameJa      String                // "連結"
+  slug        String                @unique
+  description String?
+  order       Int
+  exercises   SoundChangeExercise[]
+  createdAt   DateTime              @default(now())
+  updatedAt   DateTime              @updatedAt
+}
+
+model SoundChangeExercise {
+  id          String                    @id @default(uuid())
+  categoryId  String
+  category    SoundChangeCategory       @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  title       String
+  difficulty  String                    // beginner, intermediate, advanced
+  order       Int
+  items       SoundChangeExerciseItem[]
+  createdAt   DateTime                  @default(now())
+  updatedAt   DateTime                  @updatedAt
+}
+
+model SoundChangeExerciseItem {
+  id          String                @id @default(uuid())
+  exerciseId  String
+  exercise    SoundChangeExercise   @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+  type        String                // fill_blank, dictation
+  audioPath   String
+  sentence    String
+  blank       String?               // 穴埋めの正解語句（fill_blankのみ）
+  blankIndex  Int?                  // 穴埋め位置（0-based word index）
+  explanation String?
+  order       Int
+  progresses  SoundChangeProgress[]
+  createdAt   DateTime              @default(now())
+  updatedAt   DateTime              @updatedAt
+}
+
+model SoundChangeProgress {
+  id         String                  @id @default(uuid())
+  userId     Int
+  user       User                    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  itemId     String
+  item       SoundChangeExerciseItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  accuracy   Int                     // 0-100
+  isCorrect  Boolean
+  answeredAt DateTime                @default(now())
+
+  @@index([userId, itemId])
 }

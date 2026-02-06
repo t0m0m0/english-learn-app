@@ -11,6 +11,11 @@ import type {
   ListeningPassage,
   ListeningProgress,
   ListeningProgressSummary,
+  SoundChangeCategory,
+  SoundChangeExercise,
+  SoundChangeExerciseItem,
+  SoundChangeProgress,
+  SoundChangeProgressSummary,
 } from "../types";
 
 const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:3001/api";
@@ -274,6 +279,53 @@ export const listeningApi = {
   getSummary: async (userId: number = DEFAULT_USER_ID) => {
     const response = await api.get<ListeningProgressSummary>(
       `/listening/progress/summary?userId=${userId}`,
+    );
+    return response.data;
+  },
+};
+
+// Sound Changes API
+export const soundChangeApi = {
+  getCategories: async () => {
+    const response = await api.get<{ categories: SoundChangeCategory[] }>(
+      "/sound-changes/categories",
+    );
+    return response.data;
+  },
+
+  getCategoryBySlug: async (slug: string) => {
+    const response = await api.get<{
+      category: SoundChangeCategory & { exercises: (SoundChangeExercise & { items: { id: string }[] })[] };
+    }>(`/sound-changes/categories/${slug}`);
+    return response.data;
+  },
+
+  getExerciseById: async (exerciseId: string) => {
+    const response = await api.get<{
+      exercise: SoundChangeExercise & { items: SoundChangeExerciseItem[] };
+    }>(`/sound-changes/exercises/${exerciseId}`);
+    return response.data;
+  },
+
+  recordProgress: async (data: {
+    userId?: number;
+    itemId: string;
+    accuracy: number;
+    isCorrect: boolean;
+  }) => {
+    const response = await api.post<{ progress: SoundChangeProgress }>(
+      "/sound-changes/progress",
+      {
+        ...data,
+        userId: data.userId ?? DEFAULT_USER_ID,
+      },
+    );
+    return response.data;
+  },
+
+  getSummary: async (userId: number = DEFAULT_USER_ID) => {
+    const response = await api.get<SoundChangeProgressSummary>(
+      `/sound-changes/progress/summary?userId=${userId}`,
     );
     return response.data;
   },

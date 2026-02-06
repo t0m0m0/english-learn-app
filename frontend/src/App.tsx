@@ -14,6 +14,9 @@ import CallanShadowingPage from "./pages/CallanShadowingPage";
 import CallanDictationPage from "./pages/CallanDictationPage";
 import ListeningPractice from "./pages/ListeningPractice";
 import ListeningPracticeSession from "./pages/ListeningPracticeSession";
+import SoundChangeHome from "./pages/SoundChangeHome";
+import SoundChangeCategoryDetail from "./pages/SoundChangeCategoryDetail";
+import SoundChangePracticeSession from "./pages/SoundChangePracticeSession";
 
 function App() {
   return (
@@ -57,6 +60,15 @@ function App() {
               <Route
                 path="/listening-practice/:passageId"
                 element={<ListeningPracticeSession />}
+              />
+              <Route path="/sound-changes" element={<SoundChangeHome />} />
+              <Route
+                path="/sound-changes/:slug"
+                element={<SoundChangeCategoryDetail />}
+              />
+              <Route
+                path="/sound-changes/practice/:exerciseId"
+                element={<SoundChangePracticeSession />}
               />
             </Routes>
           </main>

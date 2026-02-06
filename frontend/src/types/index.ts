@@ -145,3 +145,67 @@ export interface ListeningProgressSummary {
   correctAnswers: number;
   accuracy: number;
 }
+
+// Sound Change types
+export interface SoundChangeCategory {
+  id: string;
+  name: string;
+  nameJa: string;
+  slug: string;
+  description: string | null;
+  order: number;
+  exercises?: SoundChangeExercise[];
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface SoundChangeExercise {
+  id: string;
+  categoryId: string;
+  title: string;
+  difficulty: "beginner" | "intermediate" | "advanced";
+  order: number;
+  items?: SoundChangeExerciseItem[];
+  category?: Pick<SoundChangeCategory, "name" | "nameJa" | "slug">;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface SoundChangeExerciseItem {
+  id: string;
+  exerciseId: string;
+  type: "fill_blank" | "dictation";
+  audioPath: string;
+  sentence: string;
+  blank: string | null;
+  blankIndex: number | null;
+  explanation: string | null;
+  order: number;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface SoundChangeProgress {
+  id: string;
+  userId: number;
+  itemId: string;
+  accuracy: number;
+  isCorrect: boolean;
+  answeredAt: string;
+}
+
+export interface SoundChangeProgressSummary {
+  totalCategories: number;
+  totalItems: number;
+  answeredItems: number;
+  correctItems: number;
+  averageAccuracy: number;
+  byCategory: {
+    categoryId: string;
+    name: string;
+    totalExercises: number;
+    totalItems: number;
+    answeredItems: number;
+    averageAccuracy: number;
+  }[];
+}
