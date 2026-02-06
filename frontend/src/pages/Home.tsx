@@ -128,6 +128,22 @@ export function Home() {
               </span>
             </Card>
           </Link>
+
+          <Link to="/sound-changes" className="block group">
+            <Card className="border-t-4 border-t-indigo-500 h-full hover:shadow-elevated hover:-translate-y-1 transition-all">
+              <div className="text-4xl mb-4">🔊</div>
+              <h3 className="text-xl font-semibold text-text-primary mb-2">
+                Sound Changes
+              </h3>
+              <p className="text-sm text-text-secondary mb-4 leading-relaxed">
+                Master English sound changes: linking, elision, assimilation,
+                and more.
+              </p>
+              <span className="text-primary font-medium text-sm group-hover:underline">
+                Start Training →
+              </span>
+            </Card>
+          </Link>
         </div>
       </section>
 

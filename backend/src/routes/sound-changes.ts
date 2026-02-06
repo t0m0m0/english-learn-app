@@ -5,8 +5,6 @@ const router = Router();
 
 type PrismaLike = Pick<PrismaClient, 'soundChangeCategory' | 'soundChangeExercise' | 'soundChangeExerciseItem' | 'soundChangeProgress'>;
 
-const VALID_DIFFICULTIES = ['beginner', 'intermediate', 'advanced'] as const;
-
 // GET /api/sound-changes/categories - List all categories
 router.get('/categories', async (req: Request, res: Response, next: NextFunction) => {
   try {
